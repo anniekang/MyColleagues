@@ -1,0 +1,30 @@
+{
+  "name": "Project-2-MyColleagues",
+  "version": "1.0.0",
+  "description": "A web application for businesses to use as a tool to understand their organizational structure and employee profiles",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "watch": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anniekang/Project-2-MyColleagues.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anniekang/Project-2-MyColleagues/issues"
+  },
+  "homepage": "https://github.com/anniekang/Project-2-MyColleagues#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.20.0",
+    "express": "^4.14.0",
+    "neo4j-driver": "^1.1.0-M03"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

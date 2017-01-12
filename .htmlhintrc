@@ -1,0 +1,18 @@
+{
+  "doctype-first": true,
+  "doctype-html5": true,
+  "meta-charset": true,
+  "title-require": false,
+  "tagname-lowercase": true,
+  "id-unique": true,
+  "id-class-value": "dash",
+  "attr-lowercase": true,
+  "attr-value-double-quotes": true,
+  "attr-value-not-empty": true,
+  "attr-no-duplication": true,
+  "href-abs-or-rel": false,
+  "src-not-empty": true,
+  "tag-pair": true,
+  "tag-self-close": false,
+  "spec-char-escape": true
+}
