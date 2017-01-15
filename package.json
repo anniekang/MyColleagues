@@ -22,7 +22,7 @@
   "dependencies": {
     "babel-polyfill": "^6.20.0",
     "express": "^4.14.0",
-    "neo4j-driver": "^1.1.0-M03"
+    "neo4j-driver": "^1.1.0-M04"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
