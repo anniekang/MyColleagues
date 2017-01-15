@@ -33,25 +33,22 @@ app.post('/newemployee/:id/:first/:last/:photo/:title/:email/:manager', (req, re
   var session = driver.session();
   session
     .run("MATCH (check:Employee {id: {id}}) RETURN check.id", {id: req.params.id})
-    .then( function(result){
+    .then( result => {
       if (result.records.length===0) {
-        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, email: {email}, manager_id: {manager} }) WITH new MATCH (mgr: Employee {id: {manager}}) CREATE UNIQUE (new)-[:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.email AS email, new.manager_id AS manager_id", {id: req.params.id, first: req.params.first, last: req.params.last, photo: req.params.photo, title: req.params.title, email: req.params.email, manager: req.params.manager})
+        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, email: {email}, manager_id: {manager} }) WITH new MATCH (mgr: Employee {id: {manager}}) CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name", {id: req.params.id, first: req.params.first, last: req.params.last, photo: req.params.photo, title: req.params.title, email: req.params.email, manager: req.params.manager})
       }
       res.json(req.params.id + ' already exists');
       session.close();
       res.json(results);
     })
-    .then( function(result) {
-      const results = result.records[0].get('id');
-      //return object of key + properties
+    .then( result => {
+      const results = result.records[0];
       console.log(results);
-      console.log(result);
-      console.log(result.records[0]);
       session.close();
       res.json(results);
     })
 
-    .catch(function(error) {
+    .catch( error => {
       console.log(error);
       res.json(error);
     });

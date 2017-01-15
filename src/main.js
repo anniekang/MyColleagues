@@ -19,15 +19,14 @@ function createEmployee(event) {
                  mode: 'cors',
                  cache: 'default' };
 
-   /*const getData = fetch('/data/', myInit);
-   getData
-     .then(result => result.json())
-     .catch(error => console.error(error.data))
-   */
-   const createNew = fetch('/newemployee/' + newEmployee.id.value + '/' + newEmployee.first.value + '/' + newEmployee.last.value + '/' + newEmployee.photo.value + '/' + newEmployee.title.value + '/' + newEmployee.email.value + '/' + newEmployee.manager.value, myInit);
-   createNew
-     .then(result => result.json())
-     .catch(error => console.error(error.data))
+  const myRequest = new Request('/newemployee/' + newEmployee.id.value + '/' + newEmployee.first.value + '/' + newEmployee.last.value + '/' + newEmployee.photo.value + '/' + newEmployee.title.value + '/' + newEmployee.email.value + '/' + newEmployee.manager.value, myInit)
+
+  fetch(myRequest)
+    .then(result => {
+     console.log(result)
+     result.json()
+    })
+    .catch(error => console.error(error.data))
 }
 
 newEmployee.addEventListener('submit', createEmployee);
