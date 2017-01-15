@@ -24,7 +24,7 @@ function createEmployee(event) {
      .then(result => result.json())
      .catch(error => console.error(error.data))
    */
-   const createNew = fetch('/newemployee/' + newEmployee.id.value + '/' + newEmployee.first.value + '/' + newEmployee.last.value, myInit);
+   const createNew = fetch('/newemployee/' + newEmployee.id.value + '/' + newEmployee.first.value + '/' + newEmployee.last.value + '/' + newEmployee.photo.value + '/' + newEmployee.title.value + '/' + newEmployee.email.value + '/' + newEmployee.manager.value, myInit);
    createNew
      .then(result => result.json())
      .catch(error => console.error(error.data))
