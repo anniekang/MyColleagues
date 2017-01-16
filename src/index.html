@@ -19,8 +19,9 @@
 </head>
 
 <body>
-  <div class = "ui container">
-    <form id="employee" class="ui form">
+  <div class = "ui grid container">
+    <div class="ui hidden divider"></div>
+    <form id="employee" class="ui sixteen wide column form">
       <div class="field">
        <label>Employee Profile</label>
       </div>
@@ -52,7 +53,10 @@
        <label>Manager ID</label>
        <input id="employee-mgr" type="text" name="manager-id" placeholder="Manager ID">
       </div>
-      <button class="ui button" type="submit">Submit</button>
+      <div class="ui hidden divider"></div>
+      <div class="ui one column centered grid">
+        <button class="ui button" type="submit">Submit</button>
+      </div>
     </form>
   </div>
 

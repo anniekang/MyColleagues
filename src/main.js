@@ -22,17 +22,13 @@ function createEmployee(event) {
 
   fetchData(newEmployee, 'POST', headers, request)
     .then(response => {
-      console.log(response);
       if (response.error) {
         const idExists = response.error;
-        console.log(idExists);
+        alert(idExists);
       }
       else if (response.id) {
         const created = 'Employee ' + response.id + ' ' + response.first_name + ' ' + response.last_name + ' has been successfully created.';
-        console.log(created);
-      }
-      else {
-        //..
+        alert(created);
       }
     })
 }
