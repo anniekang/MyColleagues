@@ -3,7 +3,7 @@ const neo4j = require('neo4j-driver').v1;
 const babel = require('babel-polyfill');
 
 const app = express();
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'kangaroo'));
+var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'annie'));
 
 app.use(express.static('src'));
 
