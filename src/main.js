@@ -1,38 +1,49 @@
 const newEmployee = document.getElementById('employee');
+newEmployee.addEventListener('submit', createEmployee);
 
 function createEmployee(event) {
   event.preventDefault();
+  const employeeData = new FormData(event.target);
+
   const newEmployee = {
-    id: document.getElementById('employee-id'),
-    first: document.getElementById('employee-first'),
-    last: document.getElementById('employee-last'),
-    photo: document.getElementById('employee-photo'),
-    title: document.getElementById('employee-title'),
-    email: document.getElementById('employee-email'),
-    manager: document.getElementById('employee-mgr'),
+    id: employeeData.get('id'),
+    first: employeeData.get('first-name'),
+    last: employeeData.get('last-name'),
+    photo: employeeData.get('photo'),
+    title: employeeData.get('job-title'),
+    email: employeeData.get('email'),
+    manager: employeeData.get('manager-id'),
   };
 
-  var myHeaders = new Headers();
+  var headers = new Headers();
+  headers.append('Content-Type', 'application/json');
 
-  var myInit = { method: 'POST',
-                 headers: myHeaders,
-                 mode: 'cors',
-                 cache: 'default' };
+  const request = new Request('/newemployee/');
 
-  const myRequest = new Request('/newemployee/' + newEmployee.id.value + '/' + newEmployee.first.value + '/' + newEmployee.last.value + '/' + newEmployee.photo.value + '/' + newEmployee.title.value + '/' + newEmployee.email.value + '/' + newEmployee.manager.value, myInit)
-
-  fetch(myRequest)
+  fetchData(newEmployee, 'POST', headers, request)
     .then(response => {
-      if (response.ok) {
-        console.log(response)
-        response.json()
-        //if successful, clear and hide form, and show confirmation of "Employee, ID:#### created".
+      console.log(response);
+      if (response.error) {
+        const idExists = response.error;
+        console.log(idExists);
+      }
+      else if (response.id) {
+        const created = 'Employee ' + response.id + ' ' + response.first_name + ' ' + response.last_name + ' has been successfully created.';
+        console.log(created);
       }
       else {
-        console.log(response.status)
+        //..
       }
     })
-    .catch(error => console.error(error.data))
 }
 
-newEmployee.addEventListener('submit', createEmployee);
+function fetchData(data, method, myHeaders, request) {
+var init = { method: method,
+               headers: myHeaders,
+               mode: 'cors',
+               body: JSON.stringify(data),
+               cache: 'default' };
+
+return fetch(request, init)
+        .then(response => response.json())
+}

@@ -21,6 +21,7 @@
   "homepage": "https://github.com/anniekang/Project-2-MyColleagues#readme",
   "dependencies": {
     "babel-polyfill": "^6.20.0",
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "neo4j-driver": "^1.1.0-M04"
   },
