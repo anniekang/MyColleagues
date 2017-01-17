@@ -40,8 +40,9 @@ function fetchData(data, method, myHeaders, request) {
 var init = { method: method,
                headers: myHeaders,
                mode: 'cors',
-               body: JSON.stringify(data),
                cache: 'default' };
+
+if (method !== 'GET') init.body = JSON.stringify(data);
 
 return fetch(request, init)
         .then(response => response.json())
@@ -52,8 +53,24 @@ function viewEmployee(event) {
   const employeeData = new FormData(event.target);
 
   const employee = {
-    id: employeeData.get('id'),
+    id: employeeData.get('id')
   };
 
+  var headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
+  const request = new Request('/viewemployee/' + employee.id);
+
+  fetchData(employee, 'GET', headers, request)
+    .then(response => {
+      if (response.error) {
+        const idUnsuccessful = response.error;
+        alert(idUnsuccessful);
+      }
+      else if (response.id) {
+        console.log(response);
+        /* populate profile with Employee data */
+      }
+    })
 
 }
