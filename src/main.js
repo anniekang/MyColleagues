@@ -1,6 +1,9 @@
 const newEmployee = document.getElementById('employee');
 newEmployee.addEventListener('submit', createEmployee);
 
+const getEmployee = document.getElementById('find-employee');
+getEmployee.addEventListener('submit', viewEmployee);
+
 function createEmployee(event) {
   event.preventDefault();
   const employeeData = new FormData(event.target);
@@ -42,4 +45,15 @@ var init = { method: method,
 
 return fetch(request, init)
         .then(response => response.json())
+}
+
+function viewEmployee(event) {
+  event.preventDefault();
+  const employeeData = new FormData(event.target);
+
+  const employee = {
+    id: employeeData.get('id'),
+  };
+
+
 }
