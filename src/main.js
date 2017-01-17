@@ -12,7 +12,7 @@ function createEmployee(event) {
     photo: employeeData.get('photo'),
     title: employeeData.get('job-title'),
     email: employeeData.get('email'),
-    manager: employeeData.get('manager-id'),
+    mgr: employeeData.get('manager-id'),
   };
 
   var headers = new Headers();
@@ -32,6 +32,7 @@ function createEmployee(event) {
       }
     })
 }
+
 
 function fetchData(data, method, myHeaders, request) {
 var init = { method: method,
