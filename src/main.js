@@ -33,7 +33,6 @@ function createEmployee(event) {
     })
 }
 
-
 function fetchData(data, method, myHeaders, request) {
 var init = { method: method,
                headers: myHeaders,
