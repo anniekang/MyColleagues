@@ -4,6 +4,9 @@ newEmployee.addEventListener('submit', createEmployee);
 const getEmployee = document.getElementById('find-employee');
 getEmployee.addEventListener('submit', viewEmployee);
 
+let editEmployee = document.getElementById('edit-button');
+editEmployee.addEventListener('click', updateEmployee);
+
 function createEmployee(event) {
   event.preventDefault();
   const employeeData = new FormData(event.target);
@@ -90,5 +93,13 @@ function viewEmployee(event) {
         document.getElementById('find-id').value = '';
       }
     })
+}
+
+function updateEmployee(event) {
+  event.preventDefault();
+  let employee = {
+    id: document.getElementById('profile-id').textContent
+  };
+
 
 }
