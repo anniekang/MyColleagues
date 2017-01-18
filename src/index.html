@@ -37,51 +37,12 @@
     </form>
   </div>
 
-  <div id="view-profile" class="ui grid container invisible section hidden">
-    <div class="ui hidden divider"></div>
-    <div class="row">
-      <div class="twelve wide column">
-        <div class="row">
-          <span id="profile-first"></span>
-          <span id="profile-last"></span>
-        </div>
-        <div class="ui row grid">
-          <div class="four wide column">
-            <img id="profile-photo" class="ui small image" alt="Profile Photo">
-          </div>
-          <div class ="twelve wide column">
-            <div class="row">ID:
-              <span id="profile-id"></span>
-            </div>
-            <div class="row">Job Title:
-              <span id="profile-title"></span>
-            </div>
-            <div class="row">Job Description:
-              <span id="profile-description"></span>
-            </div>
-            <div class="row">Email:
-              <span id="profile-email"></span>
-            </div>
-            <div class="row">Manager ID:
-              <span id="profile-mgr-id"></span>
-            </div>
-            <div class="row">Manager Name:
-              <span id="profile-mgr-name"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="four wide column">
-        <div class="ui one column centered grid">
-          <button id="edit-button" class="ui button" type="submit">Edit Profile</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="employee-profile"></div>
+
 
   <div id="edit-profile" class = "ui grid container invisible section hidden">
     <div class="ui hidden divider"></div>
-    <form id="employee" class="ui sixteen wide column fluid form edit">
+    <form id="employee" class="ui sixteen wide column fluid form">
       <div class="field">
         <label>Employee Profile</label>
       </div>
@@ -105,9 +66,9 @@
         <label>Job Title</label>
         <input id="employee-title" type="text" name="job-title" placeholder="Job Title">
       </div>
-      <div class="field">
+      <div id="description" class="field invisible section hidden">
         <label>Job Description</label>
-        <textarea id="employee-description" class="invisible section hidden" rows="2" name="job-description" placeholder="Job Description"></textarea>
+        <textarea id="employee-description" rows="2" name="job-description" placeholder="Job Description"></textarea>
       </div>
       <div class="field">
         <label>Email</label>
@@ -115,7 +76,7 @@
       </div>
       <div class="field">
         <label>Manager ID</label>
-        <input id="employee-mgr" type="text" name="manager-id" placeholder="Manager ID">
+        <input id="employee-manager" type="text" name="manager-id" placeholder="Manager ID">
       </div>
       <div class="ui hidden divider"></div>
       <div class="ui one column centered grid">
