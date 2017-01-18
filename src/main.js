@@ -1,4 +1,4 @@
-const newEmployee = document.getElementById('employee');
+let newEmployee = document.getElementById('employee');
 newEmployee.addEventListener('submit', createEmployee);
 
 const getEmployee = document.getElementById('find-employee');
@@ -6,6 +6,8 @@ getEmployee.addEventListener('submit', viewEmployee);
 
 let editEmployee = document.getElementById('edit-button');
 editEmployee.addEventListener('click', updateEmployee);
+
+
 
 function hidden(item, change) {
   const check = document.getElementById(item);
@@ -20,9 +22,14 @@ function hidden(item, change) {
 
 function createEmployee(event) {
   event.preventDefault();
+  if (newEmployee.classList.contains('edit')) {
+    newEmployee.classList.remove('edit');
+    submitChanges(event);
+    return;
+  }
   const employeeData = new FormData(event.target);
 
-  const newEmployee = {
+  const employee = {
     id: employeeData.get('id'),
     first: employeeData.get('first-name'),
     last: employeeData.get('last-name'),
@@ -37,7 +44,7 @@ function createEmployee(event) {
 
   const request = new Request('/newemployee/');
 
-  fetchData(newEmployee, 'POST', headers, request)
+  fetchData(employee, 'POST', headers, request)
     .then(response => {
       if (response.error) {
         const idExists = response.error;
@@ -127,6 +134,8 @@ function updateEmployee(event) {
    .then(response => {
       hidden('view-profile', 'add');
       console.log(response);
+      let profile = document.getElementById('employee');
+      profile.classList.add('edit');
       document.getElementById('employee-id').value = document.getElementById('profile-id').textContent;
 
       document.getElementById('employee-first').value = document.getElementById('profile-first').textContent;
@@ -141,5 +150,40 @@ function updateEmployee(event) {
       hidden('edit-profile', 'remove');
 
    })
+
+}
+
+function submitChanges(event) {
+  event.preventDefault();
+  const employeeData = new FormData(event.target);
+  const employee = {
+    id: employeeData.get('id'),
+    first: employeeData.get('first-name'),
+    last: employeeData.get('last-name'),
+    photo: employeeData.get('photo'),
+    title: employeeData.get('job-title'),
+    description: employeeData.get('job-description'),
+    email: employeeData.get('email'),
+    mgr: employeeData.get('manager-id'),
+  };
+
+  console.log(employee);
+
+/*  var headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
+  const request = new Request('/newemployee/');
+
+  fetchData(newEmployee, 'POST', headers, request)
+    .then(response => {
+      if (response.error) {
+        const idExists = response.error;
+        alert(idExists);
+      }
+      else if (response.id) {
+        const created = 'Employee ' + response.id + ' ' + response.first_name + ' ' + response.last_name + ' has been successfully created.';
+        alert(created);
+      }
+    })*/
 
 }
