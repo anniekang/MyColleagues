@@ -170,21 +170,14 @@ function submitChanges(event) {
 
   console.log(employee);
 
-/*  var headers = new Headers();
+  var headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
-  const request = new Request('/newemployee/');
+  const request = new Request('/updateemployee/');
 
-  fetchData(newEmployee, 'POST', headers, request)
+  fetchData(employee, 'PUT', headers, request)
     .then(response => {
-      if (response.error) {
-        const idExists = response.error;
-        alert(idExists);
-      }
-      else if (response.id) {
-        const created = 'Employee ' + response.id + ' ' + response.first_name + ' ' + response.last_name + ' has been successfully created.';
-        alert(created);
-      }
-    })*/
+      
+    })
 
 }

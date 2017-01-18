@@ -64,4 +64,23 @@ app.post('/newemployee/', (req, res) => {
 
 });
 
+app.put('/updateemployee/', (req, res) => {
+  var session = driver.session();
+  session
+    .run()
+    .then( result => {
+      const results = {};
+      result.records[0].forEach( (value, key) => {
+        results[key] = value;
+      })
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
 app.listen(3000, () => console.log('listening at 3000'));
