@@ -140,7 +140,8 @@ function updateEmployee(event) {
 
       document.getElementById('employee-first').value = document.getElementById('profile-first').textContent;
       document.getElementById('employee-last').value = document.getElementById('profile-last').textContent;
-      document.getElementById('employee-photo').value = document.getElementById('profile-photo').textContent;
+      let photo = document.getElementById('profile-photo');
+      document.getElementById('employee-photo').value = photo.getAttribute('src');
       document.getElementById('employee-title').value = document.getElementById('profile-title').textContent;
       document.getElementById('employee-description').value = document.getElementById('profile-description').textContent;
       document.getElementById('employee-email').value = document.getElementById('profile-email').textContent;
