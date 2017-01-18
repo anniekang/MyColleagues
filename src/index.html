@@ -19,7 +19,27 @@
 </head>
 
 <body>
-  <div class = "ui grid container">
+  <div id="find-employee" class= "ui grid container">
+    <div class="ui hidden divider"></div>
+    <form id="find" class="ui form">
+      <div class="ui hidden divider"></div>
+      <div class="field">
+        <label>Employee ID</label>
+        <div class="two fields">
+          <div class="field">
+            <input id="find-id" type="text" name="id" placeholder="Employee ID">
+          </div>
+          <div class="field">
+            <button class="ui button" type="submit">View</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div id="employee-profile"></div>
+
+  <div id="edit-profile" class = "ui grid container invisible section hidden">
     <div class="ui hidden divider"></div>
     <form id="employee" class="ui sixteen wide column fluid form">
       <div class="field">
