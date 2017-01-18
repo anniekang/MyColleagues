@@ -13,27 +13,18 @@ app.use(bodyParser.json());
 
 app.get('/viewemployee/:id', (req, res) => {
   var session = driver.session();
-  console.log(req.params.id);
   session
-    .run("MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee) RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name", {id: req.params.id})
+    .run("MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee) RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last", {id: req.params.id})
     .then( result => {
-      console.log(result)
-      console.log('hello');
-      console.log(result.records);
       if (result.records.length===0) {
         session.close();
         res.status(400).json({error: 'Employee ' + req.params.id + ' does not exist.'});
       }
       else {
-        console.log('hello');
-        console.log(result.records[0]);
-        console.log('hello');
-
         const results = {};
         result.records[0].forEach( (value, key) => {
           results[key] = value;
         })
-        console.log(results);
         session.close();
         res.json(results);
       }

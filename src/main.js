@@ -64,12 +64,30 @@ function viewEmployee(event) {
   fetchData(employee, 'GET', headers, request)
     .then(response => {
       if (response.error) {
-        const idUnsuccessful = response.error;
+        let idUnsuccessful = response.error;
         alert(idUnsuccessful);
       }
       else if (response.id) {
-        console.log(response);
-        /* populate profile with Employee data */
+        let name = document.getElementById('profile-name');
+        if (name.lastChild) name.removeChild(name.lastChild);
+        name.appendChild(document.createTextNode(response.first_name + ' ' + response.last_name));
+        let photo = document.getElementById('profile-photo');
+        photo.setAttribute('src', response.photo);
+        let id = document.getElementById('profile-id');
+        if (id.lastChild) id.removeChild(id.lastChild);
+        id.appendChild(document.createTextNode(response.id));
+        let title = document.getElementById('profile-title');
+        if (title.lastChild) title.removeChild(title.lastChild);
+        title.appendChild(document.createTextNode(response.job_title));
+        let email = document.getElementById('profile-email');
+        if (email.lastChild) email.removeChild(email.lastChild);
+        email.appendChild(document.createTextNode(response.email));
+        let mgr = document.getElementById('profile-mgr');
+        if (mgr.lastChild) mgr.removeChild(mgr.lastChild);
+        mgr.appendChild(document.createTextNode(response.manager_id + ' ' + response.manager_first + ' ' + response.manager_last));
+        let viewProfile = document.getElementById('view-profile');
+        viewProfile.classList.remove('invisible', 'section', 'hidden');
+        document.getElementById('find-id').value = '';
       }
     })
 
