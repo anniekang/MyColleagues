@@ -36,14 +36,13 @@ app.get('/viewemployee/:id', (req, res) => {
 
 });
 
-
 app.post('/newemployee/', (req, res) => {
   var session = driver.session();
   session
     .run("MATCH (check:Employee {id: {id}}) RETURN check.id", {id: req.body.id})
     .then( result => {
       if (result.records.length===0) {
-        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, email: {email}, manager_id: {manager} }) WITH new MATCH (mgr: Employee {id: {manager}}) CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name", {id: req.body.id, first: req.body.first, last: req.body.last, photo: req.body.photo, title: req.body.title, email: req.body.email, manager: req.body.mgr})
+        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: '', email: {email}, manager_id: {manager} }) WITH new MATCH (mgr: Employee {id: {manager}}) CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name", {id: req.body.id, first: req.body.first, last: req.body.last, photo: req.body.photo, title: req.body.title, email: req.body.email, manager: req.body.mgr})
       }
       else {
         session.close();
