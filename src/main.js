@@ -1,7 +1,8 @@
 const newEmployee = document.getElementById('employee');
+const getEmployee = document.getElementById('find-employee');
+
 newEmployee.addEventListener('submit', createEmployee);
 
-const getEmployee = document.getElementById('find-employee');
 getEmployee.addEventListener('submit', viewEmployee);
 
 function createEmployee(event) {
@@ -15,7 +16,7 @@ function createEmployee(event) {
     photo: employeeData.get('photo'),
     title: employeeData.get('job-title'),
     email: employeeData.get('email'),
-    mgr: employeeData.get('manager-id'),
+    manager: employeeData.get('manager-id'),
   };
 
   var headers = new Headers();
@@ -30,22 +31,10 @@ function createEmployee(event) {
         alert(idExists);
       }
       else if (response.id) {
-        const created = 'Employee ' + response.id + ' ' + response.first_name + ' ' + response.last_name + ' has been successfully created.';
+        const created = 'Employee ' + response.id + ' ' + response.first + ' ' + response.last + ' has been successfully created.';
         alert(created);
       }
     })
-}
-
-function fetchData(data, method, myHeaders, request) {
-var init = { method: method,
-               headers: myHeaders,
-               mode: 'cors',
-               cache: 'default' };
-
-if (method !== 'GET') init.body = JSON.stringify(data);
-
-return fetch(request, init)
-        .then(response => response.json())
 }
 
 function viewEmployee(event) {
@@ -64,31 +53,82 @@ function viewEmployee(event) {
   fetchData(employee, 'GET', headers, request)
     .then(response => {
       if (response.error) {
-        let idUnsuccessful = response.error;
+        const idUnsuccessful = response.error;
         alert(idUnsuccessful);
       }
       else if (response.id) {
-        let name = document.getElementById('profile-name');
-        if (name.lastChild) name.removeChild(name.lastChild);
-        name.appendChild(document.createTextNode(response.first_name + ' ' + response.last_name));
-        let photo = document.getElementById('profile-photo');
-        photo.setAttribute('src', response.photo);
-        let id = document.getElementById('profile-id');
-        if (id.lastChild) id.removeChild(id.lastChild);
-        id.appendChild(document.createTextNode(response.id));
-        let title = document.getElementById('profile-title');
-        if (title.lastChild) title.removeChild(title.lastChild);
-        title.appendChild(document.createTextNode(response.job_title));
-        let email = document.getElementById('profile-email');
-        if (email.lastChild) email.removeChild(email.lastChild);
-        email.appendChild(document.createTextNode(response.email));
-        let mgr = document.getElementById('profile-mgr');
-        if (mgr.lastChild) mgr.removeChild(mgr.lastChild);
-        mgr.appendChild(document.createTextNode(response.manager_id + ' ' + response.manager_first + ' ' + response.manager_last));
+        const profile = renderProfile(response);
+        const employeeProfile = document.getElementById('employee-profile');
+        employeeProfile.appendChild(profile);
+
+
         let viewProfile = document.getElementById('view-profile');
         viewProfile.classList.remove('invisible', 'section', 'hidden');
         document.getElementById('find-id').value = '';
       }
     })
+}
 
+function renderProfile(response) {
+  const c = createElement;
+  const profile =
+    c('div', {id: 'view-profile', class: 'ui equal width grid container invisible section hidden'}, [
+      c('div', {class: 'ui hidden divider'}, []),
+      c('div', {class: 'row'}, [
+        c('span', {id: 'profile-first'}, [response.first]),
+        c('span', {id: 'profile-last'}, [response.last])
+      ]),
+      c('div', {class: 'row'}, [
+        c('div', {class: 'four wide column'}, [
+          c('img', {id: 'profile-photo', class: 'ui small image', alt: 'Profile Photo', src: response.photo}, [])
+        ]),
+        c('div', {class: 'twelve wide column'}, [
+          c('div', {class: 'row'}, ['ID:',
+            c('span', {id: 'profile-id'}, [response.id])
+          ]),
+          c('div', {class: 'row'}, ['Job Title:',
+            c('span', {id: 'profile-title'}, [response.title])
+          ]),
+          c('div', {class: 'row'}, ['Email:',
+            c('span', {id: 'profile-email'}, [response.email])
+          ]),
+          c('div', {class: 'row'}, ['Manager ID:',
+            c('span', {id: 'profile-manager'}, [response.manager_id])
+          ]),
+          c('div', {class: 'row'}, ['Manager Name:',
+            c('span', {id: 'profile-manager-name'}, [response.manager_first + ' ' + response.manager_last])
+          ])
+        ])
+      ])
+    ]);
+  return profile;
+}
+
+function fetchData(data, method, myHeaders, request) {
+var init = { method: method,
+               headers: myHeaders,
+               mode: 'cors',
+               cache: 'default' };
+
+if (method !== 'GET') init.body = JSON.stringify(data);
+
+return fetch(request, init)
+        .then(response => response.json())
+}
+
+function createElement(tagName,attributes,children) {
+  const element = document.createElement(tagName);
+  for (let key in attributes) {
+    element.setAttribute(key, attributes[key]);
+  }
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    if (child instanceof Element) {
+      element.appendChild(child)
+    }
+    else {
+      element.appendChild(document.createTextNode(child))
+    }
+  }
+  return element;
 }
