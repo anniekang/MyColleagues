@@ -158,7 +158,12 @@ function renderProfile(response) {
         ]),
         c('div', {class: 'four wide column'}, [
           c('div', {class: 'ui one column centered grid'}, [
-            c('button', {id: 'edit-button', class: 'ui button', type: 'submit'}, ['Edit Profile'])
+            c('div', {class: 'row'}, [
+              c('button', {id: 'edit-button', class: 'ui button', type: 'submit'}, ['Edit Profile'])
+            ]),
+            c('div', {class: 'row'}, [
+              c('button', {id: 'delete-button', class: 'ui button', type: 'submit'}, ['Delete Profile'])
+            ])
           ])
         ])
       ])
