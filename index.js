@@ -85,4 +85,29 @@ app.put('/updateemployee/', (req, res) => {
 
 });
 
+app.delete('/deleteemployee/:id', (req, res) => {
+  var session = driver.session();
+  session
+    .run("MATCH (del:Employee {id: {id}}) DETACH DELETE del", {id: req.params.id})
+    .then( () => {
+      return session.run("MATCH (emp:Employee {id: {id}}) RETURN emp", {id: req.params.id})
+    })
+      .then ( result => {
+        if (result.records.length===0) {
+          session.close();
+          res.json({success: 'Employee ' + req.params.id + ' has been deleted.'});
+        }
+        else {
+          session.close();
+          res.status(501).json({error: 'Employee ' + req.params.id + ' still exists'});
+        }
+
+      })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
 app.listen(3000, () => console.log('listening at 3000'));

@@ -57,6 +57,7 @@ function createEmployee(event) {
     email: employeeData.get('email'),
     managerId: employeeData.get('manager-id'),
   };
+  console.log(employee);
   var headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
@@ -122,6 +123,7 @@ function viewEmployee(event) {
 
 
 function renderProfile(response) {
+  console.log(response);
   const c = createElement;
   const profile =
     c('div', {id: 'view-profile', class: 'ui equal width grid container invisible section hidden'}, [
@@ -246,10 +248,20 @@ function deleteEmployee(event) {
       last: document.getElementById('profile-last').textContent
     };
     const confirm = window.confirm('Are you sure you would like to delete Employee ' + employee.id + ' ' + employee.first + employee.last + '?');
+    console.log(employee);
     if (!confirm) {
       console.log('saved!');
       return;
     }
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const request = new Request('/deleteemployee/' + employee.id);
+
+    fetchData(employee, 'DELETE', headers, request)
+      .then(response => {
+
+      })
 
   }
 }
