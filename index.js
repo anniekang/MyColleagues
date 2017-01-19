@@ -25,7 +25,6 @@ app.get('/viewemployee/:id', (req, res) => {
         result.records[0].forEach( (value, key) => {
           results[key] = value;
         })
-        console.log(results);
         session.close();
         res.json(results);
       }
@@ -56,7 +55,6 @@ app.post('/newemployee/', (req, res) => {
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(results);
       session.close();
       res.json(results);
     })
@@ -68,10 +66,7 @@ app.post('/newemployee/', (req, res) => {
 });
 
 app.put('/updateemployee/', (req, res) => {
-  console.log(req.body);
   const parameters = req.body;
-  console.log('test');
-  console.log(parameters);
   var session = driver.session();
   session
     .run("MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}}) SET update.first_name = {first}, update.last_name = {last}, update.photo = {photo}, update.job_title = {title}, update.job_description = {description}, update.email = {email}, update.manager_id = {managerId} RETURN update.id AS id, update.first_name AS first, update.last_name AS last, update.photo AS photo, update.job_title AS title, update.job_description AS description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last", parameters)
@@ -80,7 +75,6 @@ app.put('/updateemployee/', (req, res) => {
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(results);
       session.close();
       res.json(results);
     })

@@ -181,19 +181,18 @@ function updateEmployee(event) {
 
     fetchData(employee, 'GET', headers, request)
       .then(response => {
-        hidden('view-profile', 'add');
-        let profile = document.getElementById('employee');
-        profile.classList.add('edit');
-        document.getElementById('employee-id').value = document.getElementById('profile-id').textContent;
-        document.getElementById('employee-first').value = document.getElementById('profile-first').textContent;
-        document.getElementById('employee-last').value = document.getElementById('profile-last').textContent;
-        let photo = document.getElementById('profile-photo');
-        document.getElementById('employee-photo').value = photo.getAttribute('src');
-        document.getElementById('employee-title').value = document.getElementById('profile-title').textContent;
-        document.getElementById('employee-description').value = document.getElementById('profile-description').textContent;
-        document.getElementById('employee-email').value = document.getElementById('profile-email').textContent;
-        document.getElementById('employee-manager').value = document.getElementById('profile-manager').textContent;
+        newEmployee.classList.add('edit');
 
+        document.getElementById('employee-id').value = response.id;
+        document.getElementById('employee-first').value = response.first;
+        document.getElementById('employee-last').value = response.last;
+        document.getElementById('employee-photo').value = response.photo;
+        document.getElementById('employee-title').value = response.title;
+        document.getElementById('employee-description').value = response.description;
+        document.getElementById('employee-email').value = response.email;
+        document.getElementById('employee-manager').value = response.manager_id;
+
+        hidden('view-profile', 'add');
         hidden('description', 'remove')
         hidden('edit-profile', 'remove');
       })
