@@ -55,7 +55,6 @@ function createEmployee(event) {
     email: employeeData.get('email'),
     managerId: employeeData.get('manager-id'),
   };
-  console.log(employee);
   var headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
@@ -63,7 +62,6 @@ function createEmployee(event) {
 
   fetchData(employee, 'POST', headers, request)
     .then(response => {
-      console.log(response);
       if (response.error) {
         const idExists = response.error;
         alert(idExists);
@@ -104,7 +102,6 @@ function viewEmployee(event) {
 
   fetchData(employee, 'GET', headers, request)
     .then(response => {
-      console.log(response);
       if (response.error) {
         const idUnsuccessful = response.error;
         alert(idUnsuccessful);
@@ -185,7 +182,6 @@ function updateEmployee(event) {
     fetchData(employee, 'GET', headers, request)
       .then(response => {
         hidden('view-profile', 'add');
-        console.log(response);
         let profile = document.getElementById('employee');
         profile.classList.add('edit');
         document.getElementById('employee-id').value = document.getElementById('profile-id').textContent;
@@ -219,8 +215,6 @@ function submitChanges(event) {
     managerId: employeeData.get('manager-id'),
   };
 
-  console.log(employee);
-
   var headers = new Headers();
   headers.append('Content-Type', 'application/json');
 
@@ -228,7 +222,11 @@ function submitChanges(event) {
 
   fetchData(employee, 'PUT', headers, request)
     .then(response => {
-      console.log(response);
-
+      const profile = renderProfile(response);
+      const employeeProfile = document.getElementById('employee-profile');
+      employeeProfile.removeChild(employeeProfile.lastChild);
+      employeeProfile.appendChild(profile);
+      hidden('edit-profile', 'add');
+      hidden('view-profile', 'remove');
     })
 }
