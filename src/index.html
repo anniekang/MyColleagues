@@ -39,6 +39,7 @@
 
   <div id="employee-profile"></div>
 
+
   <div id="edit-profile" class = "ui grid container invisible section hidden">
     <div class="ui hidden divider"></div>
     <form id="employee" class="ui sixteen wide column fluid form">
@@ -65,13 +66,17 @@
         <label>Job Title</label>
         <input id="employee-title" type="text" name="job-title" placeholder="Job Title">
       </div>
+      <div id="description" class="field invisible section hidden">
+        <label>Job Description</label>
+        <textarea id="employee-description" rows="2" name="job-description" placeholder="Job Description"></textarea>
+      </div>
       <div class="field">
         <label>Email</label>
         <input id="employee-email" type="text" name="email" placeholder="Email Address">
       </div>
       <div class="field">
         <label>Manager ID</label>
-        <input id="employee-mgr" type="text" name="manager-id" placeholder="Manager ID">
+        <input id="employee-manager" type="text" name="manager-id" placeholder="Manager ID">
       </div>
       <div class="ui hidden divider"></div>
       <div class="ui one column centered grid">
