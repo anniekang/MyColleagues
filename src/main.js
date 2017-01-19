@@ -6,6 +6,8 @@ getEmployee.addEventListener('submit', viewEmployee);
 
 const editEmployee = document.getElementById('employee-profile');
 editEmployee.addEventListener('click', updateEmployee);
+editEmployee.addEventListener('click', deleteEmployee);
+
 
 
 function hidden(item, change) {
@@ -175,7 +177,7 @@ function renderProfile(response) {
 function updateEmployee(event) {
   event.preventDefault();
   if (event.target.id === 'edit-button') {
-    let employee = {
+    const employee = {
       id: document.getElementById('profile-id').textContent
     };
 
@@ -233,4 +235,16 @@ function submitChanges(event) {
       hidden('edit-profile', 'add');
       hidden('view-profile', 'remove');
     })
+}
+
+function deleteEmployee(event) {
+  event.preventDefault();
+  if (event.target.id === 'delete-button') {
+    const employee = {
+      id: document.getElementById('profile-id').textContent,
+      first: document.getElementById('profile-first').textContent,
+      last: document.getElementById('profile-last').textContent
+    };
+    console.log(employee);
+  }
 }
