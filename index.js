@@ -44,7 +44,7 @@ app.post('/newemployee/', (req, res) => {
     .run("MATCH (check:Employee {id: {id}}) RETURN check.id", {id: req.body.id})
     .then( result => {
       if (result.records.length===0) {
-        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: '', email: {email}, manager_id: {manager} }) WITH new MATCH (mgr: Employee {id: {manager}}) CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first, new.last_name AS last, new.photo AS photo, new.job_title AS title, new.job_description AS description, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name", parameters)
+        return session.run("CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: '', email: {email}, manager_id: {managerId} }) WITH new MATCH (mgr: Employee {id: {managerId}}) CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr) RETURN new.id AS id, new.first_name AS first, new.last_name AS last, new.photo AS photo, new.job_title AS title, new.job_description AS description, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first, mgr.last_name AS manager_last", parameters)
       }
       else {
         session.close();
@@ -69,14 +69,18 @@ app.post('/newemployee/', (req, res) => {
 
 app.put('/updateemployee/', (req, res) => {
   console.log(req.body);
+  const parameters = req.body;
+  console.log('test');
+  console.log(parameters);
   var session = driver.session();
   session
-    .run()
+    .run("MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}}) SET update.first_name = {first}, update.last_name = {last}, update.photo = {photo}, update.job_title = {title}, update.job_description = {description}, update.email = {email}, update.manager_id = {managerId} RETURN update.id AS id, update.first_name AS first, update.last_name AS last, update.photo AS photo, update.job_title AS title, update.job_description AS description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last", parameters)
     .then( result => {
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
+      console.log(results);
       session.close();
       res.json(results);
     })

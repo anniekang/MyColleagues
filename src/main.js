@@ -53,7 +53,7 @@ function createEmployee(event) {
     photo: employeeData.get('photo'),
     title: employeeData.get('job-title'),
     email: employeeData.get('email'),
-    manager: employeeData.get('manager-id'),
+    managerId: employeeData.get('manager-id'),
   };
   console.log(employee);
   var headers = new Headers();
@@ -216,7 +216,7 @@ function submitChanges(event) {
     title: employeeData.get('job-title'),
     description: employeeData.get('job-description'),
     email: employeeData.get('email'),
-    manager: employeeData.get('manager-id'),
+    managerId: employeeData.get('manager-id'),
   };
 
   console.log(employee);
@@ -228,6 +228,7 @@ function submitChanges(event) {
 
   fetchData(employee, 'PUT', headers, request)
     .then(response => {
+      console.log(response);
 
     })
 }
