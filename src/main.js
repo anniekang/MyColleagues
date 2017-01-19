@@ -246,10 +246,13 @@ function deleteEmployee(event) {
       first: document.getElementById('profile-first').textContent,
       last: document.getElementById('profile-last').textContent
     };
+
     const confirm = window.confirm('Are you sure you would like to delete Employee ' + employee.id + ' ' + employee.first + employee.last + '?');
+
     if (!confirm) {
       return;
     }
+
     var headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -268,6 +271,5 @@ function deleteEmployee(event) {
           alert(successful);
         }
       })
-
   }
 }
