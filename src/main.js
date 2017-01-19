@@ -130,7 +130,7 @@ function renderProfile(response) {
       c('div', {class: 'row'}, [
         c('div', {class: 'twelve wide column'}, [
           c('div', {class: 'row'}, [
-            c('span', {id: 'profile-first'}, [response.first]),
+            c('span', {id: 'profile-first'}, [response.first + ' ']),
             c('span', {id: 'profile-last'}, [response.last])
           ]),
           c('div', {class: 'ui row grid'}, [
@@ -172,7 +172,7 @@ function renderProfile(response) {
 
 function updateEmployee(event) {
   event.preventDefault();
-  if (document.getElementById('edit-button') != null) {
+  if (event.target.id === 'edit-button') {
     let employee = {
       id: document.getElementById('profile-id').textContent
     };
