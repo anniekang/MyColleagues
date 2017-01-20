@@ -7,6 +7,8 @@ getEmployee.addEventListener('submit', viewEmployee);
 const editEmployee = document.getElementById('employee-profile');
 editEmployee.addEventListener('click', updateEmployee);
 editEmployee.addEventListener('click', deleteEmployee);
+editEmployee.addEventListener('click', viewOrg);
+
 
 
 function hidden(item, change) {
@@ -164,7 +166,7 @@ function renderProfile(response) {
               c('button', {id: 'edit-button', class: 'ui button', type: 'submit'}, ['Edit Profile'])
             ]),
             c('div', {class: 'row'}, [
-              c('button', {id: 'org-button', class: 'ui button', type: 'submit'}, ['Org Chart'])
+              c('button', {class: 'ui button org-button', type: 'submit'}, ['Org Chart'])
             ]),
             c('div', {class: 'row'}, [
               c('button', {id: 'delete-button', class: 'ui button', type: 'submit'}, ['Delete Profile'])
@@ -273,5 +275,15 @@ function deleteEmployee(event) {
           alert(successful);
         }
       })
+  }
+}
+
+function viewOrg(event) {
+  event.preventDefault();
+  if (event.target.classList.contains('org-button')) {
+    const employee = document.getElementById('profile-id').textContent;
+    console.log(employee);
+
+
   }
 }
