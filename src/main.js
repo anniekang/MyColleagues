@@ -9,7 +9,6 @@ editEmployee.addEventListener('click', updateEmployee);
 editEmployee.addEventListener('click', deleteEmployee);
 
 
-
 function hidden(item, change) {
   const check = document.getElementById(item);
   if (change === 'add') {
@@ -18,6 +17,19 @@ function hidden(item, change) {
   else {
     check.classList.remove('invisible', 'section', 'hidden');
   }
+}
+
+
+function fetchData(data, method, myHeaders, request) {
+  var init = { method: method,
+                 headers: myHeaders,
+                 mode: 'cors',
+                 cache: 'default' };
+
+  if (method !== 'GET') init.body = JSON.stringify(data);
+
+  return fetch(request, init)
+          .then(response => response.json())
 }
 
 
@@ -73,19 +85,6 @@ function createEmployee(event) {
         alert(created);
       }
     })
-}
-
-
-function fetchData(data, method, myHeaders, request) {
-  var init = { method: method,
-                 headers: myHeaders,
-                 mode: 'cors',
-                 cache: 'default' };
-
-  if (method !== 'GET') init.body = JSON.stringify(data);
-
-  return fetch(request, init)
-          .then(response => response.json())
 }
 
 
@@ -163,6 +162,9 @@ function renderProfile(response) {
           c('div', {class: 'ui one column centered grid'}, [
             c('div', {class: 'row'}, [
               c('button', {id: 'edit-button', class: 'ui button', type: 'submit'}, ['Edit Profile'])
+            ]),
+            c('div', {class: 'row'}, [
+              c('button', {id: 'org-button', class: 'ui button', type: 'submit'}, ['Org Chart'])
             ]),
             c('div', {class: 'row'}, [
               c('button', {id: 'delete-button', class: 'ui button', type: 'submit'}, ['Delete Profile'])
