@@ -87,6 +87,9 @@ function createEmployee(event) {
       }
       else if (response.id) {
         const created = 'Employee ' + response.id + ' ' + response.first + ' ' + response.last + ' has been successfully created.';
+        for (let key in employee) {
+          employee[key] = '';
+        }
         alert(created);
       }
     })
@@ -307,7 +310,6 @@ function viewOrg(event) {
       .then ( () => {
         fetchData('', 'GET', requestEmp)
           .then(response => {
-            console.log(response);
             const employee = renderEmployees(response);
             const manager = document.getElementById('org-manager');
             manager.appendChild(employee);
@@ -315,10 +317,8 @@ function viewOrg(event) {
           .then ( () => {
             fetchData('', 'GET', requestPeers)
               .then(response => {
-                console.log(response);
                 const managerOrg = document.getElementById('org-manager');
 
-                console.log(response.length);
                 response.forEach( (peer) => {
                   let addPeer = renderEmployees(peer);
                   managerOrg.appendChild(addPeer);
@@ -328,7 +328,6 @@ function viewOrg(event) {
                 fetchData('', 'GET', requestReports)
                   .then(response => {
                     const employeeOrg = document.getElementById(employeeId);
-                    console.log(response.length);
                     response.forEach( (report) => {
                       let addReport = renderReports(report);
                       employeeOrg.appendChild(addReport);
@@ -397,14 +396,14 @@ function renderEmployees(response) {
             ]),
             c('div', {class: 'twelve wide column'}, [
               c('div', {class: 'row'}, ['Name: ',
-                c('span', {class: 'employee-first'}, [response.first + ' ']),
-                c('span', {class: 'employee-last'}, [response.last])
+                c('span', {class: 'employee-first'}, [response.first_name + ' ']),
+                c('span', {class: 'employee-last'}, [response.last_name])
               ]),
               c('div', {class: 'row'}, ['ID: ',
                 c('span', {class: 'employee-id'}, [response.id])
               ]),
               c('div', {class: 'row'}, ['Job Title: ',
-                c('span', {class: 'employee-title'}, [response.title])
+                c('span', {class: 'employee-title'}, [response.job_title])
               ]),
               c('div', {class: 'row'}, ['Email: ',
                 c('span', {class: 'employee-email'}, [response.email])
@@ -438,14 +437,14 @@ function renderReports(response) {
             ]),
             c('div', {class: 'twelve wide column'}, [
               c('div', {class: 'row'}, ['Name: ',
-                c('span', {class: 'report-first'}, [response.first + ' ']),
-                c('span', {class: 'report-last'}, [response.last])
+                c('span', {class: 'report-first'}, [response.first_name + ' ']),
+                c('span', {class: 'report-last'}, [response.last_name])
               ]),
               c('div', {class: 'row'}, ['ID: ',
                 c('span', {class: 'report-id'}, [response.id])
               ]),
               c('div', {class: 'row'}, ['Job Title: ',
-                c('span', {class: 'report-title'}, [response.title])
+                c('span', {class: 'report-title'}, [response.job_title])
               ]),
               c('div', {class: 'row'}, ['Email: ',
                 c('span', {class: 'report-email'}, [response.email])

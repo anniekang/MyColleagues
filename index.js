@@ -103,7 +103,7 @@ app.get('/orgchartemployee/:id', (req, res) => {
   session
     .run(`
       MATCH (view:Employee {id: {id}})
-      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.email AS email, view.manager_id AS manager_id`,
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
       {id: req.params.id})
     .then( result => {
       const results = {};
