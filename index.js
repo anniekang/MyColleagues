@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 
 app.post('/newemployee/', (req, res) => {
   const parameters = req.body;
+  console.log(parameters);
   var session = driver.session();
   session
     .run(`
@@ -25,7 +26,7 @@ app.post('/newemployee/', (req, res) => {
           WITH new
           MATCH (mgr: Employee {id: {managerId}})
           CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr)
-          RETURN new.id AS id, new.first_name AS first, new.last_name AS last, new.photo AS photo, new.job_title AS title, new.job_description AS description, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
+          RETURN new.id AS id, new.first_name AS first, new.last_name AS last, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
           parameters)
       }
       else {
@@ -34,15 +35,22 @@ app.post('/newemployee/', (req, res) => {
       }
     })
     .then( result => {
+      console.log(result);
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
+      console.log(result);
+      const success = {};
+      success.success = 'Employee ' + results.id + ' ' + results.first + ' ' + results.last + ' reporting to manager ' + results.manager_id + ' ' + results.manager_first + ' ' + results.manager_last + ' has been successfully created.';
+      console.log(success);
       session.close();
-      res.json(results);
+      res.json(success);
     })
 
     .catch( error => {
+      console.log('uh oh');
+      console.log(error);
       res.json(error);
     });
 
@@ -78,6 +86,7 @@ app.get('/viewemployee/:id', (req, res) => {
 
 app.put('/updateemployee/', (req, res) => {
   const parameters = req.body;
+  console.log(parameters);
   var session = driver.session();
   session
     .run(`
@@ -90,6 +99,7 @@ app.put('/updateemployee/', (req, res) => {
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
+      console.log(results);
       session.close();
       res.json(results);
     })

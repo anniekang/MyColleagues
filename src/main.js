@@ -8,6 +8,8 @@ const editEmployee = document.getElementById('employee-profile');
 editEmployee.addEventListener('click', updateEmployee);
 editEmployee.addEventListener('click', deleteEmployee);
 
+const search = document.getElementById('search');
+search.addEventListener('submit', searchData);
 
 
 function hidden(item, change) {
@@ -57,28 +59,33 @@ function createEmployee(event) {
     email: employeeData.get('email'),
     managerId: employeeData.get('manager-id'),
   };
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+
+  for (let key in employee) {
+    employee[key] = employee[key].toUpperCase();
+  }
 
   const request = new Request('/newemployee/');
 
-  fetchData(employee, 'POST', headers, request)
+  fetchData(employee, 'POST', request)
     .then(response => {
+      console.log(response);
       if (response.error) {
-        const idExists = response.error;
-        alert(idExists);
+        alert(response.error);
       }
-      else if (response.id) {
-        const created = 'Employee ' + response.id + ' ' + response.first + ' ' + response.last + ' has been successfully created.';
-        alert(created);
+      else if (response.success) {
+        hidden('edit-profile', 'add');
+        alert(response.success);
       }
     })
 }
 
 
-function fetchData(data, method, myHeaders, request) {
+function fetchData(data, method, request) {
+  var headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
   var init = { method: method,
-                 headers: myHeaders,
+                 headers: headers,
                  mode: 'cors',
                  cache: 'default' };
 
@@ -97,12 +104,11 @@ function viewEmployee(event) {
     id: employeeData.get('id')
   };
 
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+  employee.id = employee.id.toUpperCase();
 
   const request = new Request('/viewemployee/' + employee.id);
 
-  fetchData(employee, 'GET', headers, request)
+  fetchData(employee, 'GET', request)
     .then(response => {
       if (response.error) {
         const idUnsuccessful = response.error;
@@ -182,12 +188,9 @@ function updateEmployee(event) {
       id: document.getElementById('profile-id').textContent
     };
 
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
     const request = new Request('/viewemployee/' + employee.id);
 
-    fetchData(employee, 'GET', headers, request)
+    fetchData(employee, 'GET', request)
       .then(response => {
         newEmployee.classList.add('edit');
 
@@ -211,6 +214,7 @@ function updateEmployee(event) {
 function submitChanges(event) {
   event.preventDefault();
   const employeeData = new FormData(event.target);
+
   const employee = {
     id: employeeData.get('id'),
     first: employeeData.get('first-name'),
@@ -222,13 +226,16 @@ function submitChanges(event) {
     managerId: employeeData.get('manager-id'),
   };
 
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+  for (let key in employee) {
+    employee[key] = employee[key].toUpperCase();
+  }
 
+  console.log(employee);
   const request = new Request('/updateemployee/');
 
-  fetchData(employee, 'PUT', headers, request)
+  fetchData(employee, 'PUT', request)
     .then(response => {
+      console.log(response);
       const profile = renderProfile(response);
       const employeeProfile = document.getElementById('employee-profile');
       employeeProfile.removeChild(employeeProfile.lastChild);
@@ -253,12 +260,9 @@ function deleteEmployee(event) {
       return;
     }
 
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
     const request = new Request('/deleteemployee/' + employee.id);
 
-    fetchData(employee, 'DELETE', headers, request)
+    fetchData(employee, 'DELETE', request)
       .then(response => {
         if (response.error) {
           const idUnsuccessful = response.error;
@@ -272,4 +276,13 @@ function deleteEmployee(event) {
         }
       })
   }
+}
+
+function searchData(event) {
+  event.preventDefault();
+  console.log('search');
+  
+
+
+
 }

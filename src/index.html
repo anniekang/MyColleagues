@@ -23,13 +23,21 @@
     <div id="logo-search" class="ten wide column">
       <div class="ui hidden divider"></div>
       <div class="ui grid">
-        <div class="ui medium circular image six wide column">
-          <img src="/images/wireframe/image.png" alt="Company Logo">
+        <div class="ui medium circular image four wide column">
+          <img id="logo" src="/images/wireframe/image.png" alt="Company Logo">
         </div>
-        <div class="ten wide column">
+        <div class="twelve wide column">
           <form id="search" class="ui form">
-            <div class="ui action input">
-              <input type="text" placeholder="Employee id, first, last name...">
+            <div class="fields">
+              <div class="four wide field">
+                <input id="search-id" type="text" placeholder="ID">
+              </div>
+              <div class="four wide field">
+                <input id="search-first" type="text" placeholder="first name">
+              </div>
+              <div class="four wide field">
+                <input id="search-last" type="text" placeholder="last name">
+              </div>
               <button class="ui icon button">
                 <i class="search icon"></i>
               </button>
@@ -38,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div id="find-employee" class= "six wide column invisible section hidden">
+    <div id="find-employee" class= "six wide column">
       <form id="find" class="ui form invisible section hidden">
         <div class="ui hidden divider"></div>
         <div class="field">
