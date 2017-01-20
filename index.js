@@ -77,19 +77,17 @@ app.get('/viewemployee/:id', (req, res) => {
 });
 
 app.get('/orgchartmanager/:id', (req, res) => {
-  console.log(req.params.id);
   var session = driver.session();
   session
     .run(`
       MATCH (view:Employee {id: {id}})
-      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.email AS email`,
+      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.email AS email, view.manager_id AS manager_id`,
       {id: req.params.id})
     .then( result => {
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(results);
       session.close();
       res.json(results);
     })
@@ -101,19 +99,17 @@ app.get('/orgchartmanager/:id', (req, res) => {
 });
 
 app.get('/orgchartemployee/:id', (req, res) => {
-  console.log(req.params.id);
   var session = driver.session();
   session
     .run(`
       MATCH (view:Employee {id: {id}})
-      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.email AS email`,
+      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.email AS email, view.manager_id AS manager_id`,
       {id: req.params.id})
     .then( result => {
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(results);
       session.close();
       res.json(results);
     })
@@ -129,7 +125,6 @@ app.get('/orgchartpeers/:id/:managerId', (req, res) => {
     id: req.params.id,
     managerId: req.params.managerId
   }
-  console.log(parameters);
 
   var session = driver.session();
   session
@@ -139,20 +134,40 @@ app.get('/orgchartpeers/:id/:managerId', (req, res) => {
       RETURN view`,
       parameters)
     .then( result => {
-      console.log(result);
-      console.log('next');
-      console.log(result.records.length)
       const results = [];
       for (let i = 0; i < result.records.length; i++) {
         let temp = {};
         result.records[i].forEach( (value, key) => {
         temp[key] = value;
         })
-        console.log('temp');
-        console.log(temp.view.properties);
         results.push(temp.view.properties);
       }
-      console.log(results);
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+app.get('/orgchartreports/:id', (req, res) => {
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {id}})
+      RETURN view`,
+      {id: req.params.id})
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+        temp[key] = value;
+        })
+        results.push(temp.view.properties);
+      }
       session.close();
       res.json(results);
     })
