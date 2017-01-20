@@ -22,9 +22,12 @@ function hidden(item, change) {
 }
 
 
-function fetchData(data, method, myHeaders, request) {
+function fetchData(data, method, request) {
+  var headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+
   var init = { method: method,
-                 headers: myHeaders,
+                 headers: headers,
                  mode: 'cors',
                  cache: 'default' };
 
@@ -71,12 +74,10 @@ function createEmployee(event) {
     email: employeeData.get('email'),
     managerId: employeeData.get('manager-id'),
   };
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
 
   const request = new Request('/newemployee/');
 
-  fetchData(employee, 'POST', headers, request)
+  fetchData(employee, 'POST', request)
     .then(response => {
       if (response.error) {
         const idExists = response.error;
@@ -98,12 +99,9 @@ function viewEmployee(event) {
     id: employeeData.get('id')
   };
 
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-
   const request = new Request('/viewemployee/' + employee.id);
 
-  fetchData(employee, 'GET', headers, request)
+  fetchData('', 'GET', request)
     .then(response => {
       if (response.error) {
         const idUnsuccessful = response.error;
@@ -116,6 +114,8 @@ function viewEmployee(event) {
         employeeProfile.appendChild(profile);
 
         hidden('view-profile', 'remove');
+        hidden('edit-profile', 'add');
+        hidden('org-chart', 'add');
 
         document.getElementById('find-id').value = '';
       }
@@ -186,12 +186,9 @@ function updateEmployee(event) {
       id: document.getElementById('profile-id').textContent
     };
 
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
     const request = new Request('/viewemployee/' + employee.id);
 
-    fetchData(employee, 'GET', headers, request)
+    fetchData('', 'GET', request)
       .then(response => {
         newEmployee.classList.add('edit');
 
@@ -226,12 +223,13 @@ function submitChanges(event) {
     managerId: employeeData.get('manager-id'),
   };
 
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
+  for (let key in employee) {
+    employee[key] = employee[key].trim();
+  }
 
   const request = new Request('/updateemployee/');
 
-  fetchData(employee, 'PUT', headers, request)
+  fetchData(employee, 'PUT', request)
     .then(response => {
       const profile = renderProfile(response);
       const employeeProfile = document.getElementById('employee-profile');
@@ -257,12 +255,9 @@ function deleteEmployee(event) {
       return;
     }
 
-    var headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
     const request = new Request('/deleteemployee/' + employee.id);
 
-    fetchData(employee, 'DELETE', headers, request)
+    fetchData(employee, 'DELETE', request)
       .then(response => {
         if (response.error) {
           const idUnsuccessful = response.error;
@@ -281,9 +276,126 @@ function deleteEmployee(event) {
 function viewOrg(event) {
   event.preventDefault();
   if (event.target.classList.contains('org-button')) {
+    const manager = document.getElementById('profile-manager').textContent;
     const employee = document.getElementById('profile-id').textContent;
-    console.log(employee);
 
+    const requestMgr = new Request('/orgchartmanager/' + manager);
+
+    fetchData('', 'GET', requestMgr)
+      .then(response => {
+        console.log(response);
+        const manager = renderManager(response);
+        const orgChart = document.getElementById('org-chart');
+        if (orgChart.lastChild) orgChart.removeChild(orgChart.lastChild);
+        orgChart.appendChild(manager);
+
+        hidden('view-profile', 'add');
+        hidden('org-chart', 'remove')
+      })
+
+    const requestEmp = new Request('/orgchartemployee/' + employee);
+
+    fetchData('', 'GET', requestEmp)
+      .then(response => {
+        console.log(response);
+        const employee = renderEmployees(response);
+        const manager = document.getElementById('org-manager');
+        manager.appendChild(employee);
+      })
+
+    const requestPeers = new Request('/orgchartpeers/' + employee + '/' + manager);
+
+    fetchData('', 'GET', requestPeers)
+      .then(response => {
+        const managerOrg = document.getElementById('org-manager');
+        console.log(response.length);
+        response.forEach( (peer) => {
+          let addPeer = renderEmployees(peer);
+          managerOrg.appendChild(addPeer);
+        })
+      })
 
   }
+}
+
+
+function renderManager(response) {
+  const c = createElement;
+  const manager =
+    c('div', {id: 'org-manager', class: 'ui equal width grid container'}, [
+      c('div', {class: 'ui hidden divider'}, []),
+      c('div', {class: 'row'}, [
+        c('div', {class: 'eleven wide column'}, [
+          c('div', {class: 'ui row grid'}, [
+            c('div', {class: 'four wide column'}, [
+              c('img', {id: 'manager-photo', class: 'ui small image', alt: 'Profile Photo', src: response.photo}, [])
+            ]),
+            c('div', {class: 'twelve wide column'}, [
+              c('div', {class: 'row'}, ['Name: ',
+                c('span', {id: 'manager-first'}, [response.first + ' ']),
+                c('span', {id: 'manager-last'}, [response.last])
+              ]),
+              c('div', {class: 'row'}, ['ID: ',
+                c('span', {id: 'org-manager-id'}, [response.id])
+              ]),
+              c('div', {class: 'row'}, ['Job Title: ',
+                c('span', {id: 'manager-title'}, [response.title])
+              ]),
+              c('div', {class: 'row'}, ['Email: ',
+                c('span', {id: 'manager-email'}, [response.email])
+              ])
+            ])
+          ])
+        ]),
+        c('div', {class: 'four wide column'}, [
+          c('div', {class: 'ui one column centered grid'}, [
+            c('div', {class: 'row'}, [
+              c('button', {class: 'ui button org-button', type: 'submit'}, ['Org Chart'])
+            ])
+          ])
+        ])
+      ])
+    ]);
+  return manager;
+}
+
+function renderEmployees(response) {
+  const c = createElement;
+  const employee =
+    c('div', {id: response.id, class: 'ui equal width grid container employee' + response.id}, [
+      c('div', {class: 'ui hidden divider'}, []),
+      c('div', {class: 'row'}, [
+        c('div', {class: 'one wide column'}, []),
+        c('div', {class: 'eleven wide column'}, [
+          c('div', {class: 'ui row grid'}, [
+            c('div', {class: 'four wide column'}, [
+              c('img', {class: 'ui small image employee-photo' + response.id, alt: 'Profile Photo', src: response.photo}, [])
+            ]),
+            c('div', {class: 'twelve wide column'}, [
+              c('div', {class: 'row'}, ['Name: ',
+                c('span', {class: 'employee-first'  + response.id}, [response.first + ' ']),
+                c('span', {class: 'employee-last'  + response.id}, [response.last])
+              ]),
+              c('div', {class: 'row'}, ['ID: ',
+                c('span', {class: 'employee-id'  + response.id}, [response.id])
+              ]),
+              c('div', {class: 'row'}, ['Job Title: ',
+                c('span', {class: 'employee-title'  + response.id}, [response.title])
+              ]),
+              c('div', {class: 'row'}, ['Email: ',
+                c('span', {class: 'employee-email'  + response.id}, [response.email])
+              ])
+            ])
+          ])
+        ]),
+        c('div', {class: 'four wide column'}, [
+          c('div', {class: 'ui one column centered grid'}, [
+            c('div', {class: 'row'}, [
+              c('button', {class: 'ui button org-button', type: 'submit'}, ['Org Chart'])
+            ])
+          ])
+        ])
+      ])
+    ]);
+  return employee;
 }
