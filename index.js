@@ -11,62 +11,56 @@ app.use(express.static('src'));
 
 app.use(bodyParser.json());
 
+
 app.post('/newemployee/', (req, res) => {
   const parameters = req.body;
-  console.log(parameters);
   var session = driver.session();
   session
     .run(`
       MATCH (check:Employee {id: {id}}) RETURN check.id`,
       {id: req.body.id})
     .then( result => {
-      if (result.records.length===0) {
+      if (result.records.length === 0) {
         return session.run(`
           CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: '', email: {email}, manager_id: {managerId}})
           WITH new
           MATCH (mgr: Employee {id: {managerId}})
           CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr)
-          RETURN new.id AS id, new.first_name AS first, new.last_name AS last, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
+          RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, type(rel) AS relationship, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
           parameters)
       }
       else {
         session.close();
-        res.status(400).json({error: req.body.id + ' already exists'});
+        res.status(400).json({error: `${req.body.id} already exists`});
       }
     })
     .then( result => {
-      console.log(result);
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(result);
-      const success = {};
-      success.success = 'Employee ' + results.id + ' ' + results.first + ' ' + results.last + ' reporting to manager ' + results.manager_id + ' ' + results.manager_first + ' ' + results.manager_last + ' has been successfully created.';
-      console.log(success);
       session.close();
-      res.json(success);
+      res.json(results);
     })
 
     .catch( error => {
-      console.log('uh oh');
-      console.log(error);
       res.json(error);
     });
 
 });
+
 
 app.get('/viewemployee/:id', (req, res) => {
   var session = driver.session();
   session
     .run(`
       MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee)
-      RETURN view.id AS id, view.first_name AS first, view.last_name AS last, view.photo AS photo, view.job_title AS title, view.job_description AS description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
       {id: req.params.id})
     .then( result => {
-      if (result.records.length===0) {
+      if (result.records.length === 0) {
         session.close();
-        res.status(400).json({error: 'Employee ' + req.params.id + ' does not exist.'});
+        res.status(400).json({error: `Employee ${req.params.id} does not exist.`});
       }
       else {
         const results = {};
@@ -84,9 +78,155 @@ app.get('/viewemployee/:id', (req, res) => {
 
 });
 
+
+app.get('/orgchartemployee/:id', (req, res) => {
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee {id: {id}})
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
+      {id: req.params.id})
+    .then( result => {
+      const results = {};
+      result.records[0].forEach( (value, key) => {
+        results[key] = value;
+      })
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+
+app.get('/orgchartpeers/:id/:managerId', (req, res) => {
+  const parameters = {
+    id: req.params.id,
+    managerId: req.params.managerId
+  }
+
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
+      WHERE NOT view.id = {id}
+      RETURN view`,
+      parameters)
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+        temp[key] = value;
+        })
+        results.push(temp.view.properties);
+      }
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+
+app.get('/orgchartreports/:id', (req, res) => {
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {id}})
+      RETURN view`,
+      {id: req.params.id})
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+        temp[key] = value;
+        })
+        results.push(temp.view.properties);
+      }
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+
+app.get('/searchname/:name', (req, res) => {
+  const parameters = {
+    name: req.params.name
+  }
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
+      WHERE search.first_name CONTAINS {name} OR search.last_name CONTAINS {name}
+      RETURN search`,
+      parameters)
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+          temp[key] = value;
+        })
+        results.push(temp.search.properties);
+      }
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+
+app.get('/searchnames/:firstname/:lastname', (req, res) => {
+  const parameters = {
+    firstName: req.params.firstname,
+    lastName: req.params.lastname
+  }
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
+      WHERE search.first_name CONTAINS {firstName} AND search.last_name CONTAINS {lastName}
+      RETURN search`,
+      parameters)
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+          temp[key] = value;
+        })
+        results.push(temp.search.properties);
+      }
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
+});
+
+
 app.put('/updateemployee/', (req, res) => {
   const parameters = req.body;
-  console.log(parameters);
   var session = driver.session();
   session
     .run(`
@@ -99,7 +239,6 @@ app.put('/updateemployee/', (req, res) => {
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
-      console.log(results);
       session.close();
       res.json(results);
     })
@@ -109,6 +248,7 @@ app.put('/updateemployee/', (req, res) => {
     });
 
 });
+
 
 app.delete('/deleteemployee/:id', (req, res) => {
   var session = driver.session();
@@ -122,13 +262,13 @@ app.delete('/deleteemployee/:id', (req, res) => {
                       {id: req.params.id})
     })
       .then ( result => {
-        if (result.records.length===0) {
+        if (result.records.length === 0) {
           session.close();
-          res.json({success: 'Employee ' + req.params.id + ' has been deleted.'});
+          res.json({success: `Employee ${req.params.id} has been deleted.`});
         }
         else {
           session.close();
-          res.status(501).json({error: 'Employee ' + req.params.id + ' still exists'});
+          res.status(501).json({error: `Employee ${req.params.id} still exists`});
         }
 
       })

@@ -6,16 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MyColleagues.org</title>
   <link rel="stylesheet" href="default.css"/>
-  <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css">
-  <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
 </head>
 
 <body>
@@ -29,14 +20,8 @@
         <div class="twelve wide column">
           <form id="search" class="ui form">
             <div class="fields">
-              <div class="four wide field">
-                <input id="search-id" type="text" placeholder="ID">
-              </div>
-              <div class="four wide field">
-                <input id="search-first" type="text" placeholder="first name">
-              </div>
-              <div class="four wide field">
-                <input id="search-last" type="text" placeholder="last name">
+              <div class="twelve wide field">
+                <input id="emp-search" name="emp-search" type="text" placeholder="ID or First and Last Name">
               </div>
               <button class="ui icon button">
                 <i class="search icon"></i>
@@ -47,7 +32,7 @@
       </div>
     </div>
     <div id="find-employee" class= "six wide column">
-      <form id="find" class="ui form invisible section hidden">
+      <form id="find" class="ui form profile-button">
         <div class="ui hidden divider"></div>
         <div class="field">
           <label>Employee ID</label>
@@ -64,52 +49,54 @@
     </div>
   </div>
 
-  <div id="employee-profile"></div>
-
-
-  <div id="edit-profile" class="ui grid container invisible section hidden">
-    <div class="ui hidden divider"></div>
-    <form id="employee" class="ui sixteen wide column fluid form">
-      <div class="field">
-        <label>Employee Profile</label>
-      </div>
-      <div class="field">
-        <label>ID</label>
-        <input id="employee-id" type="text" name="id" placeholder="ID">
-      </div>
-      <div class="field">
-        <label>First Name</label>
-        <input id="employee-first" type="text" name="first-name" placeholder="First Name">
-      </div>
-      <div class="field">
-        <label>Last Name</label>
-        <input id="employee-last" type="text" name="last-name" placeholder="Last Name">
-      </div>
-      <div class="field">
-        <label>Photo</label>
-        <input id="employee-photo" type="text" name="photo" placeholder="Photo URL">
-      </div>
-      <div class="field">
-        <label>Job Title</label>
-        <input id="employee-title" type="text" name="job-title" placeholder="Job Title">
-      </div>
-      <div id="description" class="field invisible section hidden">
-        <label>Job Description</label>
-        <textarea id="employee-description" rows="2" name="job-description" placeholder="Job Description"></textarea>
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input id="employee-email" type="text" name="email" placeholder="Email Address">
-      </div>
-      <div class="field">
-        <label>Manager ID</label>
-        <input id="employee-manager" type="text" name="manager-id" placeholder="Manager ID">
-      </div>
+  <div id="body">
+    <div id="employee-profile"></div>
+    <div id="org-chart"></div>
+    <div id="search-results" class="invisible section hidden"></div>
+    <div id="edit-profile" class="ui grid container invisible section hidden">
       <div class="ui hidden divider"></div>
-      <div class="ui one column centered grid">
-        <button class="ui button" type="submit">Submit</button>
-      </div>
-    </form>
+      <form id="employee" class="ui sixteen wide column fluid form">
+        <div class="field">
+          <label>Employee Profile</label>
+        </div>
+        <div class="field">
+          <label>ID</label>
+          <input id="employee-id" type="text" name="id" placeholder="ID">
+        </div>
+        <div class="field">
+          <label>First Name</label>
+          <input id="employee-first" type="text" name="first-name" placeholder="First Name">
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          <input id="employee-last" type="text" name="last-name" placeholder="Last Name">
+        </div>
+        <div class="field">
+          <label>Photo</label>
+          <input id="employee-photo" type="text" name="photo" placeholder="Photo URL">
+        </div>
+        <div class="field">
+          <label>Job Title</label>
+          <input id="employee-title" type="text" name="job-title" placeholder="Job Title">
+        </div>
+        <div id="description" class="field invisible section hidden">
+          <label>Job Description</label>
+          <textarea id="employee-description" rows="2" name="job-description" placeholder="Job Description"></textarea>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="employee-email" type="text" name="email" placeholder="Email Address">
+        </div>
+        <div class="field">
+          <label>Manager ID</label>
+          <input id="employee-manager" type="text" name="manager-id" placeholder="Manager ID">
+        </div>
+        <div class="ui hidden divider"></div>
+        <div class="ui one column centered grid">
+          <button class="ui button" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="main.js"></script>
