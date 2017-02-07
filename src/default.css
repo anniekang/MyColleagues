@@ -1,3 +1,12 @@
 .invisible.section.hidden {
   display: none;
 }
+
+/*
+#search-input {
+  width: 280px;
+}*/
+
+#search-results {
+  margin-left: 40px;
+}
