@@ -7,7 +7,7 @@ const app = express();
 
 var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
 
-app.use(express.static('src'));
+app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json());
 

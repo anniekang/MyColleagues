@@ -32,11 +32,8 @@ function hidden(item, change) {
 
 
 function fetchData(data, method, request) {
-  var headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-
   var init = { method: method,
-                 headers: headers,
+                 headers: {'Content-Type', 'application/json'},
                  mode: 'cors',
                  cache: 'default' };
 
@@ -88,9 +85,14 @@ function createEmployee(event) {
     employee[key] = employee[key].toUpperCase();
   }
 
-  const request = new Request('/newemployee/');
-
-  fetchData(employee, 'POST', request)
+  fetch('/newemployee/', {
+    method: 'POST',
+    headers: {'Content-Type', 'application/json'},
+    body: JSON.stringify(employeee)
+    mode: 'cors',
+    cache: 'default'
+  })
+    .then(response => response.json())
     .then(response => {
       if (response.error) {
         alert(response.error);
@@ -100,11 +102,7 @@ function createEmployee(event) {
         hidden('org-chart', 'add');
         hidden('search-results', 'add');
         hidden('edit-profile', 'add');
-        //clear values in form
-        /*for (let key in employee) {
-          employee[key] = '';
-        }
-        */
+
         alert(response.success);
       }
     })
