@@ -55,7 +55,7 @@ app.get('/viewemployee/:id', (req, res) => {
   session
     .run(`
       MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee)
-      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first, mgr.last_name AS manager_last`,
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       {id: req.params.id})
     .then( result => {
       if (result.records.length === 0) {

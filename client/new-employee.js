@@ -1,26 +1,8 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { saveEmployee } = require('./actions')
+const { saveEmployee } = require('./actions');
 
-const NewEmployee = ({ dispatch }) => {
-  const handleSubmit = event => {
-    event.preventDefault();
-    const employeeData = new FormData(event.target);
-    const employee = {
-      id: employeeData.get('id'),
-      first: employeeData.get('first-name'),
-      last: employeeData.get('last-name'),
-      photo: employeeData.get('photo'),
-      title: employeeData.get('job-title'),
-      email: employeeData.get('email'),
-      managerId: employeeData.get('manager-id'),
-    };
-    for (let key in employee) {
-      employee[key] = employee[key].toUpperCase();
-    }
-    dispatch(saveEmployee(employee))
-  }
-
+const NewEmployee = ( { handleSubmit } ) => {
   return (
     <div id="edit-profile" className="ui grid container">
       <div className="ui hidden divider"></div>
@@ -69,4 +51,24 @@ const NewEmployee = ({ dispatch }) => {
   )
 }
 
-module.exports = connect()(NewEmployee)
+const mapDispatch = ({ dispatch }) => ({
+  handleSubmit: event => {
+    event.preventDefault();
+    const employeeData = new FormData(event.target);
+    const employee = {
+      id: employeeData.get('id'),
+      first: employeeData.get('first-name'),
+      last: employeeData.get('last-name'),
+      photo: employeeData.get('photo'),
+      title: employeeData.get('job-title'),
+      email: employeeData.get('email'),
+      managerId: employeeData.get('manager-id'),
+    };
+    for (let key in employee) {
+      employee[key] = employee[key].toUpperCase();
+    }
+    dispatch(saveEmployee(employee))
+  }
+})
+
+module.exports = connect('', mapDispatch)(NewEmployee)

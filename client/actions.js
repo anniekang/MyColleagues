@@ -1,17 +1,17 @@
 const employeeSubmitted = () => {
-  return { type: 'EMPLOYEE_SUBMITTED'}
+  return { type: 'EMPLOYEE_SUBMITTED' }
 }
 
 const employeeSaved = () => {
-  return { type: 'EMPLOYEE_SAVED'}
+  return { type: 'EMPLOYEE_SAVED' }
 }
 
 const employeeFailure = () => {
-  return { type: 'EMPLOYEE_FAILURE'}
+  return { type: 'EMPLOYEE_FAILURE' }
 }
 
 const formCleared = () => {
-  return { type: 'FORM_CLEARED'}
+  return { type: 'FORM_CLEARED' }
 }
 
 const saveEmployee = employee => {
@@ -42,4 +42,46 @@ const saveEmployee = employee => {
   }
 }
 
-module.exports = { saveEmployee }
+const idSearch = () => {
+  return { type: 'ID_SEARCH' }
+}
+
+const idFound = (response) => {
+  return { type: 'ID_FOUND', response }
+}
+
+const idNotFound = () => {
+  return { type: 'ID_NOT_FOUND' }
+}
+
+const idCleared = () => {
+  return { type: 'ID_CLEARED' }
+}
+
+const renderProfile = employeeId => {
+  return dispatch => {
+    dispatch(idSearch());
+
+    fetch(`/viewemployee/${employeeId}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.error) {
+          alert(response.error);
+          dispatch(idNotFound());
+        }
+        else if (response.id) {
+          dispatch(idFound(response))
+        }
+      })
+      .then( () => {
+        document.getElementById('find').reset();
+        dispatch(idCleared());
+      })
+
+  }
+}
+
+
+module.exports = { saveEmployee, renderProfile }

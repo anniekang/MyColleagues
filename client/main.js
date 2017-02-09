@@ -33,7 +33,7 @@ function hidden(item, change) {
 
 function fetchData(data, method, request) {
   var init = { method: method,
-                 headers: {'Content-Type', 'application/json'},
+                 headers: {'Content-Type': 'application/json'},
                  mode: 'cors',
                  cache: 'default' };
 
@@ -112,7 +112,7 @@ function createEmployee(event) {
 function viewEmployee(event) {
   event.preventDefault();
 
-  if (event.target.classList.contains('profile-buttn') || event.target.classList.contains('manager-profile') || event.target.classList.contains('employee-profile') || event.target.classList.contains('report-profile') || event.target.classList.contains('search-profile')) {
+  if (event.target.classList.contains('profile-button') || event.target.classList.contains('manager-profile') || event.target.classList.contains('employee-profile') || event.target.classList.contains('report-profile') || event.target.classList.contains('search-profile')) {
     let employeeId = '';
     if (event.target.classList.contains('profile-button')) {
       const employeeData = new FormData(event.target);
