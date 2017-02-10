@@ -217,11 +217,11 @@ function updateEmployee(event) {
         newEmployee.classList.add('edit');
 
         document.getElementById('employee-id').value = response.id;
-        document.getElementById('employee-first').value = response.first;
-        document.getElementById('employee-last').value = response.last;
+        document.getElementById('employee-first').value = response.first_name;
+        document.getElementById('employee-last').value = response.last_name;
         document.getElementById('employee-photo').value = response.photo;
-        document.getElementById('employee-title').value = response.title;
-        document.getElementById('employee-description').value = response.description;
+        document.getElementById('employee-title').value = response.job_title;
+        document.getElementById('employee-description').value = response.job_description;
         document.getElementById('employee-email').value = response.email;
         document.getElementById('employee-manager').value = response.manager_id;
 

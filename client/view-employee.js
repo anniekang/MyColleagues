@@ -1,7 +1,10 @@
 const React = require('react');
 const { connect } = require('react-redux');
+const { updateProfile } = require('./actions');
 
-const ViewEmployee = ({ viewEmployee, dispatch }) => {
+
+const ViewEmployee = ({ viewEmployee, handleClickEdit }) => {
+  console.log(viewEmployee)
   return (
     <div id='view-profile' className='ui equal width grid container'>
       <div className='ui hidden divider'></div>
@@ -40,7 +43,7 @@ const ViewEmployee = ({ viewEmployee, dispatch }) => {
         <div className='four wide column'>
           <div className='ui one column centered grid'>
             <div className='row'>
-              <button id='edit-button' className='ui button' type='submit'>Edit Profile</button>
+              <button id='edit-button' className='ui button' type='submit' onClick = { handleClickEdit }>Edit Profile</button>
             </div>
             <div className='row'>
               <button className='ui button org-button' type='submit'>Org Chart</button>
@@ -55,6 +58,20 @@ const ViewEmployee = ({ viewEmployee, dispatch }) => {
   )
 }
 
-const MapStatetoProps = ({ viewEmployee }) => ({ viewEmployee })
+const mapState = ({ viewEmployee }) => ({ viewEmployee })
 
-module.exports = connect(MapStatetoProps)(ViewEmployee)
+const mapDispatch = dispatch => {
+  return {
+    handleClickEdit: event => {
+      event.preventDefault();
+      const employee = {
+        id: document.getElementById('profile-id').textContent.trim()
+      };
+      console.log('test2')
+      console.log(employee)
+      dispatch(updateProfile(employee.id))
+    }
+  }
+}
+
+module.exports = connect(mapState, mapDispatch)(ViewEmployee)

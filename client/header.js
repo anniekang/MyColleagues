@@ -29,8 +29,10 @@ const mapDispatch = dispatch => {
     handleSubmit: event => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
-      const employeeId = employeeData.get('id') //.toUpperCase();
-      dispatch(renderProfile(employeeId));
+      const employee = {
+        id: employeeData.get('id') //.toUpperCase();
+      }
+      dispatch(renderProfile(employee.id));
 
     }
   }

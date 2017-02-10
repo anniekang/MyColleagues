@@ -1,6 +1,6 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const NewEmployee = require('./new-employee')
+const EditEmployee = require('./edit-employee')
 const ViewEmployee = require('./view-employee')
 
 
@@ -8,7 +8,7 @@ const Body = ({ currentView }) => {
   console.log(currentView)
   switch (currentView) {
     case 'edit-profile':
-      return <NewEmployee/>;
+      return <EditEmployee/>;
     case 'profile':
       return <ViewEmployee/>;
   }
