@@ -22,9 +22,9 @@ const Header = ({ handleSubmit }) => {
       </form>
     </div>
   )
-}
+};
 
-const mapDispatch = dispatch => {
+const mapDispatchtoProps = dispatch => {
   return {
     handleSubmit: event => {
       event.preventDefault();
@@ -36,6 +36,6 @@ const mapDispatch = dispatch => {
 
     }
   }
-}
+};
 
-module.exports = connect('', mapDispatch)(Header)
+module.exports = connect('', mapDispatchtoProps)(Header);

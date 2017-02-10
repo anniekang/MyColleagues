@@ -13,6 +13,6 @@ const App = () => {
       </div>
     </div>
   )
-}
+};
 
-module.exports = App
+module.exports = App;

@@ -148,4 +148,110 @@ const saveUpdate = employee => {
   }
 }
 
-module.exports = { saveEmployee, renderProfile, updateProfile, saveUpdate }
+const deleteSubmitted = () => {
+  return { type: 'DELETE_EMPLOYEE' }
+}
+
+const deleteConfirmed = () => {
+  return { type: 'DELETE_CONFIRMED' }
+}
+
+const deleteError = () => {
+  return { type: 'DELETE_ERROR' }
+}
+
+const employeeDeleted = () => {
+  return { type: 'EMPLOYEE_DELETED' }
+}
+
+const deleteProfile = employee => {
+  return dispatch => {
+    dispatch(deleteSubmitted());
+    const confirm = window.confirm(`Are you sure you would like to delete Employee ${employee.id} ${employee.first} ${employee.last}?`);
+    if (!confirm) {
+      return;
+    }
+    dispatch(deleteConfirmed());
+    fetch(`/deleteemployee/${employee.id}`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.error) {
+          alert(response.error);
+          dispatch(deleteError());
+        }
+        else if (response.success) {
+          alert(response.success);
+          dispatch(employeeDeleted(response))
+        }
+      })
+  }
+}
+
+const orgSubmitted = () => {
+  return { type: 'ORG_SUBMITTED' }
+}
+
+const renderManager = response => {
+  return { type: 'RENDER_MANAGER', response }
+}
+
+const renderEmployee = response => {
+  return { type: 'RENDER_EMPLOYEE', response}
+}
+
+const renderPeers = response => {
+  return { type: 'RENDER_PEERS', response}
+}
+
+const renderReports = response => {
+  return { type: 'RENDER_REPORTS', response}
+}
+
+const renderOrgChart = employee => {
+  return dispatch => {
+    dispatch(orgSubmitted());
+    fetch(`/orgchartemployee/${employee.managerId}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+        dispatch(renderManager(response));
+      })
+      .then( () => {
+        fetch(`/orgchartemployee/${employee.id}`, {
+          headers: {'Content-Type': 'application/json'}
+        })
+          .then(response => response.json())
+          .then(response => {
+            console.log(response)
+            dispatch(renderEmployee(response));
+          })
+          .then( () => {
+            fetch(`/orgchartpeers/${employee.id}/${employee.managerId}`, {
+              headers: {'Content-Type': 'application/json'}
+            })
+              .then(response => response.json())
+              .then(response => {
+                console.log(response)
+                dispatch(renderPeers(response))
+              })
+              .then( () => {
+                fetch(`/orgchartreports/${employee.id}`, {
+                  headers: {'Content-Type': 'application/json'}
+                })
+                  .then(response => response.json())
+                  .then(response => {
+                    dispatch(renderReports(response))
+                  })
+              })
+          })
+      })
+  }
+}
+
+
+module.exports = { saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart }

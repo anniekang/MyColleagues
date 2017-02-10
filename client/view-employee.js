@@ -1,10 +1,9 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { updateProfile } = require('./actions');
+const { updateProfile, deleteProfile, renderOrgChart } = require('./actions');
 
 
-const ViewEmployee = ({ viewEmployee, handleClickEdit }) => {
-  console.log(viewEmployee)
+const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
   return (
     <div id='view-profile' className='ui equal width grid container'>
       <div className='ui hidden divider'></div>
@@ -43,35 +42,51 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit }) => {
         <div className='four wide column'>
           <div className='ui one column centered grid'>
             <div className='row'>
-              <button id='edit-button' className='ui button' type='submit' onClick = { handleClickEdit }>Edit Profile</button>
+              <button id='edit-button' className='ui button' type='submit' onClick={ handleClickEdit }>Edit Profile</button>
             </div>
             <div className='row'>
-              <button className='ui button org-button' type='submit'>Org Chart</button>
+              <button className='ui button org-button' type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
             <div className='row'>
-              <button id='delete-button' className='ui button' type='submit'>Delete Profile</button>
+              <button id='delete-button' className='ui button' type='submit' onClick={ handleClickDelete }>Delete Profile</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   )
-}
+};
 
-const mapState = ({ viewEmployee }) => ({ viewEmployee })
+const mapStatetoProps = ({ viewEmployee }) => ({ viewEmployee });
 
-const mapDispatch = dispatch => {
+const mapDispatchtoProps = dispatch => {
   return {
     handleClickEdit: event => {
       event.preventDefault();
       const employee = {
         id: document.getElementById('profile-id').textContent.trim()
       };
-      console.log('test2')
-      console.log(employee)
       dispatch(updateProfile(employee.id))
+    },
+    handleClickOrg: event => {
+      event.preventDefault();
+      const employee = {
+        id: document.getElementById('profile-id').textContent.trim(),
+        managerId: document.getElementById('profile-manager').textContent.trim()
+      }
+      console.log(employee)
+      dispatch(renderOrgChart(employee))
+    },
+    handleClickDelete: event => {
+      event.preventDefault();
+      const employee = {
+        id: document.getElementById('profile-id').textContent.trim(),
+        first: document.getElementById('profile-first').textContent.trim(),
+        last: document.getElementById('profile-last').textContent.trim()
+      };
+      dispatch(deleteProfile(employee))
     }
   }
-}
+};
 
-module.exports = connect(mapState, mapDispatch)(ViewEmployee)
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(ViewEmployee);

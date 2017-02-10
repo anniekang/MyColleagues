@@ -80,6 +80,7 @@ app.get('/viewemployee/:id', (req, res) => {
 
 
 app.get('/orgchartemployee/:id', (req, res) => {
+  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
@@ -87,11 +88,13 @@ app.get('/orgchartemployee/:id', (req, res) => {
       RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
       {id: req.params.id})
     .then( result => {
+      console.log(result)
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
       session.close();
+      console.log(results);
       res.json(results);
     })
 
@@ -230,7 +233,6 @@ app.put('/updateemployee/', (req, res) => {
   console.log('params')
   console.log(parameters)
   var session = driver.session();
-  /*MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})*/
   session
     .run(`
       MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
@@ -256,6 +258,7 @@ app.put('/updateemployee/', (req, res) => {
 
 
 app.delete('/deleteemployee/:id', (req, res) => {
+  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
@@ -263,8 +266,8 @@ app.delete('/deleteemployee/:id', (req, res) => {
       {id: req.params.id})
     .then( () => {
       return session.run(`
-                      MATCH (emp:Employee {id: {id}}) RETURN emp`,
-                      {id: req.params.id})
+        MATCH (emp:Employee {id: {id}}) RETURN emp`,
+        {id: req.params.id})
     })
       .then ( result => {
         if (result.records.length === 0) {

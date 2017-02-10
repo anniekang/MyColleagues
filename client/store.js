@@ -8,11 +8,14 @@ const currentView = (state = [], action) => {
     case 'EDIT_SAVED':
       return 'profile';
     case 'EDIT_FORM':
+    case 'EMPLOYEE_DELETED':
       return 'edit-profile';
+    case 'RENDER_MANAGER':
+      return 'org-chart';
     default:
       return state;
   }
-}
+};
 
 const newEmployee = (state = {}, action) => {
   switch (action.type) {
@@ -29,7 +32,7 @@ const newEmployee = (state = {}, action) => {
     default:
       return state;
   }
-}
+};
 
 const viewEmployee = (state = [], action) => {
   switch (action.type) {
@@ -44,7 +47,7 @@ const viewEmployee = (state = [], action) => {
     default:
       return state;
   }
-}
+};
 
 const editEmployee = (state = [], action) => {
   switch (action.type) {
@@ -61,7 +64,7 @@ const editEmployee = (state = [], action) => {
     default:
       return state;
   }
-}
+};
 
 const editSubmission = (state = [], action) => {
   switch (action.type) {
@@ -76,6 +79,56 @@ const editSubmission = (state = [], action) => {
     default:
       return state;
   }
+};
+
+const deleteEmployee = (state = [], action) => {
+  switch (action.type) {
+    case 'DELETE_EMPLOYEE':
+      return Object.assign({}, state, {
+        deleteSubmitted: true
+      });
+    case 'DELETE_CONFIRMED':
+      return Object.assign({}, state, {
+        deleteConfirmed: true
+      });
+    case 'DELETE_ERROR':
+    case 'EMPLOYEE_DELETED':
+      return Object.assign({}, state, {
+        deleteSubmitted: false,
+        deleteConfirmed: false
+      });
+    default:
+      return state;
+  }
+};
+
+const viewOrg = (state = [], action) => {
+  switch (action.type) {
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        orgSubmitted: true
+      });
+    case 'RENDER_MANAGER':
+      return Object.assign({}, state, {
+        orgSubmitted: false,
+        employeeType: 'org-manager',
+        manager: action.response
+      });
+    case 'RENDER_EMPLOYEE':
+      return Object.assign({}, state, {
+        employee: action.response
+      });
+    case 'RENDER_PEERS':
+      return Object.assign({}, state, {
+        peers: action.response
+      });
+    case 'RENDER_REPORTS':
+      return Object.assign({}, state, {
+        reports: action.response
+      });
+    default:
+      return state;
+  }
 }
 
 const initialState = {
@@ -86,12 +139,24 @@ const initialState = {
   editEmployee: {
     editReady: false
   },
-  editSubmissions: {
+  editSubmission: {
     editSubmitted: false
+  },
+  deleteEmployee: {
+    deleteSubmitted: false,
+    deleteConfirmed: false
+  },
+  viewOrg: {
+    orgSubmitted: false,
+    employeeType: '',
+    manager: {},
+    employee: {},
+    peers: [],
+    reports: []
   }
-}
+};
 
-const reducer = combineReducers({ currentView, newEmployee, viewEmployee, editEmployee, editSubmission });
+const reducer = combineReducers({ currentView, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;

@@ -4,7 +4,6 @@ const { saveEmployee, saveUpdate } = require('./actions');
 
 const EditEmployee = ( { handleSubmit, handleSubmitEdit, currentView, editEmployee } ) => {
   console.log(currentView);
-  console.log(editEmployee.editReady);
   let handle = '';
   if (editEmployee.editReady) {
     handle = handleSubmitEdit
@@ -61,9 +60,9 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, currentView, editEmploy
   )
 }
 
-const mapState = ({ editEmployee, currentView }) => ({ editEmployee, currentView })
+const mapStatetoProps = ({ editEmployee, currentView }) => ({ editEmployee, currentView })
 
-const mapDispatch = ( dispatch ) => {
+const mapDispatchtoProps = ( dispatch ) => {
   return {
     handleSubmit: event => {
       event.preventDefault();
@@ -102,10 +101,9 @@ const mapDispatch = ( dispatch ) => {
       /*for (let key in employee) {
         employee[key] = employee[key].toUpperCase();
       }*/
-      console.log(employee)
       dispatch(saveUpdate(employee));
     }
   }
-}
+};
 
-module.exports = connect(mapState, mapDispatch)(EditEmployee)
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(EditEmployee);
