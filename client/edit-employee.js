@@ -2,8 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ( { handleSubmit, handleSubmitEdit, currentView, editEmployee } ) => {
-  console.log(currentView);
+const EditEmployee = ( { handleSubmit, handleSubmitEdit, editEmployee } ) => {
   let handle = '';
   if (editEmployee.editReady) {
     handle = handleSubmitEdit
@@ -60,7 +59,7 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, currentView, editEmploy
   )
 }
 
-const mapStatetoProps = ({ editEmployee, currentView }) => ({ editEmployee, currentView })
+const mapStatetoProps = ({ editEmployee }) => ({ editEmployee })
 
 const mapDispatchtoProps = ( dispatch ) => {
   return {

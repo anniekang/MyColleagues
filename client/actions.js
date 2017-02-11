@@ -1,3 +1,62 @@
+const searchSubmitted = (search) => {
+  return { type: 'SEARCH_SUBMITTED', search }
+}
+
+const renderResults = (results) => {
+  return { type: 'RENDER_RESULTS', results }
+}
+
+const searchCleared = () => {
+  return { type: 'SEARCH_CLEARED' }
+}
+
+const search = searchString => {
+  const searchArray = searchString.trim().split(' ');
+  if (searchArray.length === 0) return;
+
+  return dispatch => {
+    dispatch(searchSubmitted(searchString));
+    if (searchArray.length === 1 || searchArray.length === 3) {
+      const resultsArray = [];
+      fetch(`/orgchartemployee/${searchArray[0]}`, {
+        headers: {'Content-Type': 'application/json'}
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response.id === searchArray[0]) {
+            resultsArray.push(response);
+          }
+        })
+        .then ( () => {
+          fetch(`/searchname/${searchArray[0]}`, {
+            headers: {'Content-Type': 'application/json'}
+          })
+            .then(response => response.json())
+            .then(response => {
+              if (response) {
+                response.forEach(result => {
+                  resultsArray.push(result);
+                })
+              }
+              dispatch(renderResults(resultsArray))
+              document.getElementById('search').reset();
+              dispatch(searchCleared());
+            })
+        })
+      }
+    if (searchArray === 2) {
+      fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
+        headers: {'Content-Type': 'application/json'}
+      })
+        .then(response => response.json())
+        .then(response => {
+          dispatch(renderResults(response))
+        })
+    }
+
+  }
+}
+
 const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
 }
@@ -31,7 +90,6 @@ const saveEmployee = employee => {
         }
         else if (response.id) {
           alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-          console.log(response)
           dispatch(employeeSaved(response));
         }
 
@@ -105,8 +163,6 @@ const updateProfile = employeeId => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log('test1')
-        console.log(response);
         dispatch(editForm(response));
         document.getElementById('employee-id').value = response.id;
         document.getElementById('employee-first').value = response.first_name;
@@ -132,8 +188,6 @@ const editSaved = response => {
 const saveUpdate = employee => {
   return dispatch => {
     dispatch(editSubmitted());
-    console.log('test5')
-    console.log(employee)
     fetch('/updateemployee/', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -141,8 +195,6 @@ const saveUpdate = employee => {
     })
       .then(response => response.json())
       .then(response => {
-          console.log('test2')
-          console.log(response)
           dispatch(editSaved(response))
       })
   }
@@ -218,8 +270,9 @@ const renderOrgChart = employee => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response)
-        dispatch(renderManager(response));
+        const array = [];
+        array.push(response);
+        dispatch(renderManager(array));
       })
       .then( () => {
         fetch(`/orgchartemployee/${employee.id}`, {
@@ -227,7 +280,6 @@ const renderOrgChart = employee => {
         })
           .then(response => response.json())
           .then(response => {
-            console.log(response)
             dispatch(renderEmployee(response));
           })
           .then( () => {
@@ -236,7 +288,6 @@ const renderOrgChart = employee => {
             })
               .then(response => response.json())
               .then(response => {
-                console.log(response)
                 dispatch(renderPeers(response))
               })
               .then( () => {
@@ -254,4 +305,4 @@ const renderOrgChart = employee => {
 }
 
 
-module.exports = { saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart }
+module.exports = { search, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart }

@@ -1,36 +1,47 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { renderProfile, renderOrgChart } = require('./actions')
+const { renderProfile, renderOrgChart } = require('./actions');
 
-const OrgPeers = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
+
+const OrgSearchEmployee = ({ currentView, searchResults, viewOrg, handleClickProfile, handleClickOrg }) => {
+  let result = [];
+  if (currentView === 'org-search-employee') {
+    result = searchResults.results;
+  }
+  else if (currentView === 'org-chart') {
+    result = viewOrg.manager;
+  }
   return (
     <div>
-      { viewOrg.peers.map((peer, i) => {
-          let profileButton = `ui button employee-profile ${peer.id} ${peer.manager_id}`;
-          let orgButton = `ui button employee-org ${peer.id} ${peer.manager_id}`;
+      { (currentView === 'org-search-employee')
+          ? <div id='search-results'>Showing results for { searchResults.search }</div>
+          : null
+      }
+      { result.map((employee, i) => {
+          let profileButton = `ui button ${viewOrg.employeeType}-profile ${employee.id} ${employee.manager_id}`;
+          let orgButton = `ui button ${viewOrg.employeeType}-org ${employee.id} ${employee.manager_id}`;
           return (
-            <div id={ peer.id } key={ i } className='ui equal width grid container employee'>
+            <div key={ i } className='ui equal width grid container'>
               <div className='ui hidden divider'></div>
               <div className='row'>
-                <div className='one wide column'></div>
                 <div className='ten wide column'>
                   <div className='ui row grid'>
                     <div className='four wide column'>
-                      <img className='ui small image employee-photo' alt='Profile Photo' src={ peer.photo }/>
+                      <img className='ui small image' alt='Profile Photo' src={ employee.photo }/>
                     </div>
                     <div className='twelve wide column'>
                       <div className='row'>Name:
-                        <span className='employee-first'> { peer.first_name}</span>
-                        <span className='employee-last'> { peer.last_name }</span>
+                        <span> { employee.first_name }</span>
+                        <span> { employee.last_name }</span>
                       </div>
                       <div className='row'>ID:
-                        <span className='employee-id'> { peer.id }</span>
+                        <span> { employee.id }</span>
                       </div>
                       <div className='row'>Job Title:
-                        <span className='employee-title'> { peer.job_title }</span>
+                        <span> { employee.job_title }</span>
                       </div>
                       <div className='row'>Email:
-                        <span className='employee-email'> { peer.email }</span>
+                        <span> {employee.email }</span>
                       </div>
                     </div>
                   </div>
@@ -41,7 +52,7 @@ const OrgPeers = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
                       <button className={ profileButton } type='submit' onClick={ handleClickProfile }>View Profile</button>
                     </div>
                     <div className='row'>
-                      <button className={ orgButton }  type='submit' onClick={ handleClickOrg }>Org Chart</button>
+                      <button className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
                     </div>
                   </div>
                 </div>
@@ -52,7 +63,7 @@ const OrgPeers = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
   )
 }
 
-const mapStatetoProps = ({ viewOrg }) => ({ viewOrg });
+const mapStatetoProps = ({ currentView, searchResults, viewOrg }) => ({ currentView, searchResults, viewOrg });
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -74,4 +85,5 @@ const mapDispatchtoProps = dispatch => {
   }
 };
 
-module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgPeers);
+
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgSearchEmployee);

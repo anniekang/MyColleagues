@@ -1,4 +1,55 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+const searchSubmitted = search => {
+  return { type: 'SEARCH_SUBMITTED', search };
+};
+
+const renderResults = results => {
+  return { type: 'RENDER_RESULTS', results };
+};
+
+const searchCleared = () => {
+  return { type: 'SEARCH_CLEARED' };
+};
+
+const search = searchString => {
+  const searchArray = searchString.trim().split(' ');
+  if (searchArray.length === 0) return;
+
+  return dispatch => {
+    dispatch(searchSubmitted(searchString));
+    if (searchArray.length === 1 || searchArray.length === 3) {
+      const resultsArray = [];
+      fetch(`/orgchartemployee/${searchArray[0]}`, {
+        headers: { 'Content-Type': 'application/json' }
+      }).then(response => response.json()).then(response => {
+        if (response.id === searchArray[0]) {
+          resultsArray.push(response);
+        }
+      }).then(() => {
+        fetch(`/searchname/${searchArray[0]}`, {
+          headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json()).then(response => {
+          if (response) {
+            response.forEach(result => {
+              resultsArray.push(result);
+            });
+          }
+          dispatch(renderResults(resultsArray));
+          document.getElementById('search').reset();
+          dispatch(searchCleared());
+        });
+      });
+    }
+    if (searchArray === 2) {
+      fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
+        headers: { 'Content-Type': 'application/json' }
+      }).then(response => response.json()).then(response => {
+        dispatch(renderResults(response));
+      });
+    }
+  };
+};
+
 const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' };
 };
@@ -29,7 +80,6 @@ const saveEmployee = employee => {
         dispatch(employeeFailure());
       } else if (response.id) {
         alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`);
-        console.log(response);
         dispatch(employeeSaved(response));
       }
     }).then(() => {
@@ -94,8 +144,6 @@ const updateProfile = employeeId => {
     fetch(`/viewemployee/${employeeId}`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json()).then(response => {
-      console.log('test1');
-      console.log(response);
       dispatch(editForm(response));
       document.getElementById('employee-id').value = response.id;
       document.getElementById('employee-first').value = response.first_name;
@@ -121,15 +169,11 @@ const editSaved = response => {
 const saveUpdate = employee => {
   return dispatch => {
     dispatch(editSubmitted());
-    console.log('test5');
-    console.log(employee);
     fetch('/updateemployee/', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(employee)
     }).then(response => response.json()).then(response => {
-      console.log('test2');
-      console.log(response);
       dispatch(editSaved(response));
     });
   };
@@ -200,19 +244,18 @@ const renderOrgChart = employee => {
     fetch(`/orgchartemployee/${employee.managerId}`, {
       headers: { 'Content-Type': 'application/json' }
     }).then(response => response.json()).then(response => {
-      console.log(response);
-      dispatch(renderManager(response));
+      const array = [];
+      array.push(response);
+      dispatch(renderManager(array));
     }).then(() => {
       fetch(`/orgchartemployee/${employee.id}`, {
         headers: { 'Content-Type': 'application/json' }
       }).then(response => response.json()).then(response => {
-        console.log(response);
         dispatch(renderEmployee(response));
       }).then(() => {
         fetch(`/orgchartpeers/${employee.id}/${employee.managerId}`, {
           headers: { 'Content-Type': 'application/json' }
         }).then(response => response.json()).then(response => {
-          console.log(response);
           dispatch(renderPeers(response));
         }).then(() => {
           fetch(`/orgchartreports/${employee.id}`, {
@@ -226,7 +269,7 @@ const renderOrgChart = employee => {
   };
 };
 
-module.exports = { saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart };
+module.exports = { search, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart };
 
 },{}],2:[function(require,module,exports){
 const React = require('react');
@@ -258,10 +301,12 @@ const { connect } = require('react-redux');
 const EditEmployee = require('./edit-employee');
 const ViewEmployee = require('./view-employee');
 const ViewOrg = require('./view-org');
+const OrgSearchEmployee = require('./org-search-employee');
 
 const Body = ({ currentView }) => {
-  console.log(currentView);
   switch (currentView) {
+    case 'org-search-employee':
+      return React.createElement(OrgSearchEmployee, null);
     case 'edit-profile':
       return React.createElement(EditEmployee, null);
     case 'profile':
@@ -277,13 +322,12 @@ const mapStatetoProps = ({ currentView }) => ({ currentView });
 
 module.exports = connect(mapStatetoProps)(Body);
 
-},{"./edit-employee":4,"./view-employee":11,"./view-org":12,"react":217,"react-redux":187}],4:[function(require,module,exports){
+},{"./edit-employee":4,"./org-search-employee":9,"./view-employee":11,"./view-org":12,"react":217,"react-redux":187}],4:[function(require,module,exports){
 const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ({ handleSubmit, handleSubmitEdit, currentView, editEmployee }) => {
-  console.log(currentView);
+const EditEmployee = ({ handleSubmit, handleSubmitEdit, editEmployee }) => {
   let handle = '';
   if (editEmployee.editReady) {
     handle = handleSubmitEdit;
@@ -401,7 +445,7 @@ const EditEmployee = ({ handleSubmit, handleSubmitEdit, currentView, editEmploye
   );
 };
 
-const mapStatetoProps = ({ editEmployee, currentView }) => ({ editEmployee, currentView });
+const mapStatetoProps = ({ editEmployee }) => ({ editEmployee });
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -452,39 +496,79 @@ module.exports = connect(mapStatetoProps, mapDispatchtoProps)(EditEmployee);
 },{"./actions":1,"react":217,"react-redux":187}],5:[function(require,module,exports){
 const React = require('react');
 const { connect } = require('react-redux');
-const { renderProfile } = require('./actions');
+const { search, renderProfile } = require('./actions');
 
-const Header = ({ handleSubmit }) => {
+const Header = ({ handleSubmitSearch, handleSubmitId }) => {
   return React.createElement(
     'div',
-    { id: 'find-employee', className: 'six wide column' },
+    { id: 'header', className: 'ui grid container' },
     React.createElement(
-      'form',
-      { id: 'find', className: 'ui form profile-button', onSubmit: handleSubmit },
+      'div',
+      { id: 'logo-search', className: 'ten wide column' },
       React.createElement('div', { className: 'ui hidden divider' }),
       React.createElement(
         'div',
-        { className: 'field' },
+        { className: 'ui grid' },
         React.createElement(
-          'label',
-          null,
-          'Employee ID'
+          'div',
+          { className: 'ui medium circular image four wide column' },
+          React.createElement('img', { id: 'logo', src: '/images/wireframe/image.png', alt: 'Company Logo' })
         ),
         React.createElement(
           'div',
-          { className: 'two fields' },
+          { className: 'twelve wide column' },
           React.createElement(
-            'div',
-            { className: 'field' },
-            React.createElement('input', { id: 'find-id', type: 'text', name: 'id', placeholder: 'Employee ID' })
+            'form',
+            { id: 'search', className: 'ui form', onSubmit: handleSubmitSearch },
+            React.createElement(
+              'div',
+              { className: 'fields' },
+              React.createElement(
+                'div',
+                { className: 'twelve wide field' },
+                React.createElement('input', { id: 'emp-search', name: 'emp-search', type: 'text', placeholder: 'ID or First and Last Name' })
+              ),
+              React.createElement(
+                'button',
+                { className: 'ui icon button' },
+                React.createElement('i', { className: 'search icon' })
+              )
+            )
+          )
+        )
+      )
+    ),
+    React.createElement(
+      'div',
+      { id: 'find-employee', className: 'six wide column' },
+      React.createElement(
+        'form',
+        { id: 'find', className: 'ui form profile-button', onSubmit: handleSubmitId },
+        React.createElement('div', { className: 'ui hidden divider' }),
+        React.createElement(
+          'div',
+          { className: 'field' },
+          React.createElement(
+            'label',
+            null,
+            'Employee ID'
           ),
           React.createElement(
             'div',
-            { className: 'field' },
+            { className: 'two fields' },
             React.createElement(
-              'button',
-              { className: 'ui button', type: 'submit' },
-              'View'
+              'div',
+              { className: 'field' },
+              React.createElement('input', { id: 'find-id', type: 'text', name: 'id', placeholder: 'Employee ID' })
+            ),
+            React.createElement(
+              'div',
+              { className: 'field' },
+              React.createElement(
+                'button',
+                { className: 'ui button', type: 'submit' },
+                'View'
+              )
             )
           )
         )
@@ -495,7 +579,13 @@ const Header = ({ handleSubmit }) => {
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmit: event => {
+    handleSubmitSearch: event => {
+      event.preventDefault();
+      const employeeData = new FormData(event.target);
+      const searchString = employeeData.get('emp-search');
+      dispatch(search(searchString));
+    },
+    handleSubmitId: event => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
@@ -509,145 +599,6 @@ const mapDispatchtoProps = dispatch => {
 module.exports = connect('', mapDispatchtoProps)(Header);
 
 },{"./actions":1,"react":217,"react-redux":187}],6:[function(require,module,exports){
-const React = require('react');
-const { connect } = require('react-redux');
-const { renderProfile, renderOrgChart } = require('./actions');
-
-const OrgEmployee = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
-  console.log(viewOrg);
-  const profileButton = `ui button ${viewOrg.employeeType}-profile ${viewOrg.manager.id} ${viewOrg.manager.manager_id}`;
-  const orgButton = `ui button ${viewOrg.employeeType}-org ${viewOrg.manager.id} ${viewOrg.manager.manager_id}`;
-  return React.createElement(
-    'div',
-    { id: viewOrg.employeeType, className: 'ui equal width grid container' },
-    React.createElement('div', { className: 'ui hidden divider' }),
-    React.createElement(
-      'div',
-      { className: 'row' },
-      React.createElement(
-        'div',
-        { className: 'ten wide column' },
-        React.createElement(
-          'div',
-          { className: 'ui row grid' },
-          React.createElement(
-            'div',
-            { className: 'four wide column' },
-            React.createElement('img', { className: 'ui small image', alt: 'Profile Photo', src: viewOrg.manager.photo })
-          ),
-          React.createElement(
-            'div',
-            { className: 'twelve wide column' },
-            React.createElement(
-              'div',
-              { className: 'row' },
-              'Name:',
-              React.createElement(
-                'span',
-                null,
-                ' ',
-                viewOrg.manager.first_name
-              ),
-              React.createElement(
-                'span',
-                null,
-                ' ',
-                viewOrg.manager.last_name
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'row' },
-              'ID:',
-              React.createElement(
-                'span',
-                null,
-                ' ',
-                viewOrg.manager.id
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'row' },
-              'Job Title:',
-              React.createElement(
-                'span',
-                null,
-                ' ',
-                viewOrg.manager.job_title
-              )
-            ),
-            React.createElement(
-              'div',
-              { className: 'row' },
-              'Email:',
-              React.createElement(
-                'span',
-                null,
-                ' ',
-                viewOrg.manager.email
-              )
-            )
-          )
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'four wide column' },
-        React.createElement(
-          'div',
-          { className: 'ui one column centered grid' },
-          React.createElement(
-            'div',
-            { className: 'row' },
-            React.createElement(
-              'button',
-              { className: profileButton, type: 'submit', onClick: handleClickProfile },
-              'View Profile'
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'row' },
-            React.createElement(
-              'button',
-              { className: orgButton, type: 'submit', onClick: handleClickOrg },
-              'Org Chart'
-            )
-          )
-        )
-      )
-    )
-  );
-};
-
-const mapStatetoProps = ({ viewOrg }) => ({ viewOrg });
-
-const mapDispatchtoProps = dispatch => {
-  return {
-    handleClickProfile: event => {
-      event.preventDefault();
-      const employee = {
-        id: event.target.classList[3]
-      };
-      console.log(employee);
-      dispatch(renderProfile(employee.id));
-    },
-    handleClickOrg: event => {
-      event.preventDefault();
-      const employee = {
-        id: event.target.classList[3],
-        managerId: event.target.classList[4]
-      };
-      console.log(employee);
-      dispatch(renderOrgChart(employee));
-    }
-  };
-};
-
-module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgEmployee);
-
-},{"./actions":1,"react":217,"react-redux":187}],7:[function(require,module,exports){
 const React = require('react');
 const { connect } = require('react-redux');
 const { renderProfile, renderOrgChart } = require('./actions');
@@ -786,7 +737,7 @@ const mapDispatchtoProps = dispatch => {
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgMain);
 
-},{"./actions":1,"react":217,"react-redux":187}],8:[function(require,module,exports){
+},{"./actions":1,"react":217,"react-redux":187}],7:[function(require,module,exports){
 const React = require('react');
 const { connect } = require('react-redux');
 const { renderProfile, renderOrgChart } = require('./actions');
@@ -914,7 +865,6 @@ const mapDispatchtoProps = dispatch => {
       const employee = {
         id: event.target.classList[3]
       };
-      console.log(employee);
       dispatch(renderProfile(employee.id));
     },
     handleClickOrg: event => {
@@ -923,7 +873,6 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3],
         managerId: event.target.classList[4]
       };
-      console.log(employee);
       dispatch(renderOrgChart(employee));
     }
   };
@@ -931,7 +880,7 @@ const mapDispatchtoProps = dispatch => {
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgPeers);
 
-},{"./actions":1,"react":217,"react-redux":187}],9:[function(require,module,exports){
+},{"./actions":1,"react":217,"react-redux":187}],8:[function(require,module,exports){
 const React = require('react');
 const { connect } = require('react-redux');
 const { renderProfile, renderOrgChart } = require('./actions');
@@ -1059,7 +1008,6 @@ const mapDispatchtoProps = dispatch => {
       const employee = {
         id: event.target.classList[3]
       };
-      console.log(employee);
       dispatch(renderProfile(employee.id));
     },
     handleClickOrg: event => {
@@ -1068,7 +1016,6 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3],
         managerId: event.target.classList[4]
       };
-      console.log(employee);
       dispatch(renderOrgChart(employee));
     }
   };
@@ -1076,12 +1023,168 @@ const mapDispatchtoProps = dispatch => {
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgReports);
 
+},{"./actions":1,"react":217,"react-redux":187}],9:[function(require,module,exports){
+const React = require('react');
+const { connect } = require('react-redux');
+const { renderProfile, renderOrgChart } = require('./actions');
+
+const OrgSearchEmployee = ({ currentView, searchResults, viewOrg, handleClickProfile, handleClickOrg }) => {
+  let result = [];
+  if (currentView === 'org-search-employee') {
+    result = searchResults.results;
+  } else if (currentView === 'org-chart') {
+    result = viewOrg.manager;
+  }
+  return React.createElement(
+    'div',
+    null,
+    currentView === 'org-search-employee' ? React.createElement(
+      'div',
+      { id: 'search-results' },
+      'Showing results for ',
+      searchResults.search
+    ) : null,
+    result.map((employee, i) => {
+      let profileButton = `ui button ${viewOrg.employeeType}-profile ${employee.id} ${employee.manager_id}`;
+      let orgButton = `ui button ${viewOrg.employeeType}-org ${employee.id} ${employee.manager_id}`;
+      return React.createElement(
+        'div',
+        { key: i, className: 'ui equal width grid container' },
+        React.createElement('div', { className: 'ui hidden divider' }),
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement(
+            'div',
+            { className: 'ten wide column' },
+            React.createElement(
+              'div',
+              { className: 'ui row grid' },
+              React.createElement(
+                'div',
+                { className: 'four wide column' },
+                React.createElement('img', { className: 'ui small image', alt: 'Profile Photo', src: employee.photo })
+              ),
+              React.createElement(
+                'div',
+                { className: 'twelve wide column' },
+                React.createElement(
+                  'div',
+                  { className: 'row' },
+                  'Name:',
+                  React.createElement(
+                    'span',
+                    null,
+                    ' ',
+                    employee.first_name
+                  ),
+                  React.createElement(
+                    'span',
+                    null,
+                    ' ',
+                    employee.last_name
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'row' },
+                  'ID:',
+                  React.createElement(
+                    'span',
+                    null,
+                    ' ',
+                    employee.id
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'row' },
+                  'Job Title:',
+                  React.createElement(
+                    'span',
+                    null,
+                    ' ',
+                    employee.job_title
+                  )
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'row' },
+                  'Email:',
+                  React.createElement(
+                    'span',
+                    null,
+                    ' ',
+                    employee.email
+                  )
+                )
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'four wide column' },
+            React.createElement(
+              'div',
+              { className: 'ui one column centered grid' },
+              React.createElement(
+                'div',
+                { className: 'row' },
+                React.createElement(
+                  'button',
+                  { className: profileButton, type: 'submit', onClick: handleClickProfile },
+                  'View Profile'
+                )
+              ),
+              React.createElement(
+                'div',
+                { className: 'row' },
+                React.createElement(
+                  'button',
+                  { className: orgButton, type: 'submit', onClick: handleClickOrg },
+                  'Org Chart'
+                )
+              )
+            )
+          )
+        )
+      );
+    })
+  );
+};
+
+const mapStatetoProps = ({ currentView, searchResults, viewOrg }) => ({ currentView, searchResults, viewOrg });
+
+const mapDispatchtoProps = dispatch => {
+  return {
+    handleClickProfile: event => {
+      event.preventDefault();
+      const employee = {
+        id: event.target.classList[3]
+      };
+      dispatch(renderProfile(employee.id));
+    },
+    handleClickOrg: event => {
+      event.preventDefault();
+      const employee = {
+        id: event.target.classList[3],
+        managerId: event.target.classList[4]
+      };
+      dispatch(renderOrgChart(employee));
+    }
+  };
+};
+
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgSearchEmployee);
+
 },{"./actions":1,"react":217,"react-redux":187}],10:[function(require,module,exports){
 const { createStore, combineReducers, applyMiddleware } = require('redux');
 const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch (action.type) {
+    case 'SEARCH_SUBMITTED':
+      return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
     case 'ID_FOUND':
     case 'EDIT_SAVED':
@@ -1091,6 +1194,26 @@ const currentView = (state = [], action) => {
       return 'edit-profile';
     case 'RENDER_MANAGER':
       return 'org-chart';
+    default:
+      return state;
+  }
+};
+
+const searchResults = (state = {}, action) => {
+  switch (action.type) {
+    case 'SEARCH_SUBMITTED':
+      return Object.assign({}, state, {
+        search_submitted: true,
+        search: action.search
+      });
+    case 'RENDER_RESULTS':
+      return Object.assign({}, state, {
+        results: action.results
+      });
+    case 'SEARCH_CLEARED':
+      return Object.assign({}, state, {
+        search_submitted: false
+      });
     default:
       return state;
   }
@@ -1211,10 +1334,15 @@ const viewOrg = (state = [], action) => {
 };
 
 const initialState = {
+  currentView: 'edit-profile',
+  searchResults: {
+    searchSubmitted: false,
+    search: '',
+    results: []
+  },
   newEmployee: {
     employeeSubmitted: false
   },
-  currentView: 'edit-profile',
   editEmployee: {
     editReady: false
   },
@@ -1228,14 +1356,14 @@ const initialState = {
   viewOrg: {
     orgSubmitted: false,
     employeeType: '',
-    manager: {},
+    manager: [],
     employee: {},
     peers: [],
     reports: []
   }
 };
 
-const reducer = combineReducers({ currentView, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, searchResults, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;
@@ -1409,7 +1537,6 @@ const mapDispatchtoProps = dispatch => {
         id: document.getElementById('profile-id').textContent.trim(),
         managerId: document.getElementById('profile-manager').textContent.trim()
       };
-      console.log(employee);
       dispatch(renderOrgChart(employee));
     },
     handleClickDelete: event => {
@@ -1428,7 +1555,7 @@ module.exports = connect(mapStatetoProps, mapDispatchtoProps)(ViewEmployee);
 
 },{"./actions":1,"react":217,"react-redux":187}],12:[function(require,module,exports){
 const React = require('react');
-const OrgEmployee = require('./org-employee');
+const OrgSearchEmployee = require('./org-search-employee');
 const OrgMain = require('./org-main');
 const OrgPeers = require('./org-peers');
 const OrgReports = require('./org-reports');
@@ -1437,7 +1564,7 @@ const ViewOrg = () => {
   return React.createElement(
     'div',
     { id: 'orgChart' },
-    React.createElement(OrgEmployee, null),
+    React.createElement(OrgSearchEmployee, null),
     React.createElement(OrgMain, null),
     React.createElement(OrgReports, null),
     React.createElement(OrgPeers, null)
@@ -1446,7 +1573,7 @@ const ViewOrg = () => {
 
 module.exports = ViewOrg;
 
-},{"./org-employee":6,"./org-main":7,"./org-peers":8,"./org-reports":9,"react":217}],13:[function(require,module,exports){
+},{"./org-main":6,"./org-peers":7,"./org-reports":8,"./org-search-employee":9,"react":217}],13:[function(require,module,exports){
 const React = require('react');
 const ReactDOM = require('react-dom');
 const { Provider } = require('react-redux');

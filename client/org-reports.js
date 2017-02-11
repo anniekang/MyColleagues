@@ -61,7 +61,6 @@ const mapDispatchtoProps = dispatch => {
       const employee = {
         id: event.target.classList[3]
       }
-      console.log(employee)
       dispatch(renderProfile(employee.id))
     },
     handleClickOrg: event => {
@@ -70,7 +69,6 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3],
         managerId: event.target.classList[4],
       }
-      console.log(employee)
       dispatch(renderOrgChart(employee))
     }
   }

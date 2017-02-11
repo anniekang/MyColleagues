@@ -3,6 +3,8 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
+    case 'SEARCH_SUBMITTED':
+      return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
     case 'ID_FOUND':
     case 'EDIT_SAVED':
@@ -16,6 +18,26 @@ const currentView = (state = [], action) => {
       return state;
   }
 };
+
+const searchResults = (state = {}, action) => {
+  switch (action.type) {
+    case 'SEARCH_SUBMITTED':
+      return Object.assign({}, state, {
+        search_submitted: true,
+        search: action.search
+      });
+    case 'RENDER_RESULTS':
+      return Object.assign({}, state, {
+        results: action.results
+      });
+    case 'SEARCH_CLEARED':
+      return Object.assign({}, state, {
+        search_submitted: false,
+      });
+    default:
+      return state;
+  }
+}
 
 const newEmployee = (state = {}, action) => {
   switch (action.type) {
@@ -132,10 +154,15 @@ const viewOrg = (state = [], action) => {
 }
 
 const initialState = {
+  currentView: 'edit-profile',
+  searchResults: {
+    searchSubmitted: false,
+    search: '',
+    results: []
+  },
   newEmployee: {
     employeeSubmitted: false
   },
-  currentView: 'edit-profile',
   editEmployee: {
     editReady: false
   },
@@ -149,14 +176,14 @@ const initialState = {
   viewOrg: {
     orgSubmitted: false,
     employeeType: '',
-    manager: {},
+    manager: [],
     employee: {},
     peers: [],
     reports: []
   }
 };
 
-const reducer = combineReducers({ currentView, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, searchResults, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;

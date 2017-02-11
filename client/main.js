@@ -314,7 +314,7 @@ function searchEmployee(event) {
   const results = `Showing results for \'${employee}\'`;
   searchResults.appendChild(document.createTextNode(results));
 
-  if (searchArray.length === 1 || searchArray.lenght === 3) {
+  if (searchArray.length === 1 || searchArray.length === 3) {
     const resultsArray = [];
     fetchData('', 'GET', `/orgchartemployee/${searchArray[0]}`)
     .then(response => {

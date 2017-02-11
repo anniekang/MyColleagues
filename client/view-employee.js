@@ -74,7 +74,6 @@ const mapDispatchtoProps = dispatch => {
         id: document.getElementById('profile-id').textContent.trim(),
         managerId: document.getElementById('profile-manager').textContent.trim()
       }
-      console.log(employee)
       dispatch(renderOrgChart(employee))
     },
     handleClickDelete: event => {

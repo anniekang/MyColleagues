@@ -3,11 +3,13 @@ const { connect } = require('react-redux');
 const EditEmployee = require('./edit-employee')
 const ViewEmployee = require('./view-employee')
 const ViewOrg = require('./view-org')
+const OrgSearchEmployee = require('./org-search-employee')
 
 
 const Body = ({ currentView }) => {
-  console.log(currentView)
   switch (currentView) {
+    case 'org-search-employee':
+      return <OrgSearchEmployee/>;
     case 'edit-profile':
       return <EditEmployee/>;
     case 'profile':
