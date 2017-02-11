@@ -80,7 +80,6 @@ app.get('/viewemployee/:id', (req, res) => {
 
 
 app.get('/orgchartemployee/:id', (req, res) => {
-  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
@@ -88,13 +87,11 @@ app.get('/orgchartemployee/:id', (req, res) => {
       RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
       {id: req.params.id})
     .then( result => {
-      console.log(result)
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
       session.close();
-      console.log(results);
       res.json(results);
     })
 
@@ -230,8 +227,6 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
 
 app.put('/updateemployee/', (req, res) => {
   const parameters = req.body;
-  console.log('params')
-  console.log(parameters)
   var session = driver.session();
   session
     .run(`
@@ -240,13 +235,11 @@ app.put('/updateemployee/', (req, res) => {
       RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       parameters)
     .then( result => {
-      console.log(result)
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
       session.close();
-      console.log(results);
       res.json(results);
     })
 
@@ -258,7 +251,6 @@ app.put('/updateemployee/', (req, res) => {
 
 
 app.delete('/deleteemployee/:id', (req, res) => {
-  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
