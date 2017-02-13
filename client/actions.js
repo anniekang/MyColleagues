@@ -248,6 +248,9 @@ const renderOrgChart = employee => {
         })
           .then(response => response.json())
           .then(response => {
+            if (employee.managerId === employee.id) {
+              response = {};
+            }
             dispatch(renderEmployee(response));
           })
           .then( () => {
@@ -264,6 +267,9 @@ const renderOrgChart = employee => {
                 })
                   .then(response => response.json())
                   .then(response => {
+                    if (employee.managerId === employee.id) {
+                      response = {};
+                    }
                     dispatch(renderReports(response))
                   })
               })
