@@ -6,10 +6,6 @@ const renderResults = (results) => {
   return { type: 'RENDER_RESULTS', results }
 }
 
-const searchCleared = () => {
-  return { type: 'SEARCH_CLEARED' }
-}
-
 const search = searchString => {
   const searchArray = searchString.trim().split(' ');
   if (searchArray.length === 0) return;
@@ -39,8 +35,6 @@ const search = searchString => {
                 })
               }
               dispatch(renderResults(resultsArray))
-              document.getElementById('search').reset();
-              dispatch(searchCleared());
             })
         })
       }
@@ -53,9 +47,9 @@ const search = searchString => {
           dispatch(renderResults(response))
         })
     }
-
   }
 }
+
 
 const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
@@ -67,10 +61,6 @@ const employeeSaved = (response) => {
 
 const employeeFailure = () => {
   return { type: 'EMPLOYEE_FAILURE' }
-}
-
-const formCleared = () => {
-  return { type: 'FORM_CLEARED' }
 }
 
 const saveEmployee = employee => {
@@ -92,16 +82,10 @@ const saveEmployee = employee => {
           alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
           dispatch(employeeSaved(response));
         }
-
-      })
-      .then( () => {
-        if (document.getElementById('employee')) {
-          document.getElementById('employee').reset();
-          dispatch(formCleared());
-        }
       })
   }
 }
+
 
 const idSearch = () => {
   return { type: 'ID_SEARCH' }
@@ -113,10 +97,6 @@ const idFound = (response) => {
 
 const idNotFound = () => {
   return { type: 'ID_NOT_FOUND' }
-}
-
-const idCleared = () => {
-  return { type: 'ID_CLEARED' }
 }
 
 const renderProfile = employeeId => {
@@ -136,27 +116,21 @@ const renderProfile = employeeId => {
           dispatch(idFound(response))
         }
       })
-      .then( () => {
-        if (document.getElementById('find-id')) {
-          document.getElementById('find').reset();
-          dispatch(idCleared());
-        }
-      })
-
   }
+}
+
+
+const editRequest = () => {
+  return { type: 'EDIT_REQUESTED' }
 }
 
 const editForm = (response) => {
   return { type: 'EDIT_FORM', response }
 }
 
-const readyToEdit = () => {
-  return { type: 'READY_TO_EDIT'}
-}
-
 const updateProfile = employeeId => {
   return dispatch => {
-    dispatch(idSearch());
+    dispatch(editRequest());
 
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
@@ -164,18 +138,10 @@ const updateProfile = employeeId => {
       .then(response => response.json())
       .then(response => {
         dispatch(editForm(response));
-        document.getElementById('employee-id').value = response.id;
-        document.getElementById('employee-first').value = response.first_name;
-        document.getElementById('employee-last').value = response.last_name;
-        document.getElementById('employee-photo').value = response.photo;
-        document.getElementById('employee-title').value = response.job_title;
-        document.getElementById('employee-description').value = response.job_description;
-        document.getElementById('employee-email').value = response.email;
-        document.getElementById('employee-manager').value = response.manager_id;
-        dispatch(readyToEdit());
       })
   }
 }
+
 
 const editSubmitted = () => {
   return { type: 'EDIT_SUBMITTED' }
@@ -199,6 +165,7 @@ const saveUpdate = employee => {
       })
   }
 }
+
 
 const deleteSubmitted = () => {
   return { type: 'DELETE_EMPLOYEE' }
@@ -241,6 +208,7 @@ const deleteProfile = employee => {
       })
   }
 }
+
 
 const orgSubmitted = () => {
   return { type: 'ORG_SUBMITTED' }

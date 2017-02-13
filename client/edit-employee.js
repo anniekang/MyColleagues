@@ -10,7 +10,6 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, editEmployee } ) => {
   else {
     handle = handleSubmit
   }
-
   return (
     <div id="edit-profile" className="ui grid container">
       <div className="ui hidden divider"></div>
@@ -20,35 +19,35 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, editEmployee } ) => {
         </div>
         <div className="field">
           <label>ID</label>
-          <input id="employee-id" type="text" name="id" placeholder="ID"/>
+          <input id="employee-id" type="text" name="id" defaultValue={ editEmployee.employee.id } placeholder="ID"/>
         </div>
         <div className="field">
           <label>First Name</label>
-          <input id="employee-first" type="text" name="first-name" placeholder="First Name"/>
+          <input id="employee-first" type="text" name="first-name" defaultValue={ editEmployee.employee.first_name } placeholder="First Name"/>
         </div>
         <div className="field">
           <label>Last Name</label>
-          <input id="employee-last" type="text" name="last-name" placeholder="Last Name"/>
+          <input id="employee-last" type="text" name="last-name" defaultValue={ editEmployee.employee.last_name } placeholder="Last Name"/>
         </div>
         <div className="field">
           <label>Photo</label>
-          <input id="employee-photo" type="text" name="photo" placeholder="Photo URL"/>
+          <input id="employee-photo" type="text" name="photo" defaultValue={ editEmployee.employee.photo } placeholder="Photo URL"/>
         </div>
         <div className="field">
           <label>Job Title</label>
-          <input id="employee-title" type="text" name="job-title" placeholder="Job Title"/>
+          <input id="employee-title" type="text" name="job-title" defaultValue={ editEmployee.employee.job_title } placeholder="Job Title"/>
         </div>
         <div id="description" className="field">
           <label>Job Description</label>
-          <textarea id="employee-description" rows="2" name="job-description" placeholder="Job Description"></textarea>
+          <textarea id="employee-description" rows="2" name="job-description" defaultValue={ editEmployee.employee.job_description } placeholder="Job Description"></textarea>
         </div>
         <div className="field">
           <label>Email</label>
-          <input id="employee-email" type="text" name="email" placeholder="Email Address"/>
+          <input id="employee-email" type="text" name="email" defaultValue={ editEmployee.employee.email } placeholder="Email Address"/>
         </div>
         <div className="field">
           <label>Manager ID</label>
-          <input id="employee-manager" type="text" name="manager-id" placeholder="Manager ID"/>
+          <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
@@ -65,7 +64,6 @@ const mapDispatchtoProps = ( dispatch ) => {
   return {
     handleSubmit: event => {
       event.preventDefault();
-
       const employeeData = new FormData(event.target);
       const employee = {
         id: employeeData.get('id'),
@@ -85,7 +83,6 @@ const mapDispatchtoProps = ( dispatch ) => {
     },
     handleSubmitEdit: event => {
       event.preventDefault();
-
       const employeeData = new FormData(event.target);
       const employee = {
         id: employeeData.get('id'),
@@ -97,9 +94,6 @@ const mapDispatchtoProps = ( dispatch ) => {
         email: employeeData.get('email'),
         managerId: employeeData.get('manager-id'),
       };
-      /*for (let key in employee) {
-        employee[key] = employee[key].toUpperCase();
-      }*/
       dispatch(saveUpdate(employee));
     }
   }

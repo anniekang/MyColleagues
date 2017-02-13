@@ -23,16 +23,13 @@ const searchResults = (state = {}, action) => {
   switch (action.type) {
     case 'SEARCH_SUBMITTED':
       return Object.assign({}, state, {
-        search_submitted: true,
+        searchSubmitted: true,
         search: action.search
       });
     case 'RENDER_RESULTS':
       return Object.assign({}, state, {
-        results: action.results
-      });
-    case 'SEARCH_CLEARED':
-      return Object.assign({}, state, {
-        search_submitted: false,
+        results: action.results,
+        searchSubmitted: false
       });
     default:
       return state;
@@ -43,13 +40,12 @@ const newEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'EMPLOYEE_SUBMITTED':
       return Object.assign({}, state, {
-        employee_submitted: true
+        employeeSubmitted: true
       });
     case 'EMPLOYEE_SAVED':
     case 'EMPLOYEE_FAILURE':
-    case 'FORM_CLEARED':
       return Object.assign({}, state, {
-        employee_submitted: false
+        employeeSubmitted: false
       });
     default:
       return state;
@@ -59,13 +55,20 @@ const newEmployee = (state = {}, action) => {
 const viewEmployee = (state = [], action) => {
   switch (action.type) {
     case 'ID_SEARCH':
+      return Object.assign({}, state, {
+        idSubmitted: true
+      });
     case 'ID_NOT_FOUND':
-    case 'ID_CLEARED':
-      return state;
     case 'EMPLOYEE_SAVED':
+      return Object.assign({}, state, {
+        idSubmitted: false
+      });
     case 'ID_FOUND':
     case 'EDIT_SAVED':
-      return action.response;
+      return Object.assign({}, state, {
+        idSubmitted: false,
+        employee: action.response
+      });
     default:
       return state;
   }
@@ -73,30 +76,25 @@ const viewEmployee = (state = [], action) => {
 
 const editEmployee = (state = [], action) => {
   switch (action.type) {
-    case 'EDIT_FORM':
-      return action.response;
-    case 'READY_TO_EDIT':
+    case 'EDIT_REQUEST':
       return Object.assign({}, state, {
-        editReady: true
+        editRequest: true
       });
-    case 'EDIT_SAVED':
-    return Object.assign({}, state, {
-      editReady: false
-    });
-    default:
-      return state;
-  }
-};
-
-const editSubmission = (state = [], action) => {
-  switch (action.type) {
+    case 'EDIT_FORM':
+      return Object.assign({}, state, {
+        employee: action.response,
+        editReady: true,
+        editRequest: false
+      });
     case 'EDIT_SUBMITTED':
       return Object.assign({}, state, {
         editSubmitted: true
       });
     case 'EDIT_SAVED':
       return Object.assign({}, state, {
-        editSubmitted: false
+        editReady: false,
+        editSubmitted: false,
+        employee: {}
       });
     default:
       return state;
@@ -163,11 +161,15 @@ const initialState = {
   newEmployee: {
     employeeSubmitted: false
   },
-  editEmployee: {
-    editReady: false
+  viewEmployee: {
+    idSubmitted: false,
+    employee: {}
   },
-  editSubmission: {
-    editSubmitted: false
+  editEmployee: {
+    editRequest: false,
+    editReady: false,
+    editSubmitted: false,
+    employee: {}
   },
   deleteEmployee: {
     deleteSubmitted: false,
@@ -183,7 +185,7 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, searchResults, newEmployee, viewEmployee, editEmployee, editSubmission, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, searchResults, newEmployee, viewEmployee, editEmployee, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;

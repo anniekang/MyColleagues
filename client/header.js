@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { search, renderProfile } = require('./actions')
 
 
-const Header = ({ handleSubmitSearch, handleSubmitId }) => {
+const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitId }) => {
   return (
     <div id="header" className="ui grid container">
       <div id="logo-search" className="ten wide column">
@@ -16,7 +16,10 @@ const Header = ({ handleSubmitSearch, handleSubmitId }) => {
             <form id="search" className="ui form" onSubmit={ handleSubmitSearch }>
               <div className="fields">
                 <div className="twelve wide field">
-                  <input id="emp-search" name="emp-search" type="text" placeholder="ID or First and Last Name"/>
+                  { searchResults.searchSubmitted
+                    ? null
+                    : <input id="emp-search" name="emp-search" type="text" placeholder="ID or First and Last Name"/>
+                  }
                 </div>
                 <button className="ui icon button">
                   <i className="search icon"></i>
@@ -33,7 +36,10 @@ const Header = ({ handleSubmitSearch, handleSubmitId }) => {
             <label>Employee ID</label>
             <div className="two fields">
               <div className="field">
-                <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
+                { viewEmployee.idSubmitted
+                  ? null
+                  : <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
+                }
               </div>
               <div className="field">
                 <button className="ui button" type="submit">View</button>
@@ -45,6 +51,8 @@ const Header = ({ handleSubmitSearch, handleSubmitId }) => {
     </div>
   )
 };
+
+const mapStatetoProps = ({ searchResults, viewEmployee }) => ({ searchResults, viewEmployee })
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -65,4 +73,4 @@ const mapDispatchtoProps = dispatch => {
   }
 };
 
-module.exports = connect('', mapDispatchtoProps)(Header);
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(Header);

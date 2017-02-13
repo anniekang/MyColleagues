@@ -10,31 +10,31 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
       <div className='row'>
         <div className='twelve wide column'>
           <div className='row'>
-            <span id='profile-first'>{ viewEmployee.first_name }</span>
-            <span id='profile-last'> { viewEmployee.last_name }</span>
+            <span id='profile-first'>{ viewEmployee.employee.first_name }</span>
+            <span id='profile-last'> { viewEmployee.employee.last_name }</span>
           </div>
           <div className='ui row grid'>
             <div className='four wide column'>
-              <img id='profile-photo' className='ui small image' alt='Profile Photo' src={ viewEmployee.photo }/>
+              <img id='profile-photo' className='ui small image' alt='Profile Photo' src={ viewEmployee.employee.photo }/>
             </div>
             <div className='twelve wide column'>
               <div className='row'>ID:
-                <span id='profile-id'> { viewEmployee.id }</span>
+                <span id='profile-id'> { viewEmployee.employee.id }</span>
               </div>
               <div className='row'>Job Title:
-                <span id='profile-title'> { viewEmployee.job_title }</span>
+                <span id='profile-title'> { viewEmployee.employee.job_title }</span>
               </div>
               <div className='row'>Job Description:
-                <span id='profile-description'> { viewEmployee.job_description }</span>
+                <span id='profile-description'> { viewEmployee.employee.job_description }</span>
               </div>
               <div className='row'>Email:
-                <span id='profile-email'> { viewEmployee.email }</span>
+                <span id='profile-email'> { viewEmployee.employee.email }</span>
               </div>
               <div className='row'>Manager ID:
-                <span id='profile-manager'> { viewEmployee.manager_id }</span>
+                <span id='profile-manager'> { viewEmployee.employee.manager_id }</span>
               </div>
               <div className='row'>Manager Name:
-                <span id='profile-manager-name'> { viewEmployee.manager_first_name } { viewEmployee.manager_last_name }</span>
+                <span id='profile-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
               </div>
             </div>
           </div>
