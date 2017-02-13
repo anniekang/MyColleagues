@@ -14,7 +14,7 @@ const OrgSearchEmployee = ({ currentView, searchResults, viewOrg, handleClickPro
   return (
     <div>
       { (currentView === 'org-search-employee')
-          ? <div id='search-results'>Showing results for { searchResults.search }</div>
+          ? <div id='search-results'>Showing results for '{ searchResults.search }'</div>
           : null
       }
       { result.map((employee, i) => {

@@ -13,31 +13,14 @@ const search = searchString => {
   return dispatch => {
     dispatch(searchSubmitted(searchString));
     if (searchArray.length === 1 || searchArray.length === 3) {
-      const resultsArray = [];
-      fetch(`/orgchartemployee/${searchArray[0]}`, {
+      fetch(`/search/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then(response => response.json())
         .then(response => {
-          if (response.id === searchArray[0]) {
-            resultsArray.push(response);
-          }
+          dispatch(renderResults(response))
         })
-        .then ( () => {
-          fetch(`/searchname/${searchArray[0]}`, {
-            headers: {'Content-Type': 'application/json'}
-          })
-            .then(response => response.json())
-            .then(response => {
-              if (response) {
-                response.forEach(result => {
-                  resultsArray.push(result);
-                })
-              }
-              dispatch(renderResults(resultsArray))
-            })
-        })
-      }
+    }
     if (searchArray === 2) {
       fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}

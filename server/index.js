@@ -162,15 +162,18 @@ app.get('/orgchartreports/:id', (req, res) => {
 });
 
 
-app.get('/searchname/:name', (req, res) => {
+app.get('/search/:search', (req, res) => {
   const parameters = {
-    name: req.params.name
+    search: req.params.search
   }
   var session = driver.session();
   session
     .run(`
+      MATCH (search:Employee {id: {search}})
+      RETURN search
+      UNION
       MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
-      WHERE search.first_name CONTAINS {name} OR search.last_name CONTAINS {name}
+      WHERE search.first_name CONTAINS {search} OR search.last_name CONTAINS {search}
       RETURN search`,
       parameters)
     .then( result => {
