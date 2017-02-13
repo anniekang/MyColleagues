@@ -1,7 +1,50 @@
-.invisible.section.hidden {
-  display: none;
+body {
+  font-size: 12px;
+}
+
+#logo {
+  max-height: 200px;
 }
 
 #search-results {
   margin-left: 40px;
+}
+
+#view-profile {
+  margin-top: 2%;
+}
+
+#profile-first,
+#profile-last {
+  font-size: 1.9em;
+  font-weight: bold;
+}
+
+#profile-info {
+  font-size: 1.2em;
+  line-height: 1.3em;
+  color: rgb(104,104,104);
+}
+
+#profile-id,
+#profile-title,
+#profile-description,
+#profile-email,
+#profile-manager,
+#profile-manager-name {
+  color: black;
+}
+
+#profile-description-label {
+  display: inline-block;
+}
+
+#profile-description {
+  display: inline;
+}
+
+#edit-button,
+#org-button,
+#delete-button {
+  width: 130px;
 }

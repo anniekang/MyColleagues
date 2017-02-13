@@ -5,27 +5,29 @@ const { updateProfile, deleteProfile, renderOrgChart } = require('./actions');
 
 const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
   return (
-    <div id='view-profile' className='ui equal width grid container'>
-      <div className='ui hidden divider'></div>
-      <div className='row'>
-        <div className='twelve wide column'>
+    <div id='view-profile' className='ui grid container'>
+      <div className='ui fourteen wide centered column row'>
+        <div className='thirteen wide column'>
+
           <div className='row'>
             <span id='profile-first'>{ viewEmployee.employee.first_name }</span>
             <span id='profile-last'> { viewEmployee.employee.last_name }</span>
           </div>
+          <div className='ui hidden divider'></div>
           <div className='ui row grid'>
             <div className='four wide column'>
-              <img id='profile-photo' className='ui small image' alt='Profile Photo' src={ viewEmployee.employee.photo }/>
+              <img id='profile-photo' className='ui small centered image' alt='Profile Photo' src={ viewEmployee.employee.photo }/>
             </div>
-            <div className='twelve wide column'>
+            <div id='profile-info' className='twelve wide column'>
               <div className='row'>ID:
                 <span id='profile-id'> { viewEmployee.employee.id }</span>
               </div>
               <div className='row'>Job Title:
                 <span id='profile-title'> { viewEmployee.employee.job_title }</span>
               </div>
-              <div className='row'>Job Description:
-                <span id='profile-description'> { viewEmployee.employee.job_description }</span>
+              <div className='row'>
+                <div id='profile-description-label'>Job Description:</div>
+                <div id='profile-description'> { viewEmployee.employee.job_description }</div>
               </div>
               <div className='row'>Email:
                 <span id='profile-email'> { viewEmployee.employee.email }</span>
@@ -39,13 +41,15 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
             </div>
           </div>
         </div>
-        <div className='four wide column'>
+        <div className='three wide column'>
           <div className='ui one column centered grid'>
+            <div className='ui hidden divider'></div>
+
             <div className='row'>
               <button id='edit-button' className='ui button' type='submit' onClick={ handleClickEdit }>Edit Profile</button>
             </div>
             <div className='row'>
-              <button className='ui button org-button' type='submit' onClick={ handleClickOrg }>Org Chart</button>
+              <button id='org-button' className='ui button' type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
             <div className='row'>
               <button id='delete-button' className='ui button' type='submit' onClick={ handleClickDelete }>Delete Profile</button>

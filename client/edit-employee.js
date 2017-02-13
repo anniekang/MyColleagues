@@ -12,8 +12,7 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, editEmployee } ) => {
   }
   return (
     <div id="edit-profile" className="ui grid container">
-      <div className="ui hidden divider"></div>
-      <form id="employee" className="ui sixteen wide column fluid form" onSubmit={ handle }>
+      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handle }>
         <div className="field">
           <label>Employee Profile</label>
         </div>

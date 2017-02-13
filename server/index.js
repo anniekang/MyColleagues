@@ -205,7 +205,11 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
   session
     .run(`
       MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
-      WHERE search.first_name CONTAINS {firstName} AND search.last_name CONTAINS {lastName}
+      WHERE search.first_name CONTAINS {firstName}
+      RETURN search
+      UNION
+      MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
+      WHERE search.last_name CONTAINS {lastName}
       RETURN search`,
       parameters)
     .then( result => {
