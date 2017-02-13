@@ -14,7 +14,7 @@ const search = searchString => {
     dispatch(searchSubmitted(searchString));
     if (searchArray.length === 1 || searchArray.length === 3) {
       const resultsArray = [];
-      fetch(`/orgchartemployee/${searchArray[0]}`, {
+      fetch(`/searchresults/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then(response => response.json())
@@ -38,7 +38,7 @@ const search = searchString => {
             })
         })
       }
-    if (searchArray === 2) {
+    if (searchArray.length === 2) {
       fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}
       })
@@ -233,41 +233,19 @@ const renderReports = response => {
 const renderOrgChart = employee => {
   return dispatch => {
     dispatch(orgSubmitted());
-    fetch(`/orgchartemployee/${employee.managerId}`, {
+    fetch(`/orgchart/${employee.id}/${employee.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then(response => response.json())
       .then(response => {
-        const array = [];
-        array.push(response);
-        dispatch(renderManager(array));
-      })
-      .then( () => {
-        fetch(`/orgchartemployee/${employee.id}`, {
-          headers: {'Content-Type': 'application/json'}
-        })
-          .then(response => response.json())
-          .then(response => {
-            dispatch(renderEmployee(response));
-          })
-          .then( () => {
-            fetch(`/orgchartpeers/${employee.id}/${employee.managerId}`, {
-              headers: {'Content-Type': 'application/json'}
-            })
-              .then(response => response.json())
-              .then(response => {
-                dispatch(renderPeers(response))
-              })
-              .then( () => {
-                fetch(`/orgchartreports/${employee.id}`, {
-                  headers: {'Content-Type': 'application/json'}
-                })
-                  .then(response => response.json())
-                  .then(response => {
-                    dispatch(renderReports(response))
-                  })
-              })
-          })
+        const manager = [response[0]];
+        dispatch(renderManager(manager));
+        const employee = response[1];
+        dispatch(renderEmployee(employee));
+        const peers = response[2];
+        dispatch(renderPeers(peers));
+        const reports = response[3];
+        dispatch(renderReports(reports));
       })
   }
 }
