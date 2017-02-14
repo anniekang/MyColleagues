@@ -1,23 +1,27 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const EditEmployee = require('./edit-employee')
-const ViewEmployee = require('./view-employee')
-const ViewOrg = require('./view-org')
+const Home = require('./home')
 const OrgSearchEmployee = require('./org-search-employee')
+const ViewEmployee = require('./view-employee')
+const EditEmployee = require('./edit-employee')
+const ViewOrg = require('./view-org')
 
 
 const Body = ({ currentView }) => {
+  console.log(currentView)
   switch (currentView) {
+    case 'home':
+      return <Home/>;
     case 'org-search-employee':
       return <OrgSearchEmployee/>;
+    case 'profile':
+        return <ViewEmployee/>;
     case 'edit-profile':
       return <EditEmployee/>;
-    case 'profile':
-      return <ViewEmployee/>;
     case 'org-chart':
       return <ViewOrg/>;
     default:
-      return <EditEmployee/>;
+      return <Home/>;
   }
 };
 

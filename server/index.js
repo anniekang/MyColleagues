@@ -12,44 +12,6 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 
 
-app.post('/newemployee/', (req, res) => {
-  const parameters = req.body;
-  var session = driver.session();
-  session
-    .run(`
-      MATCH (check:Employee {id: {id}}) RETURN check.id`,
-      {id: req.body.id})
-    .then( result => {
-      if (result.records.length === 0) {
-        return session.run(`
-          CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: {description}, email: {email}, manager_id: {managerId}})
-          WITH new
-          MATCH (mgr: Employee {id: {managerId}})
-          CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr)
-          RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
-          parameters)
-      }
-      else {
-        session.close();
-        res.status(400).json({error: `${req.body.id} already exists`});
-      }
-    })
-    .then( result => {
-      const results = {};
-      result.records[0].forEach( (value, key) => {
-        results[key] = value;
-      })
-      session.close();
-      res.json(results);
-    })
-
-    .catch( error => {
-      res.json(error);
-    });
-
-});
-
-
 app.get('/search/:search', (req, res) => {
   const parameters = {
     search: req.params.search
@@ -137,6 +99,7 @@ app.get('/viewemployee/:id', (req, res) => {
           results[key] = value;
         })
         session.close();
+        console.log(results)
         res.json(results);
       }
     })
@@ -144,6 +107,44 @@ app.get('/viewemployee/:id', (req, res) => {
     .catch( error => {
       res.json(error);
     });
+});
+
+
+app.post('/newemployee/', (req, res) => {
+  const parameters = req.body;
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (check:Employee {id: {id}}) RETURN check.id`,
+      {id: req.body.id})
+    .then( result => {
+      if (result.records.length === 0) {
+        return session.run(`
+          CREATE (new:Employee {id: {id}, first_name: {first}, last_name: {last}, photo: {photo}, job_title: {title}, job_description: {description}, email: {email}, manager_id: {managerId}})
+          WITH new
+          MATCH (mgr: Employee {id: {managerId}})
+          CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr)
+          RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
+          parameters)
+      }
+      else {
+        session.close();
+        res.status(400).json({error: `${req.body.id} already exists`});
+      }
+    })
+    .then( result => {
+      const results = {};
+      result.records[0].forEach( (value, key) => {
+        results[key] = value;
+      })
+      session.close();
+      res.json(results);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+
 });
 
 
@@ -236,7 +237,7 @@ app.put('/updateemployee/', (req, res) => {
   var session = driver.session();
   session
     .run(`
-      MATCH (update:Employee {id: {id}})-[del:REPORTS_TO]->(mgr:Employee {id: {managerId}})
+      MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
       SET update.first_name = {first}, update.last_name = {last}, update.photo = {photo}, update.job_title = {title}, update.job_description = {description}, update.email = {email}, update.manager_id = {managerId}
       RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       parameters)
@@ -246,6 +247,7 @@ app.put('/updateemployee/', (req, res) => {
         results[key] = value;
       })
       session.close();
+      console.log(results)
       res.json(results);
     })
 

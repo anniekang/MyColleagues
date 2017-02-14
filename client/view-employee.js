@@ -4,6 +4,10 @@ const { updateProfile, deleteProfile, renderOrgChart } = require('./actions');
 
 
 const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
+  const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+  const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+  const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+
   return (
     <div id='view-profile' className='ui grid container'>
       <div className='ui fourteen wide centered column row'>
@@ -46,13 +50,13 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
             <div className='ui hidden divider'></div>
 
             <div className='row'>
-              <button id='edit-button' className='ui button' type='submit' onClick={ handleClickEdit }>Edit Profile</button>
+              <button id='edit-button' className={ editButton } type='submit' onClick={ handleClickEdit }>Edit Profile</button>
             </div>
             <div className='row'>
-              <button id='org-button' className='ui button' type='submit' onClick={ handleClickOrg }>Org Chart</button>
+              <button id='org-button' className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
             <div className='row'>
-              <button id='delete-button' className='ui button' type='submit' onClick={ handleClickDelete }>Delete Profile</button>
+              <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
             </div>
           </div>
         </div>
@@ -68,8 +72,9 @@ const mapDispatchtoProps = dispatch => {
     handleClickEdit: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase()
       };
+      console.log(employee)
       dispatch(updateProfile(employee.id))
     },
     handleClickOrg: event => {

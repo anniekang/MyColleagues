@@ -1,12 +1,12 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { search, renderProfile } = require('./actions')
+const { userSettings, search, renderProfile } = require('./actions')
 
 
-const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitId, handleChangeIT }) => {
+const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitId, handleClickIt }) => {
   return (
     <div id="header" className="ui grid container">
-      <div id="logo-search" className="ten wide column">
+      <div id="logo-search" className="twelve wide column">
         <div className="ui hidden divider"></div>
         <div className="ui grid">
           <div className="ui medium circular image four wide column">
@@ -31,32 +31,38 @@ const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitI
           </div>
         </div>
       </div>
-      <div id="find-employee" className= "six wide column">
-        <form id="find" className="ui form" onSubmit={ handleSubmitId }>
+      <div className= "four wide column">
+        <div className="ui grid">
           <div className="ui hidden divider"></div>
-          <div className="grouped fields">
-            <label htmlFor="user">Current user:</label>
-            <div className="field">
-              <div className="ui radio checkbox">
-                <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleChangeIT } />
-                <label>IT Admin</label>
-              </div>
-            </div>
-            <div className="fields">
+          <form id="set-user" className="ui form" onSubmit={ handleSubmitId }>
+            <div className="grouped fields">
+              <label htmlFor="user">Current user:</label>
               <div className="field">
-                <div className="ui radio checkbox">
-                  <input type="radio" name="user" value="Employee" tabIndex="2"/>
-                  <label>Employee</label>
-                  <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
+                <div className="ui radio checkbox four wide column">
+                  <input type="radio" name="user" value="IT Admin" tabIndex="1" onClick={ handleClickIt}/>
+                  <label>IT Admin</label>
                 </div>
               </div>
+              <div className="fields inline">
+                <div className="field">
+                  <div className="ui radio checkbox four wide column">
+                    <input type="radio" name="user" value="Employee" tabIndex="2"/>
+                    <label>Employee</label>
+                  </div>
+                </div>
+                <div className="field six wide column">
+                  { viewEmployee.idSubmitted
+                    ? null
+                    : <input id="find-id" type="text" name="id" placeholder="ID"/>
+                  }
+                </div>
+              </div>
+              <div className="field">
+                <button className="ui button" type="submit">View</button>
+              </div>
             </div>
-          </div>
-
-          <div className="field">
-            <button className="ui button" type="submit">View</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   )
@@ -73,6 +79,7 @@ const mapDispatchtoProps = dispatch => {
       dispatch(search(searchString));
     },
     handleSubmitId: event => {
+      console.log('id')
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
@@ -80,9 +87,10 @@ const mapDispatchtoProps = dispatch => {
       }
       dispatch(renderProfile(employee.id));
     },
-    handleChangeIT: event => {
+    handleClickIt: event => {
+      console.log('it')
       event.preventDefault();
-
+      dispatch(userSettings());
     }
   }
 };

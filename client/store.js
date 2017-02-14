@@ -3,14 +3,18 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
+    case 'EMPLOYEE_DELETED':
+    case 'IT_SELECTED':
+      return 'home';
     case 'RENDER_RESULTS':
       return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
     case 'ID_FOUND':
     case 'EDIT_SAVED':
       return 'profile';
+    case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
-    case 'EMPLOYEE_DELETED':
+    case 'MISSING_FIELDS':
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
@@ -18,6 +22,23 @@ const currentView = (state = [], action) => {
       return state;
   }
 };
+
+
+const currentUser = (state = {}, action) => {
+  switch(action.type) {
+    case 'IT_SELECTED':
+      return Object.assign({}, state, {
+        IT: true
+      });
+    case 'ID_SEARCH':
+    return Object.assign({}, state, {
+      IT: false
+    });
+    default:
+      return state;
+  }
+}
+
 
 const searchResults = (state = {}, action) => {
   switch (action.type) {
@@ -37,16 +58,6 @@ const searchResults = (state = {}, action) => {
   }
 };
 
-const currentUser = (state = {}, action) => {
-  switch(action.type) {
-    case 'IT':
-      return Object.assign({}, state, {
-        IT: true
-      });
-    default:
-      return state;
-  }
-}
 
 const viewEmployee = (state = {}, action) => {
   switch (action.type) {
@@ -56,11 +67,11 @@ const viewEmployee = (state = {}, action) => {
         employeeId: action.employeeId
       });
     case 'ID_NOT_FOUND':
-    case 'EMPLOYEE_SAVED':
       return Object.assign({}, state, {
         idSubmitted: false
       });
     case 'ID_FOUND':
+    case 'EMPLOYEE_SAVED':
     case 'EDIT_SAVED':
       return Object.assign({}, state, {
         idSubmitted: false,
@@ -73,14 +84,28 @@ const viewEmployee = (state = {}, action) => {
 
 const newEmployee = (state = {}, action) => {
   switch (action.type) {
+    case 'CREATE_PROFILE_SUBMITTED':
+      return Object.assign({}, state, {
+        newProfile: true
+      });
     case 'EMPLOYEE_SUBMITTED':
       return Object.assign({}, state, {
         employeeSubmitted: true
       });
-    case 'EMPLOYEE_SAVED':
+    case 'MISSING_FIELDS':
+      return Object.assign({}, state, {
+        fixMissing: true,
+        missingFields: action.missing,
+        employeeSubmitted: false
+      });
     case 'EMPLOYEE_FAILURE':
       return Object.assign({}, state, {
-        employeeSubmitted: false
+        employeeSubmitted: false,
+      });
+    case 'EMPLOYEE_SAVED':
+      return Object.assign({}, state, {
+        employeeSubmitted: false,
+        newProfile: false
       });
     default:
       return state;
@@ -90,15 +115,14 @@ const newEmployee = (state = {}, action) => {
 
 const editEmployee = (state = {}, action) => {
   switch (action.type) {
-    case 'EDIT_REQUEST':
+    case 'EDIT_REQUESTED':
       return Object.assign({}, state, {
-        editRequest: true
+        editRequested: true
       });
     case 'EDIT_FORM':
       return Object.assign({}, state, {
-        employee: action.response,
         editReady: true,
-        editRequest: false
+        employee: action.response
       });
     case 'EDIT_SUBMITTED':
       return Object.assign({}, state, {
@@ -170,7 +194,10 @@ const viewOrg = (state = [], action) => {
 }
 
 const initialState = {
-  currentView: 'edit-profile',
+  currentView: 'home',
+  currentUser: {
+    IT: false
+  },
   searchResults: {
     searchSubmitted: false,
     search: '',
@@ -183,10 +210,13 @@ const initialState = {
     employee: {}
   },
   newEmployee: {
+    newProfile: false,
+    fixMissing: false,
+    missingFields: [],
     employeeSubmitted: false
   },
   editEmployee: {
-    editRequest: false,
+    editRequested: true,
     editReady: false,
     editSubmitted: false,
     employee: {}
@@ -205,7 +235,7 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, searchResults, currentUser, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;

@@ -1,3 +1,15 @@
+const DEFAULTPHOTO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
+
+const ITSelected = () => {
+  return { type: 'IT_SELECTED'}
+}
+
+const userSettings = () => {
+  return dispatch => {
+    dispatch(ITSelected());
+  }
+}
+
 const searchSubmitted = (search) => {
   return { type: 'SEARCH_SUBMITTED', search }
 }
@@ -64,7 +76,7 @@ const renderProfile = employeeId => {
           fetch(response.photo)
             .then(photo => {
               if (photo.status === 404 || response.photo === '') {
-                response.photo = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
+                response.photo = DEFAULTPHOTO;
               }
               dispatch(idFound(response))
             })
@@ -74,9 +86,23 @@ const renderProfile = employeeId => {
   }
 }
 
+const createProfile = () => {
+  return { type: 'CREATE_PROFILE_SUBMITTED'}
+}
+
+const newProfile = () => {
+  return dispatch => {
+    dispatch(createProfile());
+  }
+}
+
 
 const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
+}
+
+const missingFields = (missing) => {
+  return { type: 'MISSING_FIELDS', missing }
 }
 
 const employeeSaved = (response) => {
@@ -90,7 +116,20 @@ const employeeFailure = () => {
 const saveEmployee = employee => {
   return dispatch => {
     dispatch(employeeSubmitted());
-
+    const missing = [];
+    let check = false;
+    for (let key in employee) {
+      if (key != 'photo' && key != 'description') {
+        if (employee[key] === '') {
+          missing.push(key);
+          check = true;
+        }
+      }
+    }
+    if (check === true) {
+      dispatch(missingFields(missing));
+      return;
+    }
     fetch('/newemployee/', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -98,20 +137,27 @@ const saveEmployee = employee => {
     })
       .then(response => response.json())
       .then(response => {
+        console.log(response)
         if (response.error) {
           alert(response.error);
           dispatch(employeeFailure());
         }
         else if (response.id) {
           alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-          dispatch(employeeSaved(response));
+          fetch(response.photo)
+            .then(photo => {
+              if (photo.status === 404 || response.photo === '') {
+                response.photo = DEFAULTPHOTO;
+              }
+              dispatch(employeeSaved(response));
+            })
         }
       })
   }
 }
 
 
-const editRequest = () => {
+const editRequested = () => {
   return { type: 'EDIT_REQUESTED' }
 }
 
@@ -121,13 +167,14 @@ const editForm = (response) => {
 
 const updateProfile = employeeId => {
   return dispatch => {
-    dispatch(editRequest());
+    dispatch(editRequested());
 
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then(response => response.json())
       .then(response => {
+        console.log(response)
         dispatch(editForm(response));
       })
   }
@@ -152,7 +199,13 @@ const saveUpdate = employee => {
     })
       .then(response => response.json())
       .then(response => {
-          dispatch(editSaved(response))
+        fetch(response.photo)
+          .then(photo => {
+            if (photo.status === 404 || response.photo === '') {
+              response.photo = DEFAULTPHOTO;
+            }
+            dispatch(editSaved(response))
+          })
       })
   }
 }
@@ -288,4 +341,4 @@ const renderOrgChart = org => {
 }
 
 
-module.exports = { search, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteProfile, renderOrgChart }
+module.exports = { userSettings, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }
