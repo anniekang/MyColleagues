@@ -3,8 +3,6 @@ const { connect } = require('react-redux')
 const { renderProfile, renderOrgChart} = require('./actions')
 
 const OrgReports = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
-  console.log('reports')
-  console.log(viewOrg.reports)
   return (
     <div>
       { viewOrg.reports.map((report, i) => {
