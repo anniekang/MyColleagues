@@ -3,7 +3,7 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
-    case 'SEARCH_SUBMITTED':
+    case 'RENDER_RESULTS':
       return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
     case 'ID_FOUND':
@@ -12,7 +12,7 @@ const currentView = (state = [], action) => {
     case 'EDIT_FORM':
     case 'EMPLOYEE_DELETED':
       return 'edit-profile';
-    case 'RENDER_MANAGER':
+    case 'RENDER_PEERS':
       return 'org-chart';
     default:
       return state;
@@ -29,6 +29,7 @@ const searchResults = (state = {}, action) => {
     case 'RENDER_RESULTS':
       return Object.assign({}, state, {
         results: action.results,
+        employeeType: 'search-result',
         searchSubmitted: false
       });
     default:
@@ -56,7 +57,8 @@ const viewEmployee = (state = [], action) => {
   switch (action.type) {
     case 'ID_SEARCH':
       return Object.assign({}, state, {
-        idSubmitted: true
+        idSubmitted: true,
+        employeeId: action.employeeId
       });
     case 'ID_NOT_FOUND':
     case 'EMPLOYEE_SAVED':
@@ -128,9 +130,12 @@ const viewOrg = (state = [], action) => {
       return Object.assign({}, state, {
         orgSubmitted: true
       });
+    case 'ORG_DATA_RECEIVED':
+      return Object.assign({}, state, {
+        orgSubmitted: false
+      });
     case 'RENDER_MANAGER':
       return Object.assign({}, state, {
-        orgSubmitted: false,
         employeeType: 'org-manager',
         manager: action.response
       });
@@ -156,6 +161,7 @@ const initialState = {
   searchResults: {
     searchSubmitted: false,
     search: '',
+    employeeType: '',
     results: []
   },
   newEmployee: {
@@ -163,6 +169,7 @@ const initialState = {
   },
   viewEmployee: {
     idSubmitted: false,
+    employeeId: '',
     employee: {}
   },
   editEmployee: {
@@ -178,8 +185,8 @@ const initialState = {
   viewOrg: {
     orgSubmitted: false,
     employeeType: '',
-    manager: [],
-    employee: {},
+    manager: {},
+    employee: [],
     peers: [],
     reports: []
   }

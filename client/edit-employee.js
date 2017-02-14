@@ -10,10 +10,10 @@ const EditEmployee = ( { handleSubmit, handleSubmitEdit, editEmployee } ) => {
   else {
     handle = handleSubmit
   }
+  
   return (
     <div id="edit-profile" className="ui grid container">
-      <div className="ui hidden divider"></div>
-      <form id="employee" className="ui sixteen wide column fluid form" onSubmit={ handle }>
+      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handle }>
         <div className="field">
           <label>Employee Profile</label>
         </div>
@@ -94,6 +94,10 @@ const mapDispatchtoProps = ( dispatch ) => {
         email: employeeData.get('email'),
         managerId: employeeData.get('manager-id'),
       };
+      for (let key in employee) {
+        employee[key] = employee[key].toUpperCase();
+      }
+
       dispatch(saveUpdate(employee));
     }
   }

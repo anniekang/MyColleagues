@@ -13,31 +13,14 @@ const search = searchString => {
   return dispatch => {
     dispatch(searchSubmitted(searchString));
     if (searchArray.length === 1 || searchArray.length === 3) {
-      const resultsArray = [];
-      fetch(`/searchresults/${searchArray[0]}`, {
+      fetch(`/search/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then(response => response.json())
         .then(response => {
-          if (response.id === searchArray[0]) {
-            resultsArray.push(response);
-          }
+          dispatch(renderResults(response))
         })
-        .then ( () => {
-          fetch(`/searchname/${searchArray[0]}`, {
-            headers: {'Content-Type': 'application/json'}
-          })
-            .then(response => response.json())
-            .then(response => {
-              if (response) {
-                response.forEach(result => {
-                  resultsArray.push(result);
-                })
-              }
-              dispatch(renderResults(resultsArray))
-            })
-        })
-      }
+    }
     if (searchArray.length === 2) {
       fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}
@@ -87,8 +70,8 @@ const saveEmployee = employee => {
 }
 
 
-const idSearch = () => {
-  return { type: 'ID_SEARCH' }
+const idSearch = (employeeId) => {
+  return { type: 'ID_SEARCH', employeeId }
 }
 
 const idFound = (response) => {
@@ -101,8 +84,8 @@ const idNotFound = () => {
 
 const renderProfile = employeeId => {
   return dispatch => {
-    dispatch(idSearch());
-
+    dispatch(idSearch(employeeId));
+    employeeId = employeeId.toUpperCase();
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
@@ -214,6 +197,10 @@ const orgSubmitted = () => {
   return { type: 'ORG_SUBMITTED' }
 }
 
+const orgDataReceived = () => {
+  return { type: 'ORG_DATA_RECEIVED'}
+}
+
 const renderManager = response => {
   return { type: 'RENDER_MANAGER', response }
 }
@@ -230,22 +217,27 @@ const renderReports = response => {
   return { type: 'RENDER_REPORTS', response}
 }
 
-const renderOrgChart = employee => {
+const renderOrgChart = org => {
   return dispatch => {
     dispatch(orgSubmitted());
-    fetch(`/orgchart/${employee.id}/${employee.managerId}`, {
+
+    fetch(`/orgchart/${org.id}/${org.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then(response => response.json())
       .then(response => {
-        const manager = [response[0]];
-        dispatch(renderManager(manager));
-        const employee = response[1];
-        dispatch(renderEmployee(employee));
-        const peers = response[2];
-        dispatch(renderPeers(peers));
+        dispatch(orgDataReceived());
+        const manager = response[0];
+        const employee = [response[1]];
         const reports = response[3];
-        dispatch(renderReports(reports));
+        const peers = response[2];
+
+        dispatch(renderManager(manager));
+        if (org.id != org.maangerID){
+          dispatch(renderEmployee(employee));
+          dispatch(renderReports(reports));
+        }
+        dispatch(renderPeers(peers));
       })
   }
 }
