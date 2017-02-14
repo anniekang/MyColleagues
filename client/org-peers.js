@@ -3,16 +3,21 @@ const { connect } = require('react-redux');
 const { renderProfile, renderOrgChart } = require('./actions')
 
 const OrgPeers = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
+  console.log('peers')
+  console.log(viewOrg.peers)
   return (
     <div>
-      { viewOrg.peers.map((peer, i) => {
+      { console.log(viewOrg.peers) }
+      {  viewOrg.peers.map((peer, i) => {
+          console.log(peer)
+          console.log(peer.photo)
           let profileButton = `ui button employee-profile ${peer.id} ${peer.manager_id}`;
           let orgButton = `ui button employee-org ${peer.id} ${peer.manager_id}`;
           return (
             <div id={ peer.id } key={ i } className='ui equal width grid container employee'>
               <div className='ui hidden divider'></div>
               <div className='row'>
-                <div className='one wide column'></div>
+                <div className='two wide column'></div>
                 <div className='ten wide column'>
                   <div className='ui row grid'>
                     <div className='four wide column'>
@@ -35,7 +40,7 @@ const OrgPeers = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
                     </div>
                   </div>
                 </div>
-                <div className='four wide column'>
+                <div className='two wide column'>
                   <div className='ui one column centered grid'>
                     <div className='row'>
                       <button className={ profileButton } type='submit' onClick={ handleClickProfile }>View Profile</button>

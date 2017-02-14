@@ -3,6 +3,8 @@ const { connect } = require('react-redux')
 const { renderProfile, renderOrgChart} = require('./actions')
 
 const OrgReports = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
+  console.log('reports')
+  console.log(viewOrg.reports)
   return (
     <div>
       { viewOrg.reports.map((report, i) => {
@@ -12,7 +14,7 @@ const OrgReports = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
           <div key={ i } className='ui equal width grid container employee'>
             <div className='ui hidden divider'></div>
             <div className='row'>
-              <div className='two wide column'></div>
+              <div className='four wide column'></div>
               <div className='ten wide column'>
                 <div className='ui row grid'>
                   <div className='four wide column'>
@@ -35,7 +37,7 @@ const OrgReports = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
                   </div>
                 </div>
               </div>
-              <div className='four wide column'>
+              <div className='two wide column'>
                 <div className='ui one column centered grid'>
                   <div className='row'>
                     <button className={ profileButton } type='submit' onClick={ handleClickProfile }>View Profile</button>

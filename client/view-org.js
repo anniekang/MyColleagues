@@ -1,6 +1,7 @@
 const React = require('react');
+const OrgManager = require ('./org-manager');
+
 const OrgSearchEmployee = require ('./org-search-employee');
-const OrgMain = require ('./org-main');
 const OrgPeers = require ('./org-peers');
 const OrgReports = require ('./org-reports');
 
@@ -9,8 +10,8 @@ const OrgReports = require ('./org-reports');
 const ViewOrg = () => {
   return (
     <div id='orgChart'>
+      <OrgManager/>
       <OrgSearchEmployee/>
-      <OrgMain/>
       <OrgReports/>
       <OrgPeers/>
     </div>

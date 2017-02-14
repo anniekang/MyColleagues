@@ -7,7 +7,7 @@ body {
 }
 
 #search-results {
-  margin-left: 40px;
+  margin-top: 2%;
 }
 
 #view-profile {
@@ -47,4 +47,9 @@ body {
 #org-button,
 #delete-button {
   width: 130px;
+}
+
+.employee-profile,
+.employee-org {
+  width: 105px;
 }

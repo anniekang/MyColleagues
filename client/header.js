@@ -68,7 +68,7 @@ const mapDispatchtoProps = dispatch => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
-        id: employeeData.get('id') //.toUpperCase();
+        id: employeeData.get('id')
       }
       dispatch(renderProfile(employee.id));
     }

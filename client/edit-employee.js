@@ -93,6 +93,10 @@ const mapDispatchtoProps = ( dispatch ) => {
         email: employeeData.get('email'),
         managerId: employeeData.get('manager-id'),
       };
+      for (let key in employee) {
+        employee[key] = employee[key].toUpperCase();
+      }
+      
       dispatch(saveUpdate(employee));
     }
   }

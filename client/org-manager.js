@@ -1,44 +1,53 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { renderProfile, renderOrgChart } = require('./actions')
+const { renderProfile, renderOrgChart } = require('./actions');
 
-const OrgMain = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
-  const profileButton = `ui button employee-profile ${viewOrg.employee.id} ${viewOrg.employee.manager_id}`;
-  const orgButton = `ui button employee-org ${viewOrg.employee.id} ${viewOrg.employee.manager_id}`;
+
+const OrgManager = ({ currentView, searchResults, viewOrg, handleClickProfile, handleClickOrg }) => {
+  console.log('1')
+  console.log(viewOrg.manager)
+  let employeeType = '';
+  if (currentView === 'org-search-employee') {
+    employeeType = searchResults.employeeType;
+  }
+  else if (currentView === 'org-chart') {
+    employeeType = viewOrg.employeeType
+  }
+  const profileButton = `ui button employee-profile ${viewOrg.manager.id} ${viewOrg.manager.manager_id}`;
+  const orgButton = `ui button employee-org ${viewOrg.manager.id} ${viewOrg.manager.manager_id}`;
   return (
-    <div id={ viewOrg.employee.id } className='ui equal width grid container employee'>
+    <div id={ employeeType } className='ui equal width grid container'>
       <div className='ui hidden divider'></div>
       <div className='row'>
-        <div className='one wide column'></div>
         <div className='ten wide column'>
           <div className='ui row grid'>
             <div className='four wide column'>
-              <img className='ui small image employee-photo' alt='Profile Photo' src={ viewOrg.employee.photo }/>
+              <img className='ui small image' alt='Profile Photo' src={ viewOrg.manager.photo }/>
             </div>
             <div className='twelve wide column'>
               <div className='row'>Name:
-                <span className='employee-first'> { viewOrg.employee.first_name}</span>
-                <span className='employee-last'> { viewOrg.employee.last_name }</span>
+                <span> { viewOrg.manager.first_name }</span>
+                <span> { viewOrg.manager.last_name }</span>
               </div>
               <div className='row'>ID:
-                <span className='employee-id'> { viewOrg.employee.id }</span>
+                <span> { viewOrg.manager.id }</span>
               </div>
               <div className='row'>Job Title:
-                <span className='employee-title'> { viewOrg.employee.job_title }</span>
+                <span> { viewOrg.manager.job_title }</span>
               </div>
               <div className='row'>Email:
-                <span className='employee-email'> { viewOrg.employee.email }</span>
+                <span> {viewOrg.manager.email }</span>
               </div>
             </div>
           </div>
         </div>
-        <div className='four wide column'>
+        <div className='two wide column'>
           <div className='ui one column centered grid'>
             <div className='row'>
               <button className={ profileButton } type='submit' onClick={ handleClickProfile }>View Profile</button>
             </div>
             <div className='row'>
-              <button className={ orgButton }  type='submit' onClick={ handleClickOrg }>Org Chart</button>
+              <button className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
           </div>
         </div>
@@ -47,7 +56,8 @@ const OrgMain = ({ viewOrg, handleClickProfile, handleClickOrg }) => {
   )
 }
 
-const mapStatetoProps = ({ viewOrg }) => ({ viewOrg });
+
+const mapStatetoProps = ({ currentView, searchResults, viewOrg }) => ({ currentView, searchResults, viewOrg });
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -56,7 +66,6 @@ const mapDispatchtoProps = dispatch => {
       const employee = {
         id: event.target.classList[3]
       }
-      console.log(employee)
       dispatch(renderProfile(employee.id))
     },
     handleClickOrg: event => {
@@ -65,11 +74,10 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3],
         managerId: event.target.classList[4],
       }
-      console.log(employee)
       dispatch(renderOrgChart(employee))
     }
   }
 };
 
 
-module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgMain);
+module.exports = connect(mapStatetoProps, mapDispatchtoProps)(OrgManager);

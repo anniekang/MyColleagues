@@ -50,118 +50,6 @@ app.post('/newemployee/', (req, res) => {
 });
 
 
-app.get('/viewemployee/:id', (req, res) => {
-  var session = driver.session();
-  session
-    .run(`
-      MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee)
-      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
-      {id: req.params.id})
-    .then( result => {
-      if (result.records.length === 0) {
-        session.close();
-        res.status(400).json({error: `Employee ${req.params.id} does not exist.`});
-      }
-      else {
-        const results = {};
-        result.records[0].forEach( (value, key) => {
-          results[key] = value;
-        })
-        session.close();
-        res.json(results);
-      }
-    })
-
-    .catch( error => {
-      res.json(error);
-    });
-
-});
-
-
-app.get('/orgchartemployee/:id', (req, res) => {
-  var session = driver.session();
-  session
-    .run(`
-      MATCH (view:Employee {id: {id}})
-      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
-      {id: req.params.id})
-    .then( result => {
-      const results = {};
-      result.records[0].forEach( (value, key) => {
-        results[key] = value;
-      })
-      session.close();
-      res.json(results);
-    })
-
-    .catch( error => {
-      res.json(error);
-    });
-
-});
-
-
-app.get('/orgchartpeers/:id/:managerId', (req, res) => {
-  const parameters = {
-    id: req.params.id,
-    managerId: req.params.managerId
-  }
-
-  var session = driver.session();
-  session
-    .run(`
-      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
-      WHERE NOT view.id = {id}
-      RETURN view`,
-      parameters)
-    .then( result => {
-      const results = [];
-      for (let i = 0; i < result.records.length; i++) {
-        let temp = {};
-        result.records[i].forEach( (value, key) => {
-        temp[key] = value;
-        })
-        results.push(temp.view.properties);
-      }
-      session.close();
-      res.json(results);
-    })
-
-    .catch( error => {
-      res.json(error);
-    });
-
-});
-
-
-app.get('/orgchartreports/:id', (req, res) => {
-  var session = driver.session();
-  session
-    .run(`
-      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {id}})
-      RETURN view`,
-      {id: req.params.id})
-    .then( result => {
-      const results = [];
-      for (let i = 0; i < result.records.length; i++) {
-        let temp = {};
-        result.records[i].forEach( (value, key) => {
-        temp[key] = value;
-        })
-        results.push(temp.view.properties);
-      }
-      session.close();
-      res.json(results);
-    })
-
-    .catch( error => {
-      res.json(error);
-    });
-
-});
-
-
 app.get('/search/:search', (req, res) => {
   const parameters = {
     search: req.params.search
@@ -169,7 +57,8 @@ app.get('/search/:search', (req, res) => {
   var session = driver.session();
   session
     .run(`
-      MATCH (search:Employee {id: {search}})
+      MATCH (search:Employee)
+      WHERE search.id={search} OR search.id CONTAINS {search}
       RETURN search
       UNION
       MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
@@ -192,7 +81,6 @@ app.get('/search/:search', (req, res) => {
     .catch( error => {
       res.json(error);
     });
-
 });
 
 
@@ -228,7 +116,118 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
     .catch( error => {
       res.json(error);
     });
+});
 
+
+app.get('/viewemployee/:id', (req, res) => {
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee)
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
+      {id: req.params.id})
+    .then( result => {
+      if (result.records.length === 0) {
+        session.close();
+        res.status(400).json({error: `Employee ${req.params.id} does not exist.`});
+      }
+      else {
+        const results = {};
+        result.records[0].forEach( (value, key) => {
+          results[key] = value;
+        })
+        session.close();
+        res.json(results);
+      }
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
+});
+
+
+app.get('/orgchart/:id/:managerId', (req, res) => {
+  const parameters = {
+    id: req.params.id,
+    managerId: req.params.managerId
+  }
+  const orgChart = [];
+  var session = driver.session();
+  session
+    .run(`
+      MATCH (view:Employee {id: {managerId}})
+      RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
+      parameters)
+    .then( result => {
+      const results = {};
+      result.records[0].forEach( (value, key) => {
+        results[key] = value;
+      })
+      results.type = 'manager';
+      orgChart.push(results);
+      session.close();
+    })
+    .then( () => {
+      return session.run(`
+        MATCH (view:Employee {id: {id}})
+        RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.email AS email, view.manager_id AS manager_id`,
+        parameters)
+    })
+    .then( result => {
+      const results = {};
+      result.records[0].forEach( (value, key) => {
+        results[key] = value;
+      })
+      results.type = 'employee';
+      orgChart.push(results);
+      session.close();
+    })
+    .then( () => {
+      return session.run(`
+      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
+      WHERE NOT view.id = {id} AND NOT view.id = {managerId}
+      RETURN view`,
+      parameters)
+    })
+    .then( result => {
+      const results = [];
+      console.log(result.records.length)
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+        temp[key] = value;
+        })
+        temp.view.properties.type = 'peer';
+        results.push(temp.view.properties);
+      }
+      orgChart.push(results);
+      session.close();
+    })
+    .then( () => {
+      return session.run(`
+      MATCH (view:Employee)-[:REPORTS_TO]->(mgr:Employee {id: {id}})
+      RETURN view`,
+      parameters)
+    })
+    .then( result => {
+      const results = [];
+      for (let i = 0; i < result.records.length; i++) {
+        let temp = {};
+        result.records[i].forEach( (value, key) => {
+        temp[key] = value;
+        })
+        temp.view.properties.type = 'report';
+        results.push(temp.view.properties);
+      }
+      orgChart.push(results);
+      session.close();
+      res.json(orgChart);
+    })
+
+    .catch( error => {
+      res.json(error);
+    });
 });
 
 
@@ -237,7 +236,7 @@ app.put('/updateemployee/', (req, res) => {
   var session = driver.session();
   session
     .run(`
-      MATCH (update:Employee {id: {id}})-[:REPORTS_TO]->(mgr:Employee {id: {managerId}})
+      MATCH (update:Employee {id: {id}})-[del:REPORTS_TO]->(mgr:Employee {id: {managerId}})
       SET update.first_name = {first}, update.last_name = {last}, update.photo = {photo}, update.job_title = {title}, update.job_description = {description}, update.email = {email}, update.manager_id = {managerId}
       RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       parameters)
@@ -253,7 +252,6 @@ app.put('/updateemployee/', (req, res) => {
     .catch( error => {
       res.json(error);
     });
-
 });
 
 
@@ -283,7 +281,6 @@ app.delete('/deleteemployee/:id', (req, res) => {
     .catch( error => {
       res.json(error);
     });
-
 });
 
 app.listen(3000, () => console.log('listening at 3000'));
