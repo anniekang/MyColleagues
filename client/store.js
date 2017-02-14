@@ -30,10 +30,7 @@ const currentUser = (state = {}, action) => {
       return Object.assign({}, state, {
         IT: true
       });
-    case 'ID_SEARCH':
-    return Object.assign({}, state, {
-      IT: false
-    });
+
     default:
       return state;
   }

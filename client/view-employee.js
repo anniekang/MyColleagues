@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { updateProfile, deleteProfile, renderOrgChart } = require('./actions');
 
 
-const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
+const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
   const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
@@ -55,9 +55,13 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
             <div className='row'>
               <button id='org-button' className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
-            <div className='row'>
-              <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
-            </div>
+            { currentUser.IT
+                ? <div className='row'>
+                    <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
+                  </div>
+                : null
+            }
+
           </div>
         </div>
       </div>
@@ -65,7 +69,7 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
   )
 };
 
-const mapStatetoProps = ({ viewEmployee }) => ({ viewEmployee });
+const mapStatetoProps = ({ currentUser, viewEmployee }) => ({ currentUser, viewEmployee });
 
 const mapDispatchtoProps = dispatch => {
   return {
