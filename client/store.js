@@ -35,25 +35,20 @@ const searchResults = (state = {}, action) => {
     default:
       return state;
   }
-}
+};
 
-const newEmployee = (state = {}, action) => {
-  switch (action.type) {
-    case 'EMPLOYEE_SUBMITTED':
+const currentUser = (state = {}, action) => {
+  switch(action.type) {
+    case 'IT':
       return Object.assign({}, state, {
-        employeeSubmitted: true
-      });
-    case 'EMPLOYEE_SAVED':
-    case 'EMPLOYEE_FAILURE':
-      return Object.assign({}, state, {
-        employeeSubmitted: false
+        IT: true
       });
     default:
       return state;
   }
-};
+}
 
-const viewEmployee = (state = [], action) => {
+const viewEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'ID_SEARCH':
       return Object.assign({}, state, {
@@ -76,7 +71,24 @@ const viewEmployee = (state = [], action) => {
   }
 };
 
-const editEmployee = (state = [], action) => {
+const newEmployee = (state = {}, action) => {
+  switch (action.type) {
+    case 'EMPLOYEE_SUBMITTED':
+      return Object.assign({}, state, {
+        employeeSubmitted: true
+      });
+    case 'EMPLOYEE_SAVED':
+    case 'EMPLOYEE_FAILURE':
+      return Object.assign({}, state, {
+        employeeSubmitted: false
+      });
+    default:
+      return state;
+  }
+};
+
+
+const editEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'EDIT_REQUEST':
       return Object.assign({}, state, {
@@ -103,7 +115,8 @@ const editEmployee = (state = [], action) => {
   }
 };
 
-const deleteEmployee = (state = [], action) => {
+
+const deleteEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'DELETE_EMPLOYEE':
       return Object.assign({}, state, {
@@ -164,13 +177,13 @@ const initialState = {
     employeeType: '',
     results: []
   },
-  newEmployee: {
-    employeeSubmitted: false
-  },
   viewEmployee: {
     idSubmitted: false,
     employeeId: '',
     employee: {}
+  },
+  newEmployee: {
+    employeeSubmitted: false
   },
   editEmployee: {
     editRequest: false,
@@ -192,7 +205,7 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, searchResults, newEmployee, viewEmployee, editEmployee, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, searchResults, currentUser, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
 const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 module.exports = store;

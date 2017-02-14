@@ -8,6 +8,7 @@ const App = () => {
       <div id='header' className='ui grid container'>
         <Header/>
       </div>
+      
       <div id='body'>
         <Body/>
       </div>

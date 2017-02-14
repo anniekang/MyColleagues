@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { search, renderProfile } = require('./actions')
 
 
-const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitId }) => {
+const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitId, handleChangeIT }) => {
   return (
     <div id="header" className="ui grid container">
       <div id="logo-search" className="ten wide column">
@@ -32,21 +32,29 @@ const Header = ({ searchResults, viewEmployee, handleSubmitSearch, handleSubmitI
         </div>
       </div>
       <div id="find-employee" className= "six wide column">
-        <form id="find" className="ui form profile-button" onSubmit= { handleSubmitId }>
+        <form id="find" className="ui form" onSubmit={ handleSubmitId }>
           <div className="ui hidden divider"></div>
-          <div className="field">
-            <label>Employee ID</label>
-            <div className="two fields">
-              <div className="field">
-                { viewEmployee.idSubmitted
-                  ? null
-                  : <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
-                }
-              </div>
-              <div className="field">
-                <button className="ui button" type="submit">View</button>
+          <div className="grouped fields">
+            <label htmlFor="user">Current user:</label>
+            <div className="field">
+              <div className="ui radio checkbox">
+                <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleChangeIT } />
+                <label>IT Admin</label>
               </div>
             </div>
+            <div className="fields">
+              <div className="field">
+                <div className="ui radio checkbox">
+                  <input type="radio" name="user" value="Employee" tabIndex="2"/>
+                  <label>Employee</label>
+                  <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <button className="ui button" type="submit">View</button>
           </div>
         </form>
       </div>
@@ -71,6 +79,10 @@ const mapDispatchtoProps = dispatch => {
         id: employeeData.get('id')
       }
       dispatch(renderProfile(employee.id));
+    },
+    handleChangeIT: event => {
+      event.preventDefault();
+
     }
   }
 };

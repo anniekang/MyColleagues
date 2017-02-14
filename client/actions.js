@@ -34,42 +34,6 @@ const search = searchString => {
 }
 
 
-const employeeSubmitted = () => {
-  return { type: 'EMPLOYEE_SUBMITTED' }
-}
-
-const employeeSaved = (response) => {
-  return { type: 'EMPLOYEE_SAVED', response }
-}
-
-const employeeFailure = () => {
-  return { type: 'EMPLOYEE_FAILURE' }
-}
-
-const saveEmployee = employee => {
-  return dispatch => {
-    dispatch(employeeSubmitted());
-
-    fetch('/newemployee/', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(employee)
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.error) {
-          alert(response.error);
-          dispatch(employeeFailure());
-        }
-        else if (response.id) {
-          alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-          dispatch(employeeSaved(response));
-        }
-      })
-  }
-}
-
-
 const idSearch = (employeeId) => {
   return { type: 'ID_SEARCH', employeeId }
 }
@@ -105,6 +69,42 @@ const renderProfile = employeeId => {
               dispatch(idFound(response))
             })
 
+        }
+      })
+  }
+}
+
+
+const employeeSubmitted = () => {
+  return { type: 'EMPLOYEE_SUBMITTED' }
+}
+
+const employeeSaved = (response) => {
+  return { type: 'EMPLOYEE_SAVED', response }
+}
+
+const employeeFailure = () => {
+  return { type: 'EMPLOYEE_FAILURE' }
+}
+
+const saveEmployee = employee => {
+  return dispatch => {
+    dispatch(employeeSubmitted());
+
+    fetch('/newemployee/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(employee)
+    })
+      .then(response => response.json())
+      .then(response => {
+        if (response.error) {
+          alert(response.error);
+          dispatch(employeeFailure());
+        }
+        else if (response.id) {
+          alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
+          dispatch(employeeSaved(response));
         }
       })
   }
