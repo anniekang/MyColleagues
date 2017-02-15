@@ -1,5 +1,3 @@
-const DEFAULTPHOTO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
-
 const ITSelected = () => {
   return { type: 'IT_SELECTED'}
 }
@@ -41,7 +39,7 @@ const renderResults = (results) => {
 }
 
 const search = searchString => {
-  const searchArray = searchString.trim().split(' ');
+  const searchArray = searchString.trim().toUpperCase().split(' ');
   if (searchArray.length === 0) return;
 
   return dispatch => {
@@ -50,8 +48,8 @@ const search = searchString => {
       fetch(`/search/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
-        .then(response => response.json())
-        .then(response => {
+        .then( response => response.json())
+        .then( response => {
           dispatch(renderResults(response))
         })
     }
@@ -59,8 +57,8 @@ const search = searchString => {
       fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}
       })
-        .then(response => response.json())
-        .then(response => {
+        .then( response => response.json())
+        .then( response => {
           dispatch(renderResults(response))
         })
     }
@@ -87,21 +85,14 @@ const renderProfile = employeeId => {
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(response => {
+      .then( response => response.json())
+      .then( response => {
         if (response.error) {
           alert(response.error);
           dispatch(idNotFound());
         }
         else if (response.id) {
-          fetch(response.photo)
-            .then(photo => {
-              if (photo.status === 404 || response.photo === '') {
-                response.photo = DEFAULTPHOTO;
-              }
-              dispatch(idFound(response))
-            })
-
+          dispatch(idFound(response))
         }
       })
   }
@@ -149,7 +140,7 @@ const saveEmployee = employee => {
       }
     }
     fetch(employee.Photo)
-      .then(photo => {
+      .then( photo => {
         if (!photo.ok) {
           photoError = true;
         }
@@ -164,21 +155,15 @@ const saveEmployee = employee => {
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(employee)
         })
-          .then(response => response.json())
-          .then(response => {
+          .then( response => response.json())
+          .then( response => {
             if (response.error) {
               alert(response.error);
               dispatch(employeeFailure());
             }
             else if (response.id) {
               alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-              fetch(response.photo)
-                .then(photo => {
-                  if (photo.status === 404 || response.photo === '') {
-                    response.photo = DEFAULTPHOTO;
-                  }
-                  dispatch(employeeSaved(response));
-                })
+              dispatch(employeeSaved(response));
             }
           })
       }
@@ -201,8 +186,8 @@ const updateProfile = employeeId => {
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(response => {
+      .then( response => response.json())
+      .then( response => {
         dispatch(editForm(response));
       })
   }
@@ -213,6 +198,10 @@ const editSubmitted = () => {
   return { type: 'EDIT_SUBMITTED' }
 }
 
+const missingFieldsEdit = (missing, photoError) => {
+  return { type: 'MISSING_FIELDS_EDIT', missing, photoError }
+}
+
 const editSaved = response => {
   return { type: 'EDIT_SAVED', response }
 }
@@ -220,21 +209,44 @@ const editSaved = response => {
 const saveUpdate = employee => {
   return dispatch => {
     dispatch(editSubmitted());
-    fetch('/updateemployee/', {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(employee)
-    })
-      .then(response => response.json())
-      .then(response => {
-        fetch(response.photo)
-          .then(photo => {
-            if (photo.status === 404 || response.photo === '') {
-              response.photo = DEFAULTPHOTO;
-            }
-            dispatch(editSaved(response))
-          })
+    const missing = [];
+    let check = false;
+    let photoError = false;
+    for (let key in employee) {
+      if (key != 'Photo' && key != 'Job_Description') {
+        if (employee[key] === '') {
+          missing.push(key);
+          check = true;
+        }
+      }
+    }
+    fetch(employee.Photo)
+      .then(photo => {
+        if (!photo.ok) {
+          photoError = true;
+        }
+        if (check || photoError) {
+          dispatch(missingFieldsEdit(missing, photoError));
+          return;
+        }
       })
+      if (!check && !photoError) {
+        fetch('/updateemployee/', {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(employee)
+        })
+          .then( response => response.json())
+          .then( response => {
+            if (response.error) {
+              alert(response.error);
+              dispatch(employeeFailure());
+            }
+            else if (response.id) {
+              dispatch(editSaved(response))
+            }
+          })
+      }
   }
 }
 
@@ -267,8 +279,8 @@ const deleteProfile = employee => {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(response => {
+      .then( response => response.json())
+      .then( response => {
         if (response.error) {
           alert(response.error);
           dispatch(deleteError());
@@ -313,8 +325,8 @@ const renderOrgChart = org => {
     fetch(`/orgchart/${org.id}/${org.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
-      .then(response => response.json())
-      .then(response => {
+      .then( response => response.json())
+      .then( response => {
         dispatch(orgDataReceived());
         const manager = response[0];
         const employee = [response[1]];

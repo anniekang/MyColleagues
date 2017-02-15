@@ -135,17 +135,27 @@ const editEmployee = (state = {}, action) => {
     case 'EDIT_FORM':
       return Object.assign({}, state, {
         editReady: true,
+        editRequested: false,
         employee: action.response
       });
     case 'EDIT_SUBMITTED':
       return Object.assign({}, state, {
-        editSubmitted: true
+        editSubmitted: true,
+        missingFields: [],
+        photoError: false
+      });
+    case 'MISSING_FIELDS_EDIT':
+      return Object.assign({}, state, {
+        missingFields: action.missing,
+        photoError: action.photoError,
       });
     case 'EDIT_SAVED':
       return Object.assign({}, state, {
         editReady: false,
         editSubmitted: false,
-        employee: {}
+        employee: {},
+        missingFields: [],
+        photoError: false
       });
     default:
       return state;
@@ -234,7 +244,9 @@ const initialState = {
     editRequested: true,
     editReady: false,
     editSubmitted: false,
-    employee: {}
+    employee: {},
+    missingFields: [],
+    photoError: false
   },
   deleteEmployee: {
     deleteSubmitted: false,

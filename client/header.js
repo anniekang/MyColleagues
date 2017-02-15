@@ -8,12 +8,12 @@ const Header = ({ currentUser, searchResults, viewEmployee, handleSubmitSearch, 
   return (
     <div id="header" className="ui grid container">
       <div id="logo-search" className="twelve wide column">
-        <div className="ui hidden divider"></div>
         <div className="ui grid">
           <div className="ui medium image four wide column">
             <img id="logo" src={ currentUser.logo || defaultPhoto } alt="Company Logo"/>
           </div>
           <div className="twelve wide column">
+            <div className="ui hidden divider"></div>
             <div className="ui hidden divider"></div>
             <form id="search" className="ui form" onSubmit={ handleSubmitSearch }>
               <div className="fields">
@@ -35,7 +35,6 @@ const Header = ({ currentUser, searchResults, viewEmployee, handleSubmitSearch, 
       </div>
       <div id="user" className= "four wide column">
         <div className="ui grid">
-          <div className="ui hidden divider"></div>
           <form id="set-user" className="ui form" onSubmit={ handleSubmitId }>
             <div className="grouped fields">
               <label htmlFor="user">Current user:</label>
@@ -81,16 +80,14 @@ const mapDispatchtoProps = dispatch => {
       dispatch(search(searchString));
     },
     handleSubmitId: event => {
-      console.log('id')
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
-        id: employeeData.get('id')
+        id: employeeData.get('id').trim().toUpperCase()
       }
       dispatch(renderProfile(employee.id));
     },
     handleClickIt: event => {
-      console.log('it')
       event.preventDefault();
       dispatch(userSettings());
     }

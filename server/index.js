@@ -82,6 +82,7 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
 
 
 app.get('/viewemployee/:id', (req, res) => {
+  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
@@ -89,6 +90,7 @@ app.get('/viewemployee/:id', (req, res) => {
       RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       {id: req.params.id})
     .then( result => {
+      console.log(result)
       if (result.records.length === 0) {
         session.close();
         res.status(400).json({error: `Employee ${req.params.id} does not exist.`});
@@ -99,7 +101,6 @@ app.get('/viewemployee/:id', (req, res) => {
           results[key] = value;
         })
         session.close();
-        console.log(results)
         res.json(results);
       }
     })
@@ -112,7 +113,6 @@ app.get('/viewemployee/:id', (req, res) => {
 
 app.post('/newemployee/', (req, res) => {
   const parameters = req.body;
-  console.log(parameters)
   var session = driver.session();
   session
     .run(`
@@ -244,11 +244,28 @@ app.put('/updateemployee/', (req, res) => {
   var session = driver.session();
   session
     .run(`
-      MATCH (update:Employee {id: { ID }})-[:REPORTS_TO]->(mgr:Employee {id: { Manager_ID }})
-      SET update.first_name = { First_Name }, update.last_name = { Last_Name }, update.photo = { Photo }, update.job_title = { Job_Title }, update.job_description = { Job_Description }, update.email = { Email }, update.manager_id = { Manager_ID }
-      RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
+      MATCH (mgr:Employee {id: { Manager_ID }})
+      RETURN mgr`,
       parameters)
-    .then( result => {
+      .then(result => {
+        console.log(result)
+        if (result.records.length === 1) {
+          return session.run(`
+            MATCH (update:Employee {id: { ID }})-[del:REPORTS_TO]->(:Employee), (update_mgr:Employee {id: { Manager_ID }})
+            DELETE del
+            WITH update
+            CREATE UNIQUE (update)-[:REPORTS_TO]->(update_mgr)
+            SET update.first_name = { First_Name }, update.last_name = { Last_Name }, update.photo = { Photo }, update.job_title = { Job_Title }, update.job_description = { Job_Description }, update.email = { Email }, update.manager_id = { Manager_ID }
+            RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, update_mgr.first_name AS manager_first_name, update_mgr.last_name AS manager_last_name`,
+            parameters)
+        }
+        else {
+          session.close();
+          res.status(400).json({error: `Manager '${parameters.Manager_ID}' does not exist.`});
+        }
+      })
+
+    .then(result => {
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
@@ -257,8 +274,7 @@ app.put('/updateemployee/', (req, res) => {
       console.log(results)
       res.json(results);
     })
-
-    .catch( error => {
+    .catch(error => {
       res.json(error);
     });
 });

@@ -4,22 +4,24 @@ const { saveEmployee, saveUpdate } = require('./actions');
 
 const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
   let handle = '';
+  let employee = {};
   if (newEmployee.newProfile){
-    handle = handleSubmitNew
+    handle = handleSubmitNew;
+    employee = newEmployee;
   }
   else if (editEmployee.editReady) {
-    handle = handleSubmitEdit
+    handle = handleSubmitEdit;
+    employee = editEmployee;
   }
-  console.log(newEmployee.photoError)
 
   return (
     <div id="edit-profile" className="ui grid container">
-      { newEmployee.missingFields
+      { employee.missingFields
         ? <ul>
-          { newEmployee.missingFields.map((key, i) => {
+          { employee.missingFields.map((key, i) => {
           return <li key={ i } className="missing-field">'{ key }' field required.</li>
           })}
-          { newEmployee.photoError
+          { employee.photoError
             ? <li className="missing-field">Photo not found.</li>
             : null
           }
@@ -32,7 +34,7 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
         </div>
         <div className="required field">
           <label>ID</label>
-          <input id="employee-id" type="text" name="id" defaultValue={ editEmployee.employee.id } placeholder="ID"/>
+          <input id="employee-id" type="text" name="id" value={ editEmployee.employee.id } placeholder="ID"/>
         </div>
         <div className="required field">
           <label>First Name</label>
