@@ -99,12 +99,14 @@ const newEmployee = (state = {}, action) => {
       });
     case 'EMPLOYEE_SUBMITTED':
       return Object.assign({}, state, {
-        employeeSubmitted: true
+        employeeSubmitted: true,
+        missingFields: [],
+        photoError: false,
       });
     case 'MISSING_FIELDS':
       return Object.assign({}, state, {
-        fixMissing: true,
         missingFields: action.missing,
+        photoError: action.photoError,
         employeeSubmitted: false
       });
     case 'EMPLOYEE_FAILURE':
@@ -114,7 +116,9 @@ const newEmployee = (state = {}, action) => {
     case 'EMPLOYEE_SAVED':
       return Object.assign({}, state, {
         employeeSubmitted: false,
-        newProfile: false
+        newProfile: false,
+        missingFields: [],
+        photoError: false
       });
     default:
       return state;
@@ -222,8 +226,8 @@ const initialState = {
   },
   newEmployee: {
     newProfile: false,
-    fixMissing: false,
     missingFields: [],
+    photoError: false,
     employeeSubmitted: false
   },
   editEmployee: {

@@ -1,14 +1,13 @@
 const React = require('react');
 const { connect } = require('react-redux');
 
-const Home = ({ currentUser }) => {
+const Home = () => {
   return (
     <div>
-    
+
     </div>
   )
 }
 
-const mapStatetoProps = ({ currentUser }) => ({ currentUser })
 
-module.exports = connect(mapStatetoProps)(Home)
+module.exports = connect()(Home)

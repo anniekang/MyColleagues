@@ -8,7 +8,6 @@ const ViewOrg = require('./view-org')
 
 
 const Body = ({ currentView }) => {
-  console.log(currentView)
   switch (currentView) {
     case 'home':
       return <Home/>;

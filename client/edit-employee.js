@@ -10,14 +10,19 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
   else if (editEmployee.editReady) {
     handle = handleSubmitEdit
   }
+  console.log(newEmployee.photoError)
 
   return (
     <div id="edit-profile" className="ui grid container">
-      { newEmployee.fixMissing
+      { newEmployee.missingFields
         ? <ul>
           { newEmployee.missingFields.map((key, i) => {
           return <li key={ i } className="missing-field">'{ key }' field required.</li>
           })}
+          { newEmployee.photoError
+            ? <li className="missing-field">Photo not found.</li>
+            : null
+          }
           </ul>
         : null
       }
@@ -74,32 +79,32 @@ const mapDispatchtoProps = dispatch => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
-        id: employeeData.get('id').trim().toUpperCase(),
-        first: employeeData.get('first-name').trim().toUpperCase(),
-        last: employeeData.get('last-name').trim().toUpperCase(),
-        photo: employeeData.get('photo').trim(),
-        title: employeeData.get('job-title').trim().toUpperCase(),
-        description: employeeData.get('job-description').trim(),
-        email: employeeData.get('email').trim().toUpperCase(),
-        managerId: employeeData.get('manager-id').trim().toUpperCase(),
+        ID: employeeData.get('id').trim().toUpperCase(),
+        First_Name: employeeData.get('first-name').trim().toUpperCase(),
+        Last_Name: employeeData.get('last-name').trim().toUpperCase(),
+        Photo: employeeData.get('photo').trim(),
+        Job_Title: employeeData.get('job-title').trim().toUpperCase(),
+        Job_Description: employeeData.get('job-description').trim(),
+        Email: employeeData.get('email').trim().toUpperCase(),
+        Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-
+      console.log('new')
       dispatch(saveEmployee(employee));
     },
     handleSubmitEdit: event => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
-        id: employeeData.get('id').trim().toUpperCase(),
-        first: employeeData.get('first-name').trim().toUpperCase(),
-        last: employeeData.get('last-name').trim().toUpperCase(),
-        photo: employeeData.get('photo').trim(),
-        title: employeeData.get('job-title').trim().toUpperCase(),
-        description: employeeData.get('job-description').trim(),
-        email: employeeData.get('email').trim().toUpperCase(),
-        managerId: employeeData.get('manager-id').trim().toUpperCase(),
+        ID: employeeData.get('id').trim().toUpperCase(),
+        First_Name: employeeData.get('first-name').trim().toUpperCase(),
+        Last_Name: employeeData.get('last-name').trim().toUpperCase(),
+        Photo: employeeData.get('photo').trim(),
+        Job_Title: employeeData.get('job-title').trim().toUpperCase(),
+        Job_Description: employeeData.get('job-description').trim(),
+        Email: employeeData.get('email').trim().toUpperCase(),
+        Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-
+      console.log('edit')
       dispatch(saveUpdate(employee));
     }
   }

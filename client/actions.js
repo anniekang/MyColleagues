@@ -122,8 +122,8 @@ const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
 }
 
-const missingFields = (missing) => {
-  return { type: 'MISSING_FIELDS', missing }
+const missingFields = (missing, photoError) => {
+  return { type: 'MISSING_FIELDS', missing, photoError }
 }
 
 const employeeSaved = (response) => {
@@ -139,40 +139,49 @@ const saveEmployee = employee => {
     dispatch(employeeSubmitted());
     const missing = [];
     let check = false;
+    let photoError = false;
     for (let key in employee) {
-      if (key != 'photo' && key != 'description') {
+      if (key != 'Photo' && key != 'Job_Description') {
         if (employee[key] === '') {
           missing.push(key);
           check = true;
         }
       }
     }
-    if (check === true) {
-      dispatch(missingFields(missing));
-      return;
-    }
-    fetch('/newemployee/', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(employee)
-    })
-      .then(response => response.json())
-      .then(response => {
-        if (response.error) {
-          alert(response.error);
-          dispatch(employeeFailure());
+    fetch(employee.Photo)
+      .then(photo => {
+        if (!photo.ok) {
+          photoError = true;
         }
-        else if (response.id) {
-          alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-          fetch(response.photo)
-            .then(photo => {
-              if (photo.status === 404 || response.photo === '') {
-                response.photo = DEFAULTPHOTO;
-              }
-              dispatch(employeeSaved(response));
-            })
+        if (check || photoError) {
+          dispatch(missingFields(missing, photoError));
+          return;
         }
       })
+      if (!check && !photoError) {
+        fetch('/newemployee/', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(employee)
+        })
+          .then(response => response.json())
+          .then(response => {
+            if (response.error) {
+              alert(response.error);
+              dispatch(employeeFailure());
+            }
+            else if (response.id) {
+              alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
+              fetch(response.photo)
+                .then(photo => {
+                  if (photo.status === 404 || response.photo === '') {
+                    response.photo = DEFAULTPHOTO;
+                  }
+                  dispatch(employeeSaved(response));
+                })
+            }
+          })
+      }
   }
 }
 

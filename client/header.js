@@ -5,7 +5,6 @@ const { userSettings, search, renderProfile } = require('./actions')
 
 const Header = ({ currentUser, searchResults, viewEmployee, handleSubmitSearch, handleSubmitId, handleClickIt }) => {
   const defaultPhoto = '//placehold.it/400/bababa/000000/?text=Company+Logo'
-  console.log(currentUser.logo)
   return (
     <div id="header" className="ui grid container">
       <div id="logo-search" className="twelve wide column">
