@@ -193,7 +193,6 @@ app.get('/orgchart/:id/:managerId', (req, res) => {
     })
     .then( result => {
       const results = [];
-      console.log(result.records.length)
       for (let i = 0; i < result.records.length; i++) {
         let temp = {};
         result.records[i].forEach( (value, key) => {

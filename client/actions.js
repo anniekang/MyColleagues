@@ -10,6 +10,28 @@ const userSettings = () => {
   }
 }
 
+
+const updateLogo = () => {
+  return { type: 'UPDATE_LOGO' }
+}
+
+const changeLogo = () => {
+  return dispatch => {
+    dispatch(updateLogo());
+  }
+}
+
+const submitLogo = (logo) => {
+  return { type: 'SUBMIT_LOGO', logo }
+}
+
+const saveLogo = (logo) => {
+  return dispatch => {
+    dispatch(submitLogo(logo))
+  }
+
+}
+
 const searchSubmitted = (search) => {
   return { type: 'SEARCH_SUBMITTED', search }
 }
@@ -62,7 +84,6 @@ const renderProfile = employeeId => {
   return dispatch => {
     dispatch(idSearch(employeeId));
     employeeId = employeeId.toUpperCase();
-    console.log(employeeId)
     fetch(`/viewemployee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
@@ -137,7 +158,6 @@ const saveEmployee = employee => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response)
         if (response.error) {
           alert(response.error);
           dispatch(employeeFailure());
@@ -174,7 +194,6 @@ const updateProfile = employeeId => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response)
         dispatch(editForm(response));
       })
   }
@@ -281,64 +300,27 @@ const renderReports = response => {
 const renderOrgChart = org => {
   return dispatch => {
     dispatch(orgSubmitted());
-    const defaultPhoto = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
-    let manager = {};
-    let employee = [];
-    let peers = [];
-    let reports = [];
+
     fetch(`/orgchart/${org.id}/${org.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then(response => response.json())
       .then(response => {
-        console.log('TEST')
-        console.log(response)
         dispatch(orgDataReceived());
-        manager = response[0];
-        employee = [response[1]];
-        reports = response[3];
-        peers = response[2];
-        peers.forEach(peer => {
-          fetch(peer.photo)
-            .then(photo => {
-              if (photo.status === 404 || peer.photo === '') {
-                peer.photo = defaultPhoto;
-              }
-            })
-        })
-        reports.forEach(report => {
-          fetch(report.photo)
-            .then(photo => {
-              if (photo.status === 404 || report.photo === '') {
-                report.photo = defaultPhoto;
-              }
-            })
-        })
-        fetch(manager.photo)
-          .then(photo => {
-            if (photo.status === 404 || manager.photo === '') {
-              manager.photo = defaultPhoto;
-            }
-          })
-        fetch(employee[0].photo)
-          .then(photo => {
-            if (photo.status === 404 || employee[0].photo === '') {
-              employee[0].photo = defaultPhoto;
-            }
-          })
-      })
-      .then( () => {
-        if (org.id === org.managerId){
-          employee = [];
-          reports = [];
-        }
+        const manager = response[0];
+        const employee = [response[1]];
+        const reports = response[3];
+        const peers = response[2];
+
         dispatch(renderManager(manager));
-        dispatch(renderEmployee(employee));
-        dispatch(renderReports(reports));
+        if (org.id != org.maangerID){
+          dispatch(renderEmployee(employee));
+          dispatch(renderReports(reports));
+        }
         dispatch(renderPeers(peers));
       })
   }
 }
 
 
-module.exports = { userSettings, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }
+module.exports = { userSettings, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }

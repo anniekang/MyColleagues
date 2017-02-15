@@ -3,8 +3,8 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
-    case 'EMPLOYEE_DELETED':
     case 'IT_SELECTED':
+    case 'EMPLOYEE_DELETED':
       return 'home';
     case 'RENDER_RESULTS':
       return 'org-search-employee';
@@ -30,12 +30,24 @@ const currentUser = (state = {}, action) => {
       return Object.assign({}, state, {
         IT: true
       });
-
+    case 'UPDATE_LOGO':
+      return Object.assign({}, state, {
+        changeLogo: true
+      });
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'SEARCH_SUBMITTED':
+      return Object.assign({}, state, {
+        changeLogo: false
+      });
+    case 'SUBMIT_LOGO':
+      return Object.assign({}, state, {
+        logo: action.logo,
+        changeLogo: false
+      })
     default:
       return state;
   }
 }
-
 
 const searchResults = (state = {}, action) => {
   switch (action.type) {
@@ -193,7 +205,9 @@ const viewOrg = (state = [], action) => {
 const initialState = {
   currentView: 'home',
   currentUser: {
-    IT: false
+    IT: false,
+    logo: '',
+    changeLogo: false
   },
   searchResults: {
     searchSubmitted: false,

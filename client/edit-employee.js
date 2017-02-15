@@ -10,6 +10,7 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
   else if (editEmployee.editReady) {
     handle = handleSubmitEdit
   }
+
   return (
     <div id="edit-profile" className="ui grid container">
       { newEmployee.fixMissing
@@ -82,7 +83,7 @@ const mapDispatchtoProps = dispatch => {
         email: employeeData.get('email').trim().toUpperCase(),
         managerId: employeeData.get('manager-id').trim().toUpperCase(),
       };
-      console.log(employee)
+
       dispatch(saveEmployee(employee));
     },
     handleSubmitEdit: event => {
