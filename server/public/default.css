@@ -12,13 +12,11 @@ body {
 
 #search-results {
   margin-top: 2%;
+  margin-left: 10%;
 }
 
 #user {
   margin-top: 1%;
-}
-
-#set-user {
   border: 1px solid gray;
   border-radius: 5px;
 }

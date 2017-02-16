@@ -4,11 +4,13 @@ const { default: thunk } = require('redux-thunk');
 const currentView = (state = [], action) => {
   switch(action.type) {
     case 'IT_SELECTED':
+    case 'EMPLOYEE_NOT_FOUND':
     case 'EMPLOYEE_DELETED':
       return 'home';
     case 'RENDER_RESULTS':
       return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
+    case 'EMPLOYEE_FOUND':
     case 'ID_FOUND':
     case 'EDIT_SAVED':
       return 'profile';
@@ -28,9 +30,36 @@ const currentUser = (state = {}, action) => {
   switch(action.type) {
     case 'IT_SELECTED':
       return Object.assign({}, state, {
-        IT: true
+        selected: true,
+        IT: true,
+        employeeCheck: false,
+        employeeSelect: false
       });
-    case 'UPDATE_LOGO':
+    case 'EMPLOYEE_CHECKED':
+      return Object.assign({}, state, {
+        IT: false,
+        employeeCheck: true
+      });
+    case 'EMPLOYEE_SELECTED':
+      return Object.assign({}, state, {
+        selected: true,
+        IT: false,
+        employeeSelect: true,
+        employeeId: action.employeeId
+      });
+    case 'EMPLOYEE_NOT_FOUND':
+      return Object.assign({}, state, {
+        employeeCheck: true,
+        employeeSelect: false
+      });
+    case 'EMPLOYEE_FOUND':
+      return Object.assign({}, state, {
+        employeeCheck: true,
+        employeeSelect: true,
+        employeeFound: true,
+        employee: action.response
+      });
+    case 'CHANGE_LOGO':
       return Object.assign({}, state, {
         changeLogo: true
       });
@@ -39,11 +68,11 @@ const currentUser = (state = {}, action) => {
       return Object.assign({}, state, {
         changeLogo: false
       });
-    case 'SUBMIT_LOGO':
+    case 'SAVE_LOGO':
       return Object.assign({}, state, {
         logo: action.logo,
         changeLogo: false
-      })
+      });
     default:
       return state;
   }
@@ -70,15 +99,18 @@ const searchResults = (state = {}, action) => {
 
 const viewEmployee = (state = {}, action) => {
   switch (action.type) {
+    case 'EMPLOYEE_SELECTED':
     case 'ID_SEARCH':
       return Object.assign({}, state, {
         idSubmitted: true,
         employeeId: action.employeeId
       });
+    case 'EMPLOYEE_NOT_FOUND':
     case 'ID_NOT_FOUND':
       return Object.assign({}, state, {
         idSubmitted: false
       });
+    case 'EMPLOYEE_FOUND':
     case 'ID_FOUND':
     case 'EMPLOYEE_SAVED':
     case 'EDIT_SAVED':
@@ -219,7 +251,13 @@ const viewOrg = (state = [], action) => {
 const initialState = {
   currentView: 'home',
   currentUser: {
+    selected: false,
     IT: false,
+    employeeCheck: false,
+    employeeSelect: false,
+    employeeFound: false,
+    employeeId: '',
+    employee: {},
     logo: '',
     changeLogo: false
   },
@@ -263,6 +301,6 @@ const initialState = {
 };
 
 const reducer = combineReducers({ currentView, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const store = createStore(reducer, initialState, applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 module.exports = store;

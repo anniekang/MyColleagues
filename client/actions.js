@@ -1,34 +1,22 @@
 const ITSelected = () => {
-  return { type: 'IT_SELECTED'}
-}
-
-const userSettings = () => {
-  return dispatch => {
-    dispatch(ITSelected());
-  }
+  return dispatch => dispatch({ type: 'IT_SELECTED' })
 }
 
 
-const updateLogo = () => {
-  return { type: 'UPDATE_LOGO' }
+const employeeChecked = () => {
+  return dispatch => dispatch({ type: 'EMPLOYEE_CHECKED'})
 }
+
 
 const changeLogo = () => {
-  return dispatch => {
-    dispatch(updateLogo());
-  }
+  return dispatch => dispatch({ type: 'CHANGE_LOGO' })
 }
 
-const submitLogo = (logo) => {
-  return { type: 'SUBMIT_LOGO', logo }
-}
 
 const saveLogo = (logo) => {
-  return dispatch => {
-    dispatch(submitLogo(logo))
-  }
-
+  return dispatch => dispatch ({ type: 'SAVE_LOGO', logo })
 }
+
 
 const searchSubmitted = (search) => {
   return { type: 'SEARCH_SUBMITTED', search }
@@ -66,37 +54,40 @@ const search = searchString => {
 }
 
 
-const idSearch = (employeeId) => {
-  return { type: 'ID_SEARCH', employeeId }
+const employeeSelected = (employeeId) => {
+  return { type: 'EMPLOYEE_SELECTED', employeeId }
 }
 
-const idFound = (response) => {
-  return { type: 'ID_FOUND', response }
+const employeeNotFound = () => {
+  return { type: 'EMPLOYEE_NOT_FOUND' }
 }
 
-const idNotFound = () => {
-  return { type: 'ID_NOT_FOUND' }
+const employeeFound = (response) => {
+  return { type: 'EMPLOYEE_FOUND', response }
 }
 
-const renderProfile = employeeId => {
+const setUser = employeeId => {
   return dispatch => {
-    dispatch(idSearch(employeeId));
-    employeeId = employeeId.toUpperCase();
-    fetch(`/viewemployee/${employeeId}`, {
-      headers: {'Content-Type': 'application/json'}
-    })
-      .then( response => response.json())
-      .then( response => {
-        if (response.error) {
-          alert(response.error);
-          dispatch(idNotFound());
-        }
-        else if (response.id) {
-          dispatch(idFound(response))
-        }
+    if (employeeId) {
+      dispatch(employeeSelected(employeeId))
+      fetch(`/viewemployee/${employeeId}`, {
+        headers: {'Content-Type': 'application/json'}
       })
+        .then( response => response.json())
+        .then( response => {
+          if (response.error) {
+            alert(response.error);
+            dispatch(employeeNotFound());
+          }
+          else if (response.id) {
+            dispatch(employeeFound(response))
+          }
+        })
+    }
+
   }
 }
+
 
 const createProfile = () => {
   return { type: 'CREATE_PROFILE_SUBMITTED'}
@@ -167,6 +158,38 @@ const saveEmployee = employee => {
             }
           })
       }
+  }
+}
+
+const idSearch = (employeeId) => {
+  return { type: 'ID_SEARCH', employeeId }
+}
+
+const idFound = (response) => {
+  return { type: 'ID_FOUND', response }
+}
+
+const idNotFound = () => {
+  return { type: 'ID_NOT_FOUND' }
+}
+
+const renderProfile = employeeId => {
+  return dispatch => {
+    dispatch(idSearch(employeeId));
+    employeeId = employeeId.toUpperCase();
+    fetch(`/viewemployee/${employeeId}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then( response => response.json())
+      .then( response => {
+        if (response.error) {
+          alert(response.error);
+          dispatch(idNotFound());
+        }
+        else if (response.id) {
+          dispatch(idFound(response))
+        }
+      })
   }
 }
 
@@ -344,4 +367,4 @@ const renderOrgChart = org => {
 }
 
 
-module.exports = { userSettings, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }
+module.exports = { ITSelected, employeeChecked, setUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }

@@ -63,7 +63,6 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
                   </div>
                 : null
             }
-
           </div>
         </div>
       </div>
