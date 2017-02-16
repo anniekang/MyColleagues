@@ -39,6 +39,10 @@ body {
   font-weight: bold;
 }
 
+#profile-photo {
+  max-height: 150px;
+}
+
 #profile-info {
   font-size: 1.2em;
   line-height: 1.3em;

@@ -34,7 +34,10 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
         </div>
         <div className="required field">
           <label>ID</label>
-          <input id="employee-id" type="text" name="id" value={ editEmployee.employee.id } placeholder="ID"/>
+          { editEmployee.editReady
+            ? <input id="employee-id" type="text" name="id" value={ editEmployee.employee.id } placeholder="ID" readOnly/>
+            : <input id="employee-id" type="text" name="id" placeholder="ID"/>
+          }
         </div>
         <div className="required field">
           <label>First Name</label>

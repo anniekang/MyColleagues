@@ -20,7 +20,7 @@ app.get('/search/:search', (req, res) => {
   session
     .run(`
       MATCH (search:Employee)
-      WHERE search.id={ search } OR search.id CONTAINS { search }
+      WHERE search.id = { search } OR search.id CONTAINS { search }
       RETURN search
       UNION
       MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
@@ -251,9 +251,10 @@ app.put('/updateemployee/', (req, res) => {
         console.log(result)
         if (result.records.length === 1) {
           return session.run(`
-            MATCH (update:Employee {id: { ID }})-[del:REPORTS_TO]->(:Employee), (update_mgr:Employee {id: { Manager_ID }})
+            MATCH (update:Employee {id: { ID }})-[del:REPORTS_TO]->(:Employee)
             DELETE del
             WITH update
+            MATCH (update_mgr:Employee {id: { Manager_ID }})
             CREATE UNIQUE (update)-[:REPORTS_TO]->(update_mgr)
             SET update.first_name = { First_Name }, update.last_name = { Last_Name }, update.photo = { Photo }, update.job_title = { Job_Title }, update.job_description = { Job_Description }, update.email = { Email }, update.manager_id = { Manager_ID }
             RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, update_mgr.first_name AS manager_first_name, update_mgr.last_name AS manager_last_name`,
@@ -266,6 +267,7 @@ app.put('/updateemployee/', (req, res) => {
       })
 
     .then(result => {
+      console.log(result)
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;

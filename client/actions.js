@@ -334,7 +334,7 @@ const renderOrgChart = org => {
         const peers = response[2];
 
         dispatch(renderManager(manager));
-        if (org.id != org.maangerID){
+        if (org.id != org.managerId){
           dispatch(renderEmployee(employee));
           dispatch(renderReports(reports));
         }
