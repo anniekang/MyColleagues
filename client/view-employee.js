@@ -85,19 +85,17 @@ const mapDispatchtoProps = dispatch => {
     handleClickOrg: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim(),
-        managerId: document.getElementById('profile-manager').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase(),
+        managerId: event.target.classList[3].trim().toUpperCase()
       }
       dispatch(renderOrgChart(employee))
     },
     handleClickDelete: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim(),
-        first: document.getElementById('profile-first').textContent.trim(),
-        last: document.getElementById('profile-last').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase()
       };
-      dispatch(deleteProfile(employee))
+      dispatch(deleteProfile(employee.id))
     }
   }
 };

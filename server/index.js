@@ -82,7 +82,6 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
 
 
 app.get('/viewemployee/:id', (req, res) => {
-  console.log(req.params.id)
   var session = driver.session();
   session
     .run(`
@@ -90,7 +89,6 @@ app.get('/viewemployee/:id', (req, res) => {
       RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
       {id: req.params.id})
     .then( result => {
-      console.log(result)
       if (result.records.length === 0) {
         session.close();
         res.status(400).json({error: `Employee ${req.params.id} does not exist.`});
@@ -248,7 +246,6 @@ app.put('/updateemployee/', (req, res) => {
       RETURN mgr`,
       parameters)
       .then(result => {
-        console.log(result)
         if (result.records.length === 1) {
           return session.run(`
             MATCH (update:Employee {id: { ID }})-[del:REPORTS_TO]->(:Employee)
@@ -267,13 +264,11 @@ app.put('/updateemployee/', (req, res) => {
       })
 
     .then(result => {
-      console.log(result)
       const results = {};
       result.records[0].forEach( (value, key) => {
         results[key] = value;
       })
       session.close();
-      console.log(results)
       res.json(results);
     })
     .catch(error => {

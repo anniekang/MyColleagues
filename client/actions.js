@@ -267,15 +267,15 @@ const employeeDeleted = () => {
   return { type: 'EMPLOYEE_DELETED' }
 }
 
-const deleteProfile = employee => {
+const deleteProfile = employeeId => {
   return dispatch => {
     dispatch(deleteSubmitted());
-    const confirm = window.confirm(`Are you sure you would like to delete Employee ${employee.id} ${employee.first} ${employee.last}?`);
+    const confirm = window.confirm(`Are you sure you would like to delete Employee '${employeeId}'?`);
     if (!confirm) {
       return;
     }
     dispatch(deleteConfirmed());
-    fetch(`/deleteemployee/${employee.id}`, {
+    fetch(`/deleteemployee/${employeeId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
