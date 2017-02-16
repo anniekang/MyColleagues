@@ -2,12 +2,31 @@ body {
   font-size: 12px;
 }
 
+#header {
+  margin-top: 1%;
+}
+
 #logo {
   max-height: 200px;
 }
 
 #search-results {
   margin-top: 2%;
+}
+
+#user {
+  margin-top: 1%;
+}
+
+#set-user {
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+#it-view {
+  margin-top: 2%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 #view-profile {
@@ -18,6 +37,10 @@ body {
 #profile-last {
   font-size: 1.9em;
   font-weight: bold;
+}
+
+#profile-photo {
+  max-height: 150px;
 }
 
 #profile-info {
@@ -47,6 +70,14 @@ body {
 #org-button,
 #delete-button {
   width: 130px;
+}
+
+#edit-profile {
+  margin-top: 2%;
+}
+
+.missing-field {
+  color: red;
 }
 
 .employee-profile,

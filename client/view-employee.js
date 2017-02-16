@@ -3,8 +3,12 @@ const { connect } = require('react-redux');
 const { updateProfile, deleteProfile, renderOrgChart } = require('./actions');
 
 
-const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
+const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete }) => {
   const defaultPhoto = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
+
+  const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+  const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+  const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
 
   return (
     <div id='view-profile' className='ui grid container'>
@@ -48,14 +52,18 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
             <div className='ui hidden divider'></div>
 
             <div className='row'>
-              <button id='edit-button' className='ui button' type='submit' onClick={ handleClickEdit }>Edit Profile</button>
+              <button id='edit-button' className={ editButton } type='submit' onClick={ handleClickEdit }>Edit Profile</button>
             </div>
             <div className='row'>
-              <button id='org-button' className='ui button' type='submit' onClick={ handleClickOrg }>Org Chart</button>
+              <button id='org-button' className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
-            <div className='row'>
-              <button id='delete-button' className='ui button' type='submit' onClick={ handleClickDelete }>Delete Profile</button>
-            </div>
+            { currentUser.IT
+                ? <div className='row'>
+                    <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
+                  </div>
+                : null
+            }
+
           </div>
         </div>
       </div>
@@ -63,33 +71,31 @@ const ViewEmployee = ({ viewEmployee, handleClickEdit, handleClickOrg, handleCli
   )
 };
 
-const mapStatetoProps = ({ viewEmployee }) => ({ viewEmployee });
+const mapStatetoProps = ({ currentUser, viewEmployee }) => ({ currentUser, viewEmployee });
 
 const mapDispatchtoProps = dispatch => {
   return {
     handleClickEdit: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase()
       };
       dispatch(updateProfile(employee.id))
     },
     handleClickOrg: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim(),
-        managerId: document.getElementById('profile-manager').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase(),
+        managerId: event.target.classList[3].trim().toUpperCase()
       }
       dispatch(renderOrgChart(employee))
     },
     handleClickDelete: event => {
       event.preventDefault();
       const employee = {
-        id: document.getElementById('profile-id').textContent.trim(),
-        first: document.getElementById('profile-first').textContent.trim(),
-        last: document.getElementById('profile-last').textContent.trim()
+        id: event.target.classList[3].trim().toUpperCase()
       };
-      dispatch(deleteProfile(employee))
+      dispatch(deleteProfile(employee.id))
     }
   }
 };
