@@ -50,19 +50,23 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
         <div className='three wide column'>
           <div className='ui one column centered grid'>
             <div className='ui hidden divider'></div>
-
-            <div className='row'>
-              <button id='edit-button' className={ editButton } type='submit' onClick={ handleClickEdit }>Edit Profile</button>
+            <div>
+              { currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId
+                ? <div className='row'>
+                    <button id='edit-button' className={ editButton } type='submit' onClick={ handleClickEdit }>Edit Profile</button>
+                  </div>
+                : null
+              }
             </div>
             <div className='row'>
               <button id='org-button' className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
             </div>
-            { currentUser.IT
-                ? <div className='row'>
-                    <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
-                  </div>
-                : null
-            }
+              { currentUser.IT
+                  ? <div className='row'>
+                      <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
+                    </div>
+                  : null
+              }
           </div>
         </div>
       </div>
@@ -85,7 +89,7 @@ const mapDispatchtoProps = dispatch => {
       event.preventDefault();
       const employee = {
         id: event.target.classList[3].trim().toUpperCase(),
-        managerId: event.target.classList[3].trim().toUpperCase()
+        managerId: event.target.classList[4].trim().toUpperCase()
       }
       dispatch(renderOrgChart(employee))
     },

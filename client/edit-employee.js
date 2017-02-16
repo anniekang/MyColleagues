@@ -2,7 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
+const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
   let handle = '';
   let employee = {};
   if (newEmployee.newProfile){
@@ -65,7 +65,10 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
         </div>
         <div className="required field">
           <label>Manager ID</label>
-          <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
+          { currentUser.employeeFound
+            ? <input id="employee-manager" type="text" name="manager-id" value={ editEmployee.employee.manager_id } placeholder="Manager ID" readOnly/>
+            : <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
+          }
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
@@ -76,7 +79,7 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
   )
 }
 
-const mapStatetoProps = ({ newEmployee, editEmployee }) => ({ newEmployee, editEmployee })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee }) => ({ currentUser, newEmployee, editEmployee })
 
 const mapDispatchtoProps = dispatch => {
   return {
