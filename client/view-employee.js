@@ -9,7 +9,6 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
   const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
-  console.log(viewEmployee.employee)
 
   return (
     <div id='view-profile' className='ui grid container'>

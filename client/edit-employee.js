@@ -93,7 +93,6 @@ const mapDispatchtoProps = dispatch => {
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-      console.log('new')
       dispatch(saveEmployee(employee));
     },
     handleSubmitEdit: event => {
@@ -109,7 +108,6 @@ const mapDispatchtoProps = dispatch => {
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-      console.log('edit')
       dispatch(saveUpdate(employee));
     }
   }

@@ -3,7 +3,6 @@ const { connect } = require('react-redux');
 const { changeLogo, saveLogo, newProfile } = require('./actions');
 
 const ITDashboard = ({ currentUser, handleClickLogo, handleClickProfile, handleSubmit }) => {
-  console.log(currentUser.IT)
   return (
     <div>
       { currentUser.IT
