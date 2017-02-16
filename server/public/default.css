@@ -8,17 +8,36 @@ body {
 
 #logo {
   max-height: 200px;
+  margin: auto;
+}
+
+#my-colleagues {
+  font-size: 4em;
+  font-family: 'Bitter', serif;
+  font-weight: bold;
+  color: rgb(139,163,200);
+}
+
+#user {
+  margin-top: 1%;
+  box-shadow: 0 0 10px #777;
+  border-radius: 5px;
+}
+
+#current-user {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+#select-user {
+  font-size: 30px;
+  font-style: italic;
+  font-weight: bold;
 }
 
 #search-results {
   margin-top: 2%;
   margin-left: 10%;
-}
-
-#user {
-  margin-top: 1%;
-  border: 1px solid gray;
-  border-radius: 5px;
 }
 
 #it-view {
@@ -27,8 +46,12 @@ body {
   border-bottom: 1px solid black;
 }
 
+#home {
+  margin-top: 5%;
+}
+
 #view-profile {
-  margin-top: 2%;
+  margin-top: 3%;
 }
 
 #profile-first,

@@ -1,13 +1,17 @@
 const React = require('react');
 const { connect } = require('react-redux');
 
-const Home = () => {
+const Home = ({ currentUser }) => {
   return (
-    <div>
-
+    <div id="home" className="ui centered grid container">
+      { currentUser.employeeCheck || currentUser.IT
+        ? null
+        : <div id="select-user">Please select 'Current User'</div>
+      }
     </div>
   )
 }
 
+const mapStatetoProps= ({ currentUser }) => ({ currentUser })
 
-module.exports = connect()(Home)
+module.exports = connect(mapStatetoProps)(Home)

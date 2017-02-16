@@ -14,7 +14,6 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
     <div id='view-profile' className='ui grid container'>
       <div className='ui fourteen wide centered column row'>
         <div className='thirteen wide column'>
-
           <div className='row'>
             <span id='profile-first'>{ viewEmployee.employee.first_name }</span>
             <span id='profile-last'> { viewEmployee.employee.last_name }</span>

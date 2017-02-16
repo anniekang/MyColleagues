@@ -30,7 +30,6 @@ const currentUser = (state = {}, action) => {
   switch(action.type) {
     case 'IT_SELECTED':
       return Object.assign({}, state, {
-        selected: true,
         IT: true,
         employeeCheck: false,
         employeeSelect: false
@@ -42,7 +41,6 @@ const currentUser = (state = {}, action) => {
       });
     case 'EMPLOYEE_SELECTED':
       return Object.assign({}, state, {
-        selected: true,
         IT: false,
         employeeSelect: true,
         employeeId: action.employeeId
@@ -251,7 +249,6 @@ const viewOrg = (state = [], action) => {
 const initialState = {
   currentView: 'home',
   currentUser: {
-    selected: false,
     IT: false,
     employeeCheck: false,
     employeeSelect: false,
