@@ -3,9 +3,13 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
-    case 'IT_SELECTED':
+    case 'IT_CHECKED':
+    case 'EMPLOYEE_CHECKED':
     case 'EMPLOYEE_NOT_FOUND':
+    case 'DELETE_EMPLOYEE_CONFIRMED':
     case 'EMPLOYEE_DELETED':
+    case 'IT_SELECTED':
+    case 'CHANGE_LOGO':
       return 'home';
     case 'RENDER_RESULTS':
       return 'org-search-employee';
@@ -13,6 +17,7 @@ const currentView = (state = [], action) => {
     case 'EMPLOYEE_FOUND':
     case 'ID_FOUND':
     case 'EDIT_SAVED':
+    case 'DELETE_EMPLOYEE_ERROR':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
@@ -28,34 +33,65 @@ const currentView = (state = [], action) => {
 
 const currentUser = (state = {}, action) => {
   switch(action.type) {
+    case 'IT_CHECKED':
+      return Object.assign({}, state, {
+        ITCheck: true,
+        ITSelect: false,
+        employeeCheck: false,
+        employeeSelect: false,
+        employeeFound: false,
+        employeeError: false
+      });
     case 'IT_SELECTED':
       return Object.assign({}, state, {
-        IT: true,
-        employeeCheck: false,
-        employeeSelect: false
+        ITSelect: true,
+        ITError: false
+      });
+    case 'IT_ERROR':
+      return Object.assign({}, state, {
+        ITSelect: false,
+        ITError: true
+      });
+    case 'IT_CONFIRMED':
+      return Object.assign({}, state, {
+        ITConfirmed: true,
+        employeeId: '',
+        employee: {}
       });
     case 'EMPLOYEE_CHECKED':
       return Object.assign({}, state, {
-        IT: false,
-        employeeCheck: true
+        ITCheck: false,
+        ITSelect: false,
+        ITConfirmed: false,
+        employeeCheck: true,
+        ITError: false
       });
     case 'EMPLOYEE_SELECTED':
       return Object.assign({}, state, {
-        IT: false,
         employeeSelect: true,
-        employeeId: action.employeeId
+        employeeId: action.employeeId,
+        employeeError: false
       });
     case 'EMPLOYEE_NOT_FOUND':
       return Object.assign({}, state, {
-        employeeCheck: true,
-        employeeSelect: false
+        employeeSelect: false,
+        employeeError: true
       });
     case 'EMPLOYEE_FOUND':
       return Object.assign({}, state, {
-        employeeCheck: true,
-        employeeSelect: true,
         employeeFound: true,
         employee: action.response
+      });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        ITCheck: false,
+        ITSelect: false,
+        ITConfirmed: false,
+        employeeCheck: false,
+        employeeSelect: false,
+        employeeFound: false,
+        employeeId: '',
+        employee: {},
       });
     case 'CHANGE_LOGO':
       return Object.assign({}, state, {
@@ -125,13 +161,20 @@ const newEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'CREATE_PROFILE_SUBMITTED':
       return Object.assign({}, state, {
-        newProfile: true
+        newProfile: true,
+        missingFields: [],
+        photoError: false,
+        errorCode: '',
+        errorDescription: '',
+        saved: false
       });
     case 'EMPLOYEE_SUBMITTED':
       return Object.assign({}, state, {
         employeeSubmitted: true,
         missingFields: [],
         photoError: false,
+        errorCode: '',
+        errorDescription: ''
       });
     case 'MISSING_FIELDS':
       return Object.assign({}, state, {
@@ -142,13 +185,23 @@ const newEmployee = (state = {}, action) => {
     case 'EMPLOYEE_FAILURE':
       return Object.assign({}, state, {
         employeeSubmitted: false,
+        errorCode: action.errorCode,
+        errorDescription: action.errorDescription
       });
     case 'EMPLOYEE_SAVED':
       return Object.assign({}, state, {
         employeeSubmitted: false,
         newProfile: false,
-        missingFields: [],
-        photoError: false
+        saved: true
+      });
+    case 'CHANGE_LOGO':
+    case 'CHANGE_USER':
+    case 'SEARCH_SUBMITTED':
+    case 'EDIT_REQUESTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        saved: false
       });
     default:
       return state;
@@ -172,14 +225,20 @@ const editEmployee = (state = {}, action) => {
       return Object.assign({}, state, {
         editSubmitted: true,
         missingFields: [],
-        photoError: false
+        photoError: false,
+        errorDescription: ''
       });
     case 'MISSING_FIELDS_EDIT':
       return Object.assign({}, state, {
         missingFields: action.missing,
         photoError: action.photoError,
       });
+    case 'EDIT_FAILURE':
+      return Object.assign({}, state, {
+        errorDescription: action.errorDescription
+      });
     case 'EDIT_SAVED':
+    case 'CREATE_PROFILE_SUBMITTED':
       return Object.assign({}, state, {
         editReady: false,
         editSubmitted: false,
@@ -195,19 +254,45 @@ const editEmployee = (state = {}, action) => {
 
 const deleteEmployee = (state = {}, action) => {
   switch (action.type) {
-    case 'DELETE_EMPLOYEE':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
       return Object.assign({}, state, {
-        deleteSubmitted: true
+        deleteSubmitted: true,
+        employeeId: action.employeeId,
+        error: false,
+        deleted: false
       });
-    case 'DELETE_CONFIRMED':
+    case 'DELETE_EMPLOYEE_NOT':
       return Object.assign({}, state, {
-        deleteConfirmed: true
+        deleteSubmitted: false,
+        employeeId: ''
       });
-    case 'DELETE_ERROR':
+    case 'DELETE_EMPLOYEE_CONFIRMED':
+      return Object.assign({}, state, {
+        deleteConfirmed: true,
+        deleteSubmitted: false
+      });
+    case 'DELETE_EMPLOYEE_ERROR':
+    return Object.assign({}, state, {
+        deleteConfirmed: false,
+        deleteSubmitted: false,
+        error: true
+      });
     case 'EMPLOYEE_DELETED':
       return Object.assign({}, state, {
         deleteSubmitted: false,
-        deleteConfirmed: false
+        deleteConfirmed: false,
+        deleted: true
+      });
+    case 'CHANGE_USER':
+    case 'SEARCH_SUBMITTED':
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'CHANGE_LOGO':
+    case 'EDIT_REQUESTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        error: false,
+        deleted: false,
+        employeeId: ''
       });
     default:
       return state;
@@ -249,9 +334,13 @@ const viewOrg = (state = [], action) => {
 const initialState = {
   currentView: 'home',
   currentUser: {
-    IT: false,
+    ITCheck: false,
+    ITSelect: false,
+    ITError: false,
+    ITConfirmed: false,
     employeeCheck: false,
     employeeSelect: false,
+    employeeError: false,
     employeeFound: false,
     employeeId: '',
     employee: {},
@@ -273,7 +362,10 @@ const initialState = {
     newProfile: false,
     missingFields: [],
     photoError: false,
-    employeeSubmitted: false
+    errorCode: '',
+    errorDescription: '',
+    employeeSubmitted: false,
+    saved: false
   },
   editEmployee: {
     editRequested: true,
@@ -281,11 +373,15 @@ const initialState = {
     editSubmitted: false,
     employee: {},
     missingFields: [],
-    photoError: false
+    photoError: false,
+    errorDescription: ''
   },
   deleteEmployee: {
     deleteSubmitted: false,
-    deleteConfirmed: false
+    employeeId: '',
+    deleteConfirmed: false,
+    error: false,
+    deleted: false
   },
   viewOrg: {
     orgSubmitted: false,

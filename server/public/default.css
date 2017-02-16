@@ -2,6 +2,10 @@ body {
   font-size: 12px;
 }
 
+.error {
+  color: red;
+}
+
 #header {
   margin-top: 1%;
 }
@@ -12,7 +16,7 @@ body {
 }
 
 #my-colleagues {
-  font-size: 4em;
+  font-size: 3.6em;
   font-family: 'Bitter', serif;
   font-weight: bold;
   color: rgb(139,163,200);
@@ -79,6 +83,16 @@ body {
   color: black;
 }
 
+#profile-email {
+  color: rgb(17,85,204);
+  text-decoration: underline;
+}
+
+#profile-email:hover {
+  color: rgb(249,166,2);
+  text-decoration: none;
+}
+
 #profile-description-label {
   display: inline-block;
 }
@@ -95,10 +109,6 @@ body {
 
 #edit-profile {
   margin-top: 2%;
-}
-
-.missing-field {
-  color: red;
 }
 
 .employee-profile,

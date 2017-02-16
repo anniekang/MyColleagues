@@ -17,14 +17,29 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew
   return (
     <div id="edit-profile" className="ui grid container">
       { employee.missingFields
-        ? <ul>
+        ? <ul className="error">
           { employee.missingFields.map((key, i) => {
-          return <li key={ i } className="missing-field">'{ key }' field required.</li>
+          return <li key={ i }>'{ key }' field required.</li>
           })}
           { employee.photoError
-            ? <li className="missing-field">Photo not found.</li>
+            ? <li >Photo not found.</li>
             : null
           }
+          </ul>
+        : null
+      }
+      { newEmployee.errorCode
+        ? <ul className="error">
+           { newEmployee.errorCode === 'id'
+              ? <li>Employee '{ newEmployee.errorDescription }' already exists.</li>
+              : <li>Manager '{ newEmployee.errorDescription }' does not exist.</li>
+            }
+          </ul>
+        : null
+      }
+      { editEmployee.errorDescription
+        ? <ul className="error">
+           <li>Manager '{ editEmployee.errorDescription }' does not exist.</li>
           </ul>
         : null
       }

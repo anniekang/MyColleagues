@@ -1,9 +1,9 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { ITSelected, employeeChecked, search, setUser } = require('./actions')
+const { ITChecked, employeeChecked, changeUser, search, setUser } = require('./actions')
 
 
-const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp }) => {
+const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {
   const employeeLabel = `Employee '${currentUser.employeeId}'`;
 
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg'
@@ -20,18 +20,18 @@ const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUs
             <form id="search" className="ui form" onSubmit={ handleSubmitSearch }>
               <div className="fields">
                 <div className="fourteen wide field">
-                  { currentUser.employeeFound || currentUser.IT
+                  { currentUser.employeeFound || currentUser.ITConfirmed
                     ? <div>
                         { searchResults.searchSubmitted
                           ? null
-                          : <input id="emp-search" name="emp-search" type="text" placeholder="ID or First and Last Name"/>
+                          : <input id="emp-search" name="emp-search" type="text" placeholder="Employee ID or First and Last Name"/>
                         }
                       </div>
                     : null
                   }
                 </div>
                 <div className="two wide field">
-                  { currentUser.employeeFound || currentUser.IT
+                  { currentUser.employeeFound || currentUser.ITConfirmed
                     ? <button className="ui icon button">
                         <i className="search icon"></i>
                       </button>
@@ -61,41 +61,78 @@ const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUs
                 <div className="field">
                   { currentUser.employeeFound
                     ? null
-                    : <div className="ui radio checkbox">
-                        <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleClickIt }/>
-                        <label>IT Admin</label>
+                    : <div>
+                      { currentUser.ITCheck
+                        ? <div className="ui centered grid">
+                            { currentUser.ITConfirmed
+                              ? <div className="row">
+                                  <i className="checkmark icon"></i>
+                                  <div className="thirteen wide column">
+                                    <label>IT Administrator</label>
+                                  </div>
+                                </div>
+                              : <div className="row">
+                                  <i className="checkmark icon"></i>
+                                  <div className="ui small input thirteen wide column">
+                                    <input id="IT-pin" type="text" name="pin" placeholder="1234"/>
+                                  </div>
+                                  { currentUser.ITError
+                                    ? <ul className="user-error">
+                                        <li>Please re-enter pin</li>
+                                      </ul>
+                                    : null
+                                  }
+                              </div>
+                            }
+                          </div>
+                        : <div className="ui radio checkbox">
+                              <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleClickIt }/>
+                              <label>IT Administrator</label>
+                          </div>
+                      }
                       </div>
                   }
                 </div>
                 <div className="field">
-                  { currentUser.employeeCheck
-                    ? <div className="ui centered grid">
-                        { currentUser.employeeSelect
-                          ? <div className="row">
-                              <i className="checkmark icon"></i>
-                              <div className="thirteen wide column">
-                                <label>{ employeeLabel }</label>
-                              </div>
+                  { currentUser.ITConfirmed
+                    ? null
+                    : <div>
+                        { currentUser.employeeCheck
+                          ? <div className="ui centered grid">
+                              { currentUser.employeeFound
+                                ? <div className="row">
+                                    <i className="checkmark icon"></i>
+                                    <div className="thirteen wide column">
+                                      <label>{ employeeLabel }</label>
+                                    </div>
+                                  </div>
+                                : <div className="row">
+                                    <i className="checkmark icon"></i>
+                                    <div className="ui small input thirteen wide column">
+                                      <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
+                                    </div>
+                                    { currentUser.employeeError
+                                      ? <ul className="error">
+                                          <li>Employee { currentUser.employeeId } does not exist.</li>
+                                        </ul>
+                                      : null
+                                    }
+                                  </div>
+                              }
                             </div>
-                          : <div className="row">
-                              <i className="checkmark icon"></i>
-                              <div className="ui small input thirteen wide column">
-                                <input id="find-id" type="text" name="id" placeholder="Employee ID"/>
-                              </div>
+                          : <div className="ui radio checkbox">
+                                <input type="radio" name="user" value="Employee" tabIndex="2" onChange={ handleClickEmp }/>
+                                <label>Employee</label>
                             </div>
                         }
                       </div>
-                    : <div className="ui radio checkbox">
-                          <input type="radio" name="user" value="Employee" tabIndex="2" onChange={ handleClickEmp }/>
-                          <label>Employee</label>
-                      </div>
                   }
                 </div>
                 <div className="field">
-                  { currentUser.employeeFound || currentUser.IT
-                    ? <button className="ui button" type="submit">Change User</button>
+                  { currentUser.employeeFound || currentUser.ITConfirmed
+                    ? <button className="ui button" type="submit" onClick= { handleClickChange }>Change User</button>
                     : <div>
-                        { currentUser.IT || currentUser.employeeCheck
+                        { currentUser.ITCheck || currentUser.employeeCheck
                           ? <button className="ui button" type="submit">View As</button>
                           : null
                         }
@@ -123,19 +160,22 @@ const mapDispatchtoProps = dispatch => {
     },
     handleSubmitUser: event => {
       event.preventDefault();
-      const employeeData = new FormData(event.target);
-      const employee = {
-        id: employeeData.get('id').trim().toUpperCase()
-      }
-      dispatch(setUser(employee.id));
+      const userData = new FormData(event.target);
+      const ITAdmin = userData.get('pin');
+      const employeeId = userData.get('id');
+      dispatch(setUser(ITAdmin, employeeId));
     },
     handleClickIt: event => {
       event.preventDefault();
-      dispatch(ITSelected());
+      dispatch(ITChecked());
     },
     handleClickEmp: event => {
       event.preventDefault();
       dispatch(employeeChecked());
+    },
+    handleClickChange: event => {
+      event.preventDefault();
+      dispatch(changeUser());
     }
   }
 };

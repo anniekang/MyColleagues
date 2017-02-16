@@ -1,10 +1,69 @@
-const ITSelected = () => {
-  return dispatch => dispatch({ type: 'IT_SELECTED' })
+const ITChecked = () => {
+  return dispatch => dispatch({ type: 'IT_CHECKED' })
 }
-
 
 const employeeChecked = () => {
   return dispatch => dispatch({ type: 'EMPLOYEE_CHECKED'})
+}
+
+
+const ITSelected = () => {
+  return { type: 'IT_SELECTED' }
+}
+
+const ITError = () => {
+  return { type: 'IT_ERROR' }
+}
+
+const ITConfirmed = () => {
+  return { type: 'IT_CONFIRMED' }
+}
+
+const employeeSelected = (employeeId) => {
+  return { type: 'EMPLOYEE_SELECTED', employeeId }
+}
+
+const employeeNotFound = () => {
+  return { type: 'EMPLOYEE_NOT_FOUND' }
+}
+
+const employeeFound = (response) => {
+  return { type: 'EMPLOYEE_FOUND', response }
+}
+
+const setUser = (itAdmin, employeeId) => {
+  return dispatch => {
+    if (itAdmin) {
+      dispatch(ITSelected())
+      if (itAdmin === '1234') {
+        dispatch (ITConfirmed());
+      }
+      else {
+        dispatch(ITError())
+      }
+    }
+    else if (employeeId) {
+      employeeId = employeeId.trim().toUpperCase();
+      dispatch(employeeSelected(employeeId))
+      fetch(`/viewemployee/${employeeId}`, {
+        headers: {'Content-Type': 'application/json'}
+      })
+        .then( response => response.json())
+        .then( response => {
+          if (response.error) {
+            dispatch(employeeNotFound());
+          }
+          else if (response.id) {
+            dispatch(employeeFound(response))
+          }
+        })
+    }
+  }
+}
+
+
+const changeUser = () => {
+  return dispatch => dispatch({ type: 'CHANGE_USER' })
 }
 
 
@@ -54,41 +113,6 @@ const search = searchString => {
 }
 
 
-const employeeSelected = (employeeId) => {
-  return { type: 'EMPLOYEE_SELECTED', employeeId }
-}
-
-const employeeNotFound = () => {
-  return { type: 'EMPLOYEE_NOT_FOUND' }
-}
-
-const employeeFound = (response) => {
-  return { type: 'EMPLOYEE_FOUND', response }
-}
-
-const setUser = employeeId => {
-  return dispatch => {
-    if (employeeId) {
-      dispatch(employeeSelected(employeeId))
-      fetch(`/viewemployee/${employeeId}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          if (response.error) {
-            alert(response.error);
-            dispatch(employeeNotFound());
-          }
-          else if (response.id) {
-            dispatch(employeeFound(response))
-          }
-        })
-    }
-
-  }
-}
-
-
 const createProfile = () => {
   return { type: 'CREATE_PROFILE_SUBMITTED'}
 }
@@ -112,8 +136,8 @@ const employeeSaved = (response) => {
   return { type: 'EMPLOYEE_SAVED', response }
 }
 
-const employeeFailure = () => {
-  return { type: 'EMPLOYEE_FAILURE' }
+const employeeFailure = (errorCode, errorDescription) => {
+  return { type: 'EMPLOYEE_FAILURE', errorCode, errorDescription }
 }
 
 const saveEmployee = employee => {
@@ -139,25 +163,29 @@ const saveEmployee = employee => {
           dispatch(missingFields(missing, photoError));
           return;
         }
-      })
-      if (!check && !photoError) {
-        fetch('/newemployee/', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(employee)
-        })
-          .then( response => response.json())
-          .then( response => {
-            if (response.error) {
-              alert(response.error);
-              dispatch(employeeFailure());
-            }
-            else if (response.id) {
-              alert(`Employee ${response.id} ${response.first_name} ${response.last_name} succcessfully created!`)
-              dispatch(employeeSaved(response));
-            }
+        if (!check && !photoError) {
+          fetch('/newemployee/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(employee)
           })
-      }
+            .then( response => response.json())
+            .then( response => {
+              if (response.error) {
+                if (response.error === 'id') {
+                  dispatch(employeeFailure('id', employee.ID));
+                }
+                else if (response.error === 'manager') {
+                  dispatch(employeeFailure('manager', employee.Manager_ID));
+                }
+              }
+              else if (response.id) {
+                dispatch(employeeSaved(response));
+              }
+            })
+        }
+      })
+
   }
 }
 
@@ -225,6 +253,10 @@ const missingFieldsEdit = (missing, photoError) => {
   return { type: 'MISSING_FIELDS_EDIT', missing, photoError }
 }
 
+const editFailure = (errorDescription) => {
+  return { type: 'EDIT_FAILURE', errorDescription }
+}
+
 const editSaved = response => {
   return { type: 'EDIT_SAVED', response }
 }
@@ -261,9 +293,8 @@ const saveUpdate = employee => {
         })
           .then( response => response.json())
           .then( response => {
-            if (response.error) {
-              alert(response.error);
-              dispatch(employeeFailure());
+            if (response.error === 'manager') {
+              dispatch(editFailure(employee.Manager_ID));
             }
             else if (response.id) {
               dispatch(editSaved(response))
@@ -274,16 +305,20 @@ const saveUpdate = employee => {
 }
 
 
-const deleteSubmitted = () => {
-  return { type: 'DELETE_EMPLOYEE' }
+const deleteEmployeeSubmitted = (employeeId) => {
+  return dispatch => dispatch({ type: 'DELETE_EMPLOYEE_SUBMITTED', employeeId })
 }
 
-const deleteConfirmed = () => {
-  return { type: 'DELETE_CONFIRMED' }
+const deleteEmployeeNot = () => {
+  return dispatch => dispatch({ type: 'DELETE_EMPLOYEE_NOT' })
 }
 
-const deleteError = () => {
-  return { type: 'DELETE_ERROR' }
+const deleteEmployeeConfirmed = () => {
+  return { type: 'DELETE_EMPLOYEE_CONFIRMED' }
+}
+
+const deleteEmployeeError = () => {
+  return { type: 'DELETE_EMPLOYEE_ERROR' }
 }
 
 const employeeDeleted = () => {
@@ -292,12 +327,7 @@ const employeeDeleted = () => {
 
 const deleteProfile = employeeId => {
   return dispatch => {
-    dispatch(deleteSubmitted());
-    const confirm = window.confirm(`Are you sure you would like to delete Employee '${employeeId}'?`);
-    if (!confirm) {
-      return;
-    }
-    dispatch(deleteConfirmed());
+    dispatch(deleteEmployeeConfirmed());
     fetch(`/deleteemployee/${employeeId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
@@ -305,11 +335,9 @@ const deleteProfile = employeeId => {
       .then( response => response.json())
       .then( response => {
         if (response.error) {
-          alert(response.error);
-          dispatch(deleteError());
+          dispatch(deleteEmployeeError());
         }
         else if (response.success) {
-          alert(response.success);
           dispatch(employeeDeleted(response))
         }
       })
@@ -367,4 +395,4 @@ const renderOrgChart = org => {
 }
 
 
-module.exports = { ITSelected, employeeChecked, setUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteProfile, renderOrgChart }
+module.exports = { ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile, renderOrgChart }
