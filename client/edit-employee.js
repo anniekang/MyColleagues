@@ -2,15 +2,15 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
-  let handle = '';
+const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } ) => {
+  let isNew = '';
   let employee = {};
   if (newEmployee.newProfile){
-    handle = handleSubmitNew;
+    isNew = true;
     employee = newEmployee;
   }
   else if (editEmployee.editReady) {
-    handle = handleSubmitEdit;
+    isNew = false;
     employee = editEmployee;
   }
 
@@ -43,7 +43,7 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew
           </ul>
         : null
       }
-      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handle }>
+      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
         <div className="field">
           <label>Employee Profile</label>
         </div>
@@ -98,7 +98,7 @@ const mapStatetoProps = ({ currentUser, newEmployee, editEmployee }) => ({ curre
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmitNew: event => {
+    handleSubmit: isNew => event => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
@@ -111,22 +111,8 @@ const mapDispatchtoProps = dispatch => {
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-      dispatch(saveEmployee(employee));
-    },
-    handleSubmitEdit: event => {
-      event.preventDefault();
-      const employeeData = new FormData(event.target);
-      const employee = {
-        ID: employeeData.get('id').trim().toUpperCase(),
-        First_Name: employeeData.get('first-name').trim().toUpperCase(),
-        Last_Name: employeeData.get('last-name').trim().toUpperCase(),
-        Photo: employeeData.get('photo').trim(),
-        Job_Title: employeeData.get('job-title').trim().toUpperCase(),
-        Job_Description: employeeData.get('job-description').trim(),
-        Email: employeeData.get('email').trim().toUpperCase(),
-        Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
-      };
-      dispatch(saveUpdate(employee));
+      const action = isNew ? saveEmployee : saveUpdate;
+      dispatch(action(employee));
     }
   }
 };
