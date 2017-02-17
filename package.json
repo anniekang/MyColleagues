@@ -12,7 +12,9 @@
     "bundle": "browserify -t babelify client/ -o server/public/main.js",
     "bundle:watch": "watchify -v -t babelify client/ -o server/public/main.js",
     "dev": "npm-run-all -p start:watch bundle:watch",
-    "postinstall": "npm run bundle"
+    "postinstall": "npm run bundle",
+    "neo4j:start": "neo4j/neo4j-community-3.1.1/bin/neo4j start",
+    "neo4j:stop": "neo4j/neo4j-community-3.1.1/bin/neo4j stop",
   },
   "repository": {
     "type": "git",
