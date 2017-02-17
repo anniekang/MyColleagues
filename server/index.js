@@ -2,6 +2,7 @@ const express = require('express');
 const neo4j = require('neo4j-driver').v1;
 const babelPolyfill = require('babel-polyfill');
 const bodyParser = require('body-parser');
+const { PORT } = process.env;
 
 const app = express();
 
@@ -311,4 +312,4 @@ app.delete('/deleteemployee/:id', (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log('listening at 3000'));
+app.listen(PORT || 3000, () => console.log('listening on ${PORT || 3000}'));
