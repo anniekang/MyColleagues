@@ -265,7 +265,7 @@ app.put('/updateemployee/', (req, res) => {
         }
         else {
           session.close();
-          res.status(400).json({error: 'Manager'});
+          res.status(400).json({error: 'manager'});
         }
       })
 
