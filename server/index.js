@@ -18,6 +18,32 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json());
 
+app.post('/', (req, res) => {
+  var session = driver.session();
+  session
+    .run(`
+      LOAD CSV WITH HEADERS FROM "file:///assets/mock_org_chart.csv" AS line
+      CREATE(n:Employee { id: line.id, first_name: line.first, last_name: line.last, photo: line.photo, job_title: line.title, job_description: line.description, email: line.email, manager_id: line.manager})
+      RETURN n`)
+    .then( result => {
+      if (result) {
+        return session.run(`
+        MATCH (n:Employee)
+        WITH n
+        MATCH (mgr: Employee {id:n.manager_id})
+        CREATE UNIQUE (n)-[:REPORTS_TO]->(mgr)
+        RETURN n`)
+      }
+      else {
+        session.close();
+        res.status(400).json({ error: true });
+      }
+    })
+    .then(res => {
+      session.close();
+      res.json({ success: true });
+    })
+})
 
 app.get('/search/:search', (req, res) => {
   const parameters = {

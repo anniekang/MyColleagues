@@ -32,6 +32,14 @@ const currentView = (state = [], action) => {
   }
 };
 
+const CSV = (state = {}, action) => {
+  switch(action.type) {
+    case 'LOAD_CSV':
+      return true;
+    default:
+      return state;
+  }
+}
 
 const currentUser = (state = {}, action) => {
   switch(action.type) {
@@ -439,7 +447,7 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, CSV, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
 

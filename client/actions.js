@@ -1,3 +1,16 @@
+const loadCSV = () => {
+  return dispatch => {
+    fetch('/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({})
+    })
+      .then( () => {
+        dispatch({ type: 'LOAD_CSV' })
+      })
+  }
+}
+
 const ITChecked = () => {
   return dispatch => dispatch({ type: 'IT_CHECKED' })
 }
@@ -398,4 +411,4 @@ const renderOrgChart = org => {
 }
 
 
-module.exports = { ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile, renderOrgChart }
+module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile, renderOrgChart }
