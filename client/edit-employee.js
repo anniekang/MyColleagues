@@ -2,7 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
+const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
   let handle = '';
   let employee = {};
   if (newEmployee.newProfile){
@@ -17,14 +17,29 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
   return (
     <div id="edit-profile" className="ui grid container">
       { employee.missingFields
-        ? <ul>
+        ? <ul className="error">
           { employee.missingFields.map((key, i) => {
-          return <li key={ i } className="missing-field">'{ key }' field required.</li>
+          return <li key={ i }>'{ key }' field required.</li>
           })}
           { employee.photoError
-            ? <li className="missing-field">Photo not found.</li>
+            ? <li >Photo not found.</li>
             : null
           }
+          </ul>
+        : null
+      }
+      { newEmployee.errorCode
+        ? <ul className="error">
+           { newEmployee.errorCode === 'id'
+              ? <li>Employee '{ newEmployee.errorDescription }' already exists.</li>
+              : <li>Manager '{ newEmployee.errorDescription }' does not exist.</li>
+            }
+          </ul>
+        : null
+      }
+      { editEmployee.errorDescription
+        ? <ul className="error">
+           <li>Manager '{ editEmployee.errorDescription }' does not exist.</li>
           </ul>
         : null
       }
@@ -65,7 +80,10 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
         </div>
         <div className="required field">
           <label>Manager ID</label>
-          <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
+          { currentUser.employeeFound
+            ? <input id="employee-manager" type="text" name="manager-id" value={ editEmployee.employee.manager_id } placeholder="Manager ID" readOnly/>
+            : <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
+          }
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
@@ -76,7 +94,7 @@ const EditEmployee = ( { newEmployee, editEmployee, handleSubmitNew, handleSubmi
   )
 }
 
-const mapStatetoProps = ({ newEmployee, editEmployee }) => ({ newEmployee, editEmployee })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee }) => ({ currentUser, newEmployee, editEmployee })
 
 const mapDispatchtoProps = dispatch => {
   return {

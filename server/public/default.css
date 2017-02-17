@@ -2,25 +2,46 @@ body {
   font-size: 12px;
 }
 
+.error {
+  color: red;
+}
+
 #header {
   margin-top: 1%;
 }
 
 #logo {
   max-height: 200px;
+  margin: auto;
 }
 
-#search-results {
-  margin-top: 2%;
+#my-colleagues {
+  font-size: 3.6em;
+  font-family: 'Bitter', serif;
+  font-weight: bold;
+  color: rgb(139,163,200);
 }
 
 #user {
   margin-top: 1%;
+  box-shadow: 0 0 10px #777;
+  border-radius: 5px;
 }
 
-#set-user {
-  border: 1px solid gray;
-  border-radius: 5px;
+#current-user {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+#select-user {
+  font-size: 30px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+#search-results {
+  margin-top: 2%;
+  margin-left: 10%;
 }
 
 #it-view {
@@ -29,8 +50,12 @@ body {
   border-bottom: 1px solid black;
 }
 
+#home {
+  margin-top: 5%;
+}
+
 #view-profile {
-  margin-top: 2%;
+  margin-top: 3%;
 }
 
 #profile-first,
@@ -58,6 +83,16 @@ body {
   color: black;
 }
 
+#profile-email {
+  color: rgb(17,85,204);
+  text-decoration: underline;
+}
+
+#profile-email:hover {
+  color: rgb(249,166,2);
+  text-decoration: none;
+}
+
 #profile-description-label {
   display: inline-block;
 }
@@ -74,10 +109,6 @@ body {
 
 #edit-profile {
   margin-top: 2%;
-}
-
-.missing-field {
-  color: red;
 }
 
 .employee-profile,
