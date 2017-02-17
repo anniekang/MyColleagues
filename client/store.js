@@ -3,6 +3,7 @@ const { default: thunk } = require('redux-thunk');
 
 const currentView = (state = [], action) => {
   switch(action.type) {
+    case 'CHANGE_USER':
     case 'IT_CHECKED':
     case 'EMPLOYEE_CHECKED':
     case 'EMPLOYEE_NOT_FOUND':
@@ -127,6 +128,12 @@ const searchResults = (state = {}, action) => {
         employeeType: 'search-result',
         searchSubmitted: false
       });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        results: [],
+        employeeType: '',
+        searchSubmitted: false
+      });
     default:
       return state;
   }
@@ -153,6 +160,11 @@ const viewEmployee = (state = {}, action) => {
       return Object.assign({}, state, {
         idSubmitted: false,
         employee: action.response
+      });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        idSubmitted: false,
+        employee: ''
       });
     default:
       return state;
@@ -350,7 +362,16 @@ const viewOrg = (state = [], action) => {
       return Object.assign({}, state, {
         reports: action.response
       });
-    default:
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        orgSubmitted: false,
+        employeeType: '',
+        manager: {},
+        employee: [],
+        peers: [],
+        reports: []
+      });
+      default:
       return state;
   }
 }
