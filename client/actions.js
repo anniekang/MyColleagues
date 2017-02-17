@@ -128,8 +128,8 @@ const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
 }
 
-const missingFields = (missing, photoError) => {
-  return { type: 'MISSING_FIELDS', missing, photoError }
+const missingFieldsNew = (missing, photoError) => {
+  return { type: 'MISSING_FIELDS_NEW', missing, photoError }
 }
 
 const employeeSaved = (response) => {
@@ -160,7 +160,7 @@ const saveEmployee = employee => {
           photoError = true;
         }
         if (check || photoError) {
-          dispatch(missingFields(missing, photoError));
+          dispatch(missingFieldsNew(missing, photoError));
           return;
         }
         if (!check && !photoError) {
@@ -185,7 +185,6 @@ const saveEmployee = employee => {
             })
         }
       })
-
   }
 }
 
@@ -284,23 +283,27 @@ const saveUpdate = employee => {
           dispatch(missingFieldsEdit(missing, photoError));
           return;
         }
+        return Promise.resolve(photoError)
       })
-      if (!check && !photoError) {
-        fetch('/updateemployee/', {
-          method: 'PUT',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(employee)
-        })
-          .then( response => response.json())
-          .then( response => {
-            if (response.error === 'manager') {
-              dispatch(editFailure(employee.Manager_ID));
-            }
-            else if (response.id) {
-              dispatch(editSaved(response))
-            }
+      .then( () => {
+        if (!check && !photoError) {
+          fetch('/updateemployee/', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(employee)
           })
-      }
+            .then( response => response.json())
+            .then( response => {
+              if (response.error === 'manager') {
+                dispatch(editFailure(employee.Manager_ID));
+              }
+              else if (response.id) {
+                dispatch(editSaved(response))
+              }
+            })
+        }
+      })
+
   }
 }
 

@@ -2,48 +2,64 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
-const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmitNew, handleSubmitEdit } ) => {
-  let handle = '';
+const Missing = ({ employee }) => {
+  const { missingFields, photoError } = employee;
+  if (!missingFields && !photoError) return null;
+  return (
+    <ul className="error">
+      { missingFields.map((key, i) => {
+        return <li key={ i }>'{ key }' field required.</li>
+      })}
+      { photoError
+        ? <li >Photo not found.</li>
+        : null
+      }
+    </ul>
+  )
+}
+
+const NewError = ({ newEmployee }) => {
+  const { errorCode, errorDescription } = newEmployee;
+  if (!errorCode) return null;
+  return (
+    <ul className="error">
+      { errorCode === 'id'
+          ? <li>Employee '{ errorDescription }' already exists.</li>
+          : <li>Manager '{ errorDescription }' does not exist.</li>
+      }
+    </ul>
+  )
+}
+
+const EditError = ({ editEmployee }) => {
+  const { errorDescription } = editEmployee;
+  if (!errorDescription) return null;
+  return (
+    <ul className="error">
+      <li>Manager '{ errorDescription }' does not exist.</li>
+    </ul>
+  )
+}
+
+const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } ) => {
+  let isNew = '';
   let employee = {};
   if (newEmployee.newProfile){
-    handle = handleSubmitNew;
+    isNew = true;
     employee = newEmployee;
   }
   else if (editEmployee.editReady) {
-    handle = handleSubmitEdit;
+    isNew = false;
     employee = editEmployee;
   }
 
   return (
     <div id="edit-profile" className="ui grid container">
-      { employee.missingFields
-        ? <ul className="error">
-          { employee.missingFields.map((key, i) => {
-          return <li key={ i }>'{ key }' field required.</li>
-          })}
-          { employee.photoError
-            ? <li >Photo not found.</li>
-            : null
-          }
-          </ul>
-        : null
-      }
-      { newEmployee.errorCode
-        ? <ul className="error">
-           { newEmployee.errorCode === 'id'
-              ? <li>Employee '{ newEmployee.errorDescription }' already exists.</li>
-              : <li>Manager '{ newEmployee.errorDescription }' does not exist.</li>
-            }
-          </ul>
-        : null
-      }
-      { editEmployee.errorDescription
-        ? <ul className="error">
-           <li>Manager '{ editEmployee.errorDescription }' does not exist.</li>
-          </ul>
-        : null
-      }
-      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handle }>
+      < Missing employee={ employee }/>
+      < NewError newEmployee={ newEmployee }/>
+      < EditError editEmployee={ editEmployee }/>
+
+      <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
         <div className="field">
           <label>Employee Profile</label>
         </div>
@@ -98,7 +114,7 @@ const mapStatetoProps = ({ currentUser, newEmployee, editEmployee }) => ({ curre
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmitNew: event => {
+    handleSubmit: isNew => event => {
       event.preventDefault();
       const employeeData = new FormData(event.target);
       const employee = {
@@ -111,22 +127,8 @@ const mapDispatchtoProps = dispatch => {
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
       };
-      dispatch(saveEmployee(employee));
-    },
-    handleSubmitEdit: event => {
-      event.preventDefault();
-      const employeeData = new FormData(event.target);
-      const employee = {
-        ID: employeeData.get('id').trim().toUpperCase(),
-        First_Name: employeeData.get('first-name').trim().toUpperCase(),
-        Last_Name: employeeData.get('last-name').trim().toUpperCase(),
-        Photo: employeeData.get('photo').trim(),
-        Job_Title: employeeData.get('job-title').trim().toUpperCase(),
-        Job_Description: employeeData.get('job-description').trim(),
-        Email: employeeData.get('email').trim().toUpperCase(),
-        Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
-      };
-      dispatch(saveUpdate(employee));
+      const action = isNew ? saveEmployee : saveUpdate;
+      dispatch(action(employee));
     }
   }
 };

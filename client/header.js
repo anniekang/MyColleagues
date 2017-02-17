@@ -4,9 +4,8 @@ const { ITChecked, employeeChecked, changeUser, search, setUser } = require('./a
 
 
 const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {
-  const employeeLabel = `Employee '${currentUser.employeeId}'`;
+  const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
 
-  const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg'
   return (
     <div id="header" className="ui grid container">
       <div id="logo-search" className="twelve wide column">
@@ -103,7 +102,7 @@ const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUs
                                 ? <div className="row">
                                     <i className="checkmark icon"></i>
                                     <div className="thirteen wide column">
-                                      <label>{ employeeLabel }</label>
+                                      <label>Employee '{ currentUser.employeeId }'</label>
                                     </div>
                                   </div>
                                 : <div className="row">
