@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A web application for businesses to use as a tool to understand their organizational structure and employee profiles",
   "engines": {
-    "node": "6.9.4"
+    "node": "6.9.2"
   },
   "main": "server/index.js",
   "scripts": {
