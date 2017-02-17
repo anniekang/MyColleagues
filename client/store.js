@@ -92,6 +92,7 @@ const currentUser = (state = {}, action) => {
         employeeFound: false,
         employeeId: '',
         employee: {},
+        changeLogo: false
       });
     case 'CHANGE_LOGO':
       return Object.assign({}, state, {

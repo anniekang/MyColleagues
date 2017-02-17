@@ -2,6 +2,45 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('./actions');
 
+const Missing = ({ employee }) => {
+  const { missingFields, photoError } = employee;
+  if (!missingFields && !photoError) return null;
+  return (
+    <ul className="error">
+      { missingFields.map((key, i) => {
+        return <li key={ i }>'{ key }' field required.</li>
+      })}
+      { photoError
+        ? <li >Photo not found.</li>
+        : null
+      }
+    </ul>
+  )
+}
+
+const NewError = ({ newEmployee }) => {
+  const { errorCode, errorDescription } = newEmployee;
+  if (!errorCode) return null;
+  return (
+    <ul className="error">
+      { errorCode === 'id'
+          ? <li>Employee '{ errorDescription }' already exists.</li>
+          : <li>Manager '{ errorDescription }' does not exist.</li>
+      }
+    </ul>
+  )
+}
+
+const EditError = ({ editEmployee }) => {
+  const { errorDescription } = editEmployee;
+  if (!errorDescription) return null;
+  return (
+    <ul className="error">
+      <li>Manager '{ errorDescription }' does not exist.</li>
+    </ul>
+  )
+}
+
 const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } ) => {
   let isNew = '';
   let employee = {};
@@ -16,33 +55,10 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } 
 
   return (
     <div id="edit-profile" className="ui grid container">
-      { employee.missingFields
-        ? <ul className="error">
-          { employee.missingFields.map((key, i) => {
-          return <li key={ i }>'{ key }' field required.</li>
-          })}
-          { employee.photoError
-            ? <li >Photo not found.</li>
-            : null
-          }
-          </ul>
-        : null
-      }
-      { newEmployee.errorCode
-        ? <ul className="error">
-           { newEmployee.errorCode === 'id'
-              ? <li>Employee '{ newEmployee.errorDescription }' already exists.</li>
-              : <li>Manager '{ newEmployee.errorDescription }' does not exist.</li>
-            }
-          </ul>
-        : null
-      }
-      { editEmployee.errorDescription
-        ? <ul className="error">
-           <li>Manager '{ editEmployee.errorDescription }' does not exist.</li>
-          </ul>
-        : null
-      }
+      < Missing employee={ employee }/>
+      < NewError newEmployee={ newEmployee }/>
+      < EditError editEmployee={ editEmployee }/>
+
       <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
         <div className="field">
           <label>Employee Profile</label>
