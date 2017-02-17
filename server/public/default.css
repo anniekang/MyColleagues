@@ -29,14 +29,14 @@ body {
 }
 
 #current-user {
-  font-size: 1.3em;
+  font-size: 1.4em;
   font-weight: bold;
 }
 
 #select-user {
-  font-size: 30px;
+  font-size: 2em;
   font-style: italic;
-  font-weight: bold;
+  color: rgb(38,34,91);
 }
 
 #search-results {

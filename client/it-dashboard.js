@@ -4,7 +4,7 @@ const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = r
 
 
 
-const ITDashboard = ({ currentUser, newEmployee, viewEmployee, deleteEmployee, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
+const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
   const yesButton = `ui button ${ deleteEmployee.employeeId }`;
   if (!currentUser.ITConfirmed) return null;
   return (
@@ -38,6 +38,13 @@ const ITDashboard = ({ currentUser, newEmployee, viewEmployee, deleteEmployee, h
             </div>
           : null
         }
+        { editEmployee.saved
+          ? <div className="centered row">
+              <div>Employee '{viewEmployee.employee.id} {viewEmployee.employee.first_name} {viewEmployee.employee.last_name}' successfully updated!</div>
+            </div>
+          : null
+        }
+
         { deleteEmployee.deleteSubmitted
           ? <div className="centered row">
               <div className="ui centered grid">
@@ -69,7 +76,7 @@ const ITDashboard = ({ currentUser, newEmployee, viewEmployee, deleteEmployee, h
   )
 }
 
-const mapStatetoProps = ({ currentUser, newEmployee, viewEmployee, deleteEmployee }) => ({ currentUser, newEmployee, viewEmployee, deleteEmployee })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee })
 
 const mapDispatchtoProps = dispatch => {
   return {

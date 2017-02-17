@@ -21,7 +21,8 @@ const currentView = (state = [], action) => {
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
-    case 'MISSING_FIELDS':
+    case 'MISSING_FIELDS_NEW':
+    case 'MISSING_FIELDS_EDIT':
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
@@ -177,7 +178,7 @@ const newEmployee = (state = {}, action) => {
         errorCode: '',
         errorDescription: ''
       });
-    case 'MISSING_FIELDS':
+    case 'MISSING_FIELDS_NEW':
       return Object.assign({}, state, {
         missingFields: action.missing,
         photoError: action.photoError,
@@ -199,10 +200,14 @@ const newEmployee = (state = {}, action) => {
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
     case 'EDIT_REQUESTED':
+    case 'EDIT_SUBMITTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
-        saved: false
+        saved: false,
+        errorCode: '',
+        errorDescription: '',
+        photoError: false
       });
     default:
       return state;
@@ -214,7 +219,14 @@ const editEmployee = (state = {}, action) => {
   switch (action.type) {
     case 'EDIT_REQUESTED':
       return Object.assign({}, state, {
-        editRequested: true
+        editRequested: true,
+        editReady: false,
+        editSubmitted: false,
+        employee: {},
+        missingFields: [],
+        photoError: false,
+        errorDescription: '',
+        saved: false
       });
     case 'EDIT_FORM':
       return Object.assign({}, state, {
@@ -233,19 +245,30 @@ const editEmployee = (state = {}, action) => {
       return Object.assign({}, state, {
         missingFields: action.missing,
         photoError: action.photoError,
+        editSubmitted: false
       });
     case 'EDIT_FAILURE':
       return Object.assign({}, state, {
+        editSubmitted: false,
         errorDescription: action.errorDescription
       });
     case 'EDIT_SAVED':
-    case 'CREATE_PROFILE_SUBMITTED':
       return Object.assign({}, state, {
         editReady: false,
-        editSubmitted: false,
-        employee: {},
         missingFields: [],
-        photoError: false
+        photoError: false,
+        saved: true
+      });
+    case 'CHANGE_LOGO':
+    case 'CHANGE_USER':
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'SEARCH_SUBMITTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        editReady: false,
+        saved: false,
+        employee: {}
       });
     default:
       return state;
@@ -369,13 +392,14 @@ const initialState = {
     saved: false
   },
   editEmployee: {
-    editRequested: true,
+    editRequested: false,
     editReady: false,
     editSubmitted: false,
     employee: {},
     missingFields: [],
     photoError: false,
-    errorDescription: ''
+    errorDescription: '',
+    saved: false
   },
   deleteEmployee: {
     deleteSubmitted: false,
@@ -395,6 +419,7 @@ const initialState = {
 };
 
 const reducer = combineReducers({ currentView, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
-const store = createStore(reducer, initialState, applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
 
 module.exports = store;
