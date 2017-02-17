@@ -135,13 +135,13 @@ app.post('/newemployee/', (req, res) => {
       }
       else {
         session.close();
-        res.status(400).json({error: `'${parameters.ID}' already exists.`});
+        res.status(400).json({error: 'id'});
       }
     })
     .then( result => {
       if (result.records.length === 0){
         session.close();
-        res.status(400).json({error: `Manager '${parameters.Manager_ID}' does not exist.`});
+        res.status(400).json({error: 'manager'});
       }
       else {
         const results = {};
@@ -265,7 +265,7 @@ app.put('/updateemployee/', (req, res) => {
         }
         else {
           session.close();
-          res.status(400).json({error: `Manager '${parameters.Manager_ID}' does not exist.`});
+          res.status(400).json({error: 'Manager'});
         }
       })
 
