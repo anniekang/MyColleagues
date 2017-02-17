@@ -22,7 +22,7 @@ app.post('/', (req, res) => {
   var session = driver.session();
   session
     .run(`
-      LOAD CSV WITH HEADERS FROM "file:///mock_org_chart.csv" AS line
+      LOAD CSV WITH HEADERS FROM "https://dl.dropboxusercontent.com/u/12239436/mock_org_chart.csv" AS line
       CREATE(n:Employee { id: line.id, first_name: line.first, last_name: line.last, photo: line.photo, job_title: line.title, job_description: line.description, email: line.email, manager_id: line.manager})
       RETURN n`)
     .then( result => {
