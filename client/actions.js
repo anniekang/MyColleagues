@@ -1,12 +1,12 @@
 const loadCSV = () => {
   return dispatch => {
-    fetch('/', {
+    fetch('/loadcsv', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({})
     })
-      .then( () => {
-        dispatch({ type: 'LOAD_CSV' })
+      .then( response => {
+        if (response.success) dispatch({ type: 'LOAD_CSV' })
       })
   }
 }
