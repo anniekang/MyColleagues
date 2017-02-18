@@ -2,21 +2,64 @@ const express = require('express');
 const neo4j = require('neo4j-driver').v1;
 const babelPolyfill = require('babel-polyfill');
 const bodyParser = require('body-parser');
+const { PORT } = process.env;
 
 const app = express();
 
-var driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
+/*var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
+var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
+
+var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));*/
+
+const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
 
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json());
 
+/*app.use( (req, res, next) => {
+  const session = driver.session();
+  session
+    .run(`CREATE CONSTRAINT ON (n:Employee) ASSERT n.id IS UNIQUE`)
+  session.close();
+  next()
+})*/
+
+app.post('/loadcsv/', (req, res) => {
+const session = driver.session();
+  session
+    .run(`
+      LOAD CSV WITH HEADERS FROM "https://dl.dropboxusercontent.com/u/12239436/mock_org_chart.csv" AS line
+      CREATE(n:Employee { id: line.id, first_name: line.first, last_name: line.last, photo: line.photo, job_title: line.title, job_description: line.description, email: line.email, manager_id: line.manager})
+      RETURN n`)
+    .then( result => {
+      if (result.records.length === 11) {
+        return session.run(`
+        MATCH (n:Employee)
+        WITH n
+        MATCH (mgr: Employee {id:n.manager_id})
+        CREATE UNIQUE (n)-[:REPORTS_TO]->(mgr)
+        RETURN n`)
+      }
+      else {
+        session.close();
+        res.status(400).json({ error: true });
+      }
+    })
+    .then( result => {
+      if (result.records.length === 11) {
+        session.close();
+        res.json({ success: true });
+      }
+    })
+})
 
 app.get('/search/:search', (req, res) => {
   const parameters = {
     search: req.params.search
   }
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (search:Employee)
@@ -51,7 +94,7 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
     firstName: req.params.firstname,
     lastName: req.params.lastname
   }
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (search:Employee)-[:REPORTS_TO]->(Employee)
@@ -82,7 +125,7 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
 
 
 app.get('/viewemployee/:id', (req, res) => {
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (view:Employee {id: { id }})-[:REPORTS_TO]->(mgr:Employee)
@@ -111,7 +154,7 @@ app.get('/viewemployee/:id', (req, res) => {
 
 app.post('/newemployee/', (req, res) => {
   const parameters = req.body;
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (emp:Employee {id: { ID }})
@@ -160,7 +203,7 @@ app.get('/orgchart/:id/:managerId', (req, res) => {
     managerId: req.params.managerId
   }
   const orgChart = [];
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (view:Employee {id: { managerId }})
@@ -239,7 +282,7 @@ app.get('/orgchart/:id/:managerId', (req, res) => {
 
 app.put('/updateemployee/', (req, res) => {
   const parameters = req.body;
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (mgr:Employee {id: { Manager_ID }})
@@ -278,7 +321,7 @@ app.put('/updateemployee/', (req, res) => {
 
 
 app.delete('/deleteemployee/:id', (req, res) => {
-  var session = driver.session();
+  const session = driver.session();
   session
     .run(`
       MATCH (del:Employee {id: { id }}) DETACH DELETE del`,
@@ -305,4 +348,4 @@ app.delete('/deleteemployee/:id', (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log('listening at 3000'));
+app.listen(PORT || 3000, () => console.log('listening on ${PORT || 3000}'));
