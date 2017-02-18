@@ -6,6 +6,7 @@ const loadCSV = () => {
       body: JSON.stringify({})
     })
       .then( response => {
+        console.log(response)
         if (response.success) dispatch({ type: 'LOAD_CSV' })
       })
   }

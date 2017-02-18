@@ -6,25 +6,25 @@ const { PORT } = process.env;
 
 const app = express();
 
-var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+/*var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
 var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
 var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
-var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
+var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));*/
 
-//const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
+const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
 
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json());
 
-app.use( (req, res, next) => {
+/*app.use( (req, res, next) => {
   const session = driver.session();
   session
     .run(`CREATE CONSTRAINT ON (n:Employee) ASSERT n.id IS UNIQUE`)
   session.close();
   next()
-})
+})*/
 
 app.post('/loadcsv/', (req, res) => {
 const session = driver.session();
@@ -34,7 +34,7 @@ const session = driver.session();
       CREATE(n:Employee { id: line.id, first_name: line.first, last_name: line.last, photo: line.photo, job_title: line.title, job_description: line.description, email: line.email, manager_id: line.manager})
       RETURN n`)
     .then( result => {
-      if (result) {
+      if (result.records.length === 11) {
         return session.run(`
         MATCH (n:Employee)
         WITH n
@@ -48,9 +48,10 @@ const session = driver.session();
       }
     })
     .then( result => {
-      console.log(result)
-      session.close();
-      res.json({ success: true });
+      if (result.records.length === 11) {
+        session.close();
+        res.json({ success: true });
+      }
     })
 })
 
