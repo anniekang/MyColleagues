@@ -1,6 +1,6 @@
 const loadCSV = () => {
   return dispatch => {
-    fetch('/loadcsv', {
+    fetch('/employee/loadcsv', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({})
@@ -59,7 +59,7 @@ const setUser = (itAdmin, employeeId) => {
     else if (employeeId) {
       employeeId = employeeId.trim().toUpperCase();
       dispatch(employeeSelected(employeeId))
-      fetch(`/viewemployee/${employeeId}`, {
+      fetch(`/employee/${employeeId}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -106,7 +106,7 @@ const search = searchString => {
   return dispatch => {
     dispatch(searchSubmitted(searchString));
     if (searchArray.length === 1 || searchArray.length === 3) {
-      fetch(`/search/${searchArray[0]}`, {
+      fetch(`/employee/search/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -115,7 +115,7 @@ const search = searchString => {
         })
     }
     if (searchArray.length === 2) {
-      fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
+      fetch(`/employee/searchnames/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -178,7 +178,7 @@ const saveEmployee = employee => {
           return;
         }
         if (!check && !photoError) {
-          fetch('/newemployee/', {
+          fetch('/employee', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(employee)
@@ -218,7 +218,7 @@ const renderProfile = employeeId => {
   return dispatch => {
     dispatch(idSearch(employeeId));
     employeeId = employeeId.toUpperCase();
-    fetch(`/viewemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
@@ -247,7 +247,7 @@ const updateProfile = employeeId => {
   return dispatch => {
     dispatch(editRequested());
 
-    fetch(`/viewemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
@@ -301,7 +301,7 @@ const saveUpdate = employee => {
       })
       .then( () => {
         if (!check && !photoError) {
-          fetch('/updateemployee/', {
+          fetch('/employee', {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(employee)
@@ -345,7 +345,7 @@ const employeeDeleted = () => {
 const deleteProfile = employeeId => {
   return dispatch => {
     dispatch(deleteEmployeeConfirmed());
-    fetch(`/deleteemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -390,7 +390,7 @@ const renderOrgChart = org => {
   return dispatch => {
     dispatch(orgSubmitted());
 
-    fetch(`/orgchart/${org.id}/${org.managerId}`, {
+    fetch(`/employee/orgchart/${org.id}/${org.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())

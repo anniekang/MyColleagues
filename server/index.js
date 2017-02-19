@@ -18,15 +18,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json());
 
-/*app.use( (req, res, next) => {
-  const session = driver.session();
-  session
-    .run(`CREATE CONSTRAINT ON (n:Employee) ASSERT n.id IS UNIQUE`)
-  session.close();
-  next()
-})*/
-
-app.post('/loadcsv/', (req, res) => {
+app.post('/employee/loadcsv', (req, res) => {
 const session = driver.session();
   session
     .run(`
@@ -55,7 +47,7 @@ const session = driver.session();
     })
 })
 
-app.get('/search/:search', (req, res) => {
+app.get('/employee/search/:search', (req, res) => {
   const parameters = {
     search: req.params.search
   }
@@ -89,7 +81,7 @@ app.get('/search/:search', (req, res) => {
 });
 
 
-app.get('/searchnames/:firstname/:lastname', (req, res) => {
+app.get('/employee/searchnames/:firstname/:lastname', (req, res) => {
   const parameters = {
     firstName: req.params.firstname,
     lastName: req.params.lastname
@@ -124,7 +116,7 @@ app.get('/searchnames/:firstname/:lastname', (req, res) => {
 });
 
 
-app.get('/viewemployee/:id', (req, res) => {
+app.get('/employee/:id', (req, res) => {
   const session = driver.session();
   session
     .run(`
@@ -152,7 +144,7 @@ app.get('/viewemployee/:id', (req, res) => {
 });
 
 
-app.post('/newemployee/', (req, res) => {
+app.post('/employee', (req, res) => {
   const parameters = req.body;
   const session = driver.session();
   session
@@ -197,7 +189,7 @@ app.post('/newemployee/', (req, res) => {
 });
 
 
-app.get('/orgchart/:id/:managerId', (req, res) => {
+app.get('/employee/orgchart/:id/:managerId', (req, res) => {
   const parameters = {
     id: req.params.id,
     managerId: req.params.managerId
@@ -280,7 +272,7 @@ app.get('/orgchart/:id/:managerId', (req, res) => {
 });
 
 
-app.put('/updateemployee/', (req, res) => {
+app.put('/employee', (req, res) => {
   const parameters = req.body;
   const session = driver.session();
   session
@@ -320,7 +312,7 @@ app.put('/updateemployee/', (req, res) => {
 });
 
 
-app.delete('/deleteemployee/:id', (req, res) => {
+app.delete('/employee/:id', (req, res) => {
   const session = driver.session();
   session
     .run(`
