@@ -91,42 +91,6 @@ const saveLogo = (logo) => {
 }
 
 
-const searchSubmitted = (search) => {
-  return { type: 'SEARCH_SUBMITTED', search }
-}
-
-const renderResults = (results) => {
-  return { type: 'RENDER_RESULTS', results }
-}
-
-const search = searchString => {
-  const searchArray = searchString.trim().toUpperCase().split(' ');
-  if (searchArray.length === 0) return;
-
-  return dispatch => {
-    dispatch(searchSubmitted(searchString));
-    if (searchArray.length === 1 || searchArray.length === 3) {
-      fetch(`/search/${searchArray[0]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
-        })
-    }
-    if (searchArray.length === 2) {
-      fetch(`/search/names/${searchArray[0]}/${searchArray[1]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
-        })
-    }
-  }
-}
-
-
 const createProfile = () => {
   return { type: 'CREATE_PROFILE_SUBMITTED'}
 }
@@ -361,55 +325,4 @@ const deleteProfile = employeeId => {
   }
 }
 
-
-const orgSubmitted = () => {
-  return { type: 'ORG_SUBMITTED' }
-}
-
-const orgDataReceived = () => {
-  return { type: 'ORG_DATA_RECEIVED'}
-}
-
-const renderManager = response => {
-  return { type: 'RENDER_MANAGER', response }
-}
-
-const renderEmployee = response => {
-  return { type: 'RENDER_EMPLOYEE', response}
-}
-
-const renderPeers = response => {
-  return { type: 'RENDER_PEERS', response}
-}
-
-const renderReports = response => {
-  return { type: 'RENDER_REPORTS', response}
-}
-
-const renderOrgChart = org => {
-  return dispatch => {
-    dispatch(orgSubmitted());
-
-    fetch(`/orgchart/${org.id}/${org.managerId}`, {
-      headers: {'Content-Type': 'application/json'}
-    })
-      .then( response => response.json())
-      .then( response => {
-        dispatch(orgDataReceived());
-        const manager = response[0];
-        const employee = [response[1]];
-        const reports = response[3];
-        const peers = response[2];
-
-        dispatch(renderManager(manager));
-        if (org.id != org.managerId){
-          dispatch(renderEmployee(employee));
-          dispatch(renderReports(reports));
-        }
-        dispatch(renderPeers(peers));
-      })
-  }
-}
-
-
-module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile, renderOrgChart }
+module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile }

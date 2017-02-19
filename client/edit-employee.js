@@ -1,6 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { saveEmployee, saveUpdate } = require('./actions');
+const { saveEmployee, saveUpdate } = require('./actions/employee-actions');
+
 
 const Missing = ({ employee }) => {
   const { missingFields, photoError } = employee;

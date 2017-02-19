@@ -1,6 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { ITChecked, employeeChecked, changeUser, search, setUser } = require('./actions')
+const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/employee-actions')
+const { search } = require('./actions/search-actions')
 
 
 const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {

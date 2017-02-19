@@ -1,8 +1,10 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { loadCSV } = require('./actions')
+const { loadCSV } = require('./actions/employee-actions')
+
 
 const Home = ({ currentUser, handleClick }) => {
+
   return (
     <div id="home" className="ui centered grid container">
       { currentUser.employeeCheck || currentUser.ITCheck
