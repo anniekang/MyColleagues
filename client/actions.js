@@ -106,7 +106,7 @@ const search = searchString => {
   return dispatch => {
     dispatch(searchSubmitted(searchString));
     if (searchArray.length === 1 || searchArray.length === 3) {
-      fetch(`/employee/search/${searchArray[0]}`, {
+      fetch(`/search/${searchArray[0]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -115,7 +115,7 @@ const search = searchString => {
         })
     }
     if (searchArray.length === 2) {
-      fetch(`/employee/searchnames/${searchArray[0]}/${searchArray[1]}`, {
+      fetch(`/search/names/${searchArray[0]}/${searchArray[1]}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -390,7 +390,7 @@ const renderOrgChart = org => {
   return dispatch => {
     dispatch(orgSubmitted());
 
-    fetch(`/employee/orgchart/${org.id}/${org.managerId}`, {
+    fetch(`/orgchart/${org.id}/${org.managerId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
