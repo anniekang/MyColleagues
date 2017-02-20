@@ -1,5 +1,6 @@
 const { Router } = require('express')
 
+
 const SearchRoutes = (driver) => {
   const router = new Router;
 
@@ -30,9 +31,7 @@ const SearchRoutes = (driver) => {
         session.close();
         res.json(results);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.get('/names/:firstname/:lastname', (req, res) => {
@@ -63,9 +62,7 @@ const SearchRoutes = (driver) => {
         session.close();
         res.json(results);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   return router;

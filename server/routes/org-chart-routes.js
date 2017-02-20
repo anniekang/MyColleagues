@@ -1,5 +1,6 @@
 const { Router } = require('express')
 
+
 const OrgChartRoutes = (driver) => {
   const router = new Router;
 
@@ -79,9 +80,7 @@ const OrgChartRoutes = (driver) => {
         session.close();
         res.json(orgChart);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   return router;

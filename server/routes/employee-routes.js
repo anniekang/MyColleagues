@@ -1,5 +1,6 @@
 const { Router } = require('express')
 
+
 const EmployeeRoutes = (driver) => {
   const router = new Router;
 
@@ -30,9 +31,7 @@ const EmployeeRoutes = (driver) => {
             res.json({ success: true });
           }
         })
-        .catch( error => {
-          res.json(error);
-        });
+        .catch( error => res.json(error) );
   })
 
   router.post('/', (req, res) => {
@@ -72,9 +71,7 @@ const EmployeeRoutes = (driver) => {
           res.json(results);
         }
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.get('/:id', (req, res) => {
@@ -98,10 +95,7 @@ const EmployeeRoutes = (driver) => {
           res.json(results);
         }
       })
-
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.put('/', (req, res) => {
@@ -138,10 +132,7 @@ const EmployeeRoutes = (driver) => {
         session.close();
         res.json(results);
       })
-
-      .catch(error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.delete('/:id', (req, res) => {
@@ -166,9 +157,7 @@ const EmployeeRoutes = (driver) => {
           }
 
         })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.get('/search/:search', (req, res) => {
@@ -198,9 +187,7 @@ const EmployeeRoutes = (driver) => {
         session.close();
         res.json(results);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.get('/searchnames/:firstname/:lastname', (req, res) => {
@@ -231,9 +218,7 @@ const EmployeeRoutes = (driver) => {
         session.close();
         res.json(results);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   router.get('/orgchart/:id/:managerId', (req, res) => {
@@ -312,9 +297,7 @@ const EmployeeRoutes = (driver) => {
         session.close();
         res.json(orgChart);
       })
-      .catch( error => {
-        res.json(error);
-      });
+      .catch( error => res.json(error) );
   });
 
   return router;
