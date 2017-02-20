@@ -103,8 +103,14 @@ body {
 
 #edit-button,
 #org-button,
-#delete-button {
-  width: 130px;
+#delete-button,
+#new-collab-button {
+  width: 150px;
+}
+
+#collaborations {
+  font-size: 1.4em;
+  font-weight: bold;
 }
 
 #edit-profile {

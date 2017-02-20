@@ -1,107 +1,15 @@
-const loadCSV = () => {
+const createCollab = () => {
+  return { type: 'CREATE_COLLAB_SUBMITTED'}
+}
+
+const newCollab = () => {
   return dispatch => {
-    fetch('/employee/loadcsv', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({})
-    })
-      .then( response => {
-        if (response.success) dispatch({ type: 'LOAD_CSV' })
-      })
-  }
-}
-
-const ITChecked = () => {
-  return dispatch => dispatch({ type: 'IT_CHECKED' })
-}
-
-const employeeChecked = () => {
-  return dispatch => dispatch({ type: 'EMPLOYEE_CHECKED'})
-}
-
-
-const ITSelected = () => {
-  return { type: 'IT_SELECTED' }
-}
-
-const ITError = () => {
-  return { type: 'IT_ERROR' }
-}
-
-const ITConfirmed = () => {
-  return { type: 'IT_CONFIRMED' }
-}
-
-const employeeSelected = (employeeId) => {
-  return { type: 'EMPLOYEE_SELECTED', employeeId }
-}
-
-const employeeNotFound = () => {
-  return { type: 'EMPLOYEE_NOT_FOUND' }
-}
-
-const employeeFound = (response) => {
-  return { type: 'EMPLOYEE_FOUND', response }
-}
-
-const setUser = (itAdmin, employeeId) => {
-  return dispatch => {
-    if (itAdmin) {
-      dispatch(ITSelected())
-      if (itAdmin === '1234') {
-        dispatch (ITConfirmed());
-      }
-      else {
-        dispatch(ITError())
-      }
-    }
-    else if (employeeId) {
-      employeeId = employeeId.trim().toUpperCase();
-      dispatch(employeeSelected(employeeId))
-      fetch(`/employee/${employeeId}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          if (response.error) {
-            dispatch(employeeNotFound());
-          }
-          else if (response.id) {
-            dispatch(employeeFound(response))
-          }
-        })
-    }
+    dispatch(createCollab());
   }
 }
 
 
-const changeUser = () => {
-  return dispatch => dispatch({ type: 'CHANGE_USER' })
-}
-
-
-const changeLogo = () => {
-  return dispatch => dispatch({ type: 'CHANGE_LOGO' })
-}
-
-
-const saveLogo = (logo) => {
-  return dispatch => dispatch ({ type: 'SAVE_LOGO', logo })
-}
-
-
-const createProfile = () => {
-  return { type: 'CREATE_PROFILE_SUBMITTED'}
-}
-
-const newProfile = () => {
-  return dispatch => {
-    dispatch(createProfile());
-  }
-}
-
-
-const employeeSubmitted = () => {
+/*const employeeSubmitted = () => {
   return { type: 'EMPLOYEE_SUBMITTED' }
 }
 
@@ -322,7 +230,7 @@ const deleteProfile = employeeId => {
         }
       })
   }
-}
+}*/
 
 
-module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, newProfile, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile }
+module.exports = { newCollab /*, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile*/ }
