@@ -1,8 +1,10 @@
 const { createStore, combineReducers, applyMiddleware } = require('redux');
 const { default: thunk } = require('redux-thunk');
 
+
 const currentView = (state = [], action) => {
   switch(action.type) {
+    case 'CHANGE_USER':
     case 'IT_CHECKED':
     case 'EMPLOYEE_CHECKED':
     case 'EMPLOYEE_NOT_FOUND':
@@ -31,6 +33,14 @@ const currentView = (state = [], action) => {
   }
 };
 
+const CSV = (state = {}, action) => {
+  switch(action.type) {
+    case 'LOAD_CSV':
+      return true;
+    default:
+      return state;
+  }
+}
 
 const currentUser = (state = {}, action) => {
   switch(action.type) {
@@ -127,6 +137,12 @@ const searchResults = (state = {}, action) => {
         employeeType: 'search-result',
         searchSubmitted: false
       });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        results: [],
+        employeeType: '',
+        searchSubmitted: false
+      });
     default:
       return state;
   }
@@ -153,6 +169,11 @@ const viewEmployee = (state = {}, action) => {
       return Object.assign({}, state, {
         idSubmitted: false,
         employee: action.response
+      });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        idSubmitted: false,
+        employee: ''
       });
     default:
       return state;
@@ -350,7 +371,16 @@ const viewOrg = (state = [], action) => {
       return Object.assign({}, state, {
         reports: action.response
       });
-    default:
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        orgSubmitted: false,
+        employeeType: '',
+        manager: {},
+        employee: [],
+        peers: [],
+        reports: []
+      });
+      default:
       return state;
   }
 }
@@ -418,8 +448,10 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
+
+const reducer = combineReducers({ currentView, CSV, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+
 
 module.exports = store;

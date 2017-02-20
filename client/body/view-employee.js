@@ -1,6 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { updateProfile, deleteEmployeeSubmitted, renderOrgChart } = require('./actions');
+const { updateProfile, deleteEmployeeSubmitted } = require('../actions/employee-actions');
+const { renderOrgChart } = require('../actions/org-chart-actions');
 
 
 const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete, handleClickNew }) => {
@@ -160,5 +161,6 @@ const mapDispatchtoProps = dispatch => {
     }
   }
 };
+
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(ViewEmployee);
