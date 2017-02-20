@@ -77,51 +77,31 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
         </div>
       </div>
       <div className="row">
-
         <div id='view-profile-collabs' className='ui grid container'>
           <div className='ui fourteen wide centered column row'>
             <div className='thirteen wide column'>
-              <div className='row'>
+              <div id="collaborations" className='row'>
                 Collaborations
               </div>
               <div className='ui hidden divider'></div>
               <div className='ui row grid'>
-                  <div className='row'>ID:
-                    <span id='profile-id'> { viewEmployee.employee.id }</span>
-                  </div>
-                  <div className='row'>Job Title:
-                    <span id='profile-title'> { viewEmployee.employee.job_title }</span>
-                  </div>
-                  <div className='row'>
-                    <div id='profile-description-label'>Job Description:</div>
-                    <div id='profile-description'> { viewEmployee.employee.job_description }</div>
-                  </div>
-                  <div className='row'>Email:
-                    <a id='profile-email' href={ email }> { viewEmployee.employee.email } </a>
-                  </div>
-                  <div className='row'>Manager ID:
-                    <span id='profile-manager'> { viewEmployee.employee.manager_id }</span>
-                  </div>
-                  <div className='row'>Manager Name:
-                    <span id='profile-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
-                  </div>
-                  </div>
               </div>
-              <div className='three wide column'>
-                <div className='ui one column centered grid'>
-                  <div className='ui hidden divider'></div>
-                  { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
-                    ? <div className='row'>
-                        <button id='new-collab-button' className={ collabButton } type='submit' onClick={ handleClickNew }>New Collaboration</button>
-                      </div>
-                    : null
-                  }
-                </div>
+            </div>
+            <div className='three wide column'>
+              <div className='ui one column centered grid'>
+                <div className='ui hidden divider'></div>
+                { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
+                  ? <div className='row'>
+                      <button id='new-collab-button' className={ collabButton } type='submit' onClick={ handleClickNew }>New Collaboration</button>
+                    </div>
+                  : null
+                }
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   )
 };
 
