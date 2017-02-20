@@ -1,12 +1,12 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = require('./actions');
-
+const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = require('./actions/employee-actions');
 
 
 const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
   const yesButton = `ui button ${ deleteEmployee.employeeId }`;
   if (!currentUser.ITConfirmed) return null;
+
   return (
     <div>
       <div id='it-view' className='ui grid container'>
@@ -105,5 +105,6 @@ const mapDispatchtoProps = dispatch => {
     }
   }
 }
+
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(ITDashboard)

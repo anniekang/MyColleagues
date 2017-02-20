@@ -1,12 +1,11 @@
 const loadCSV = () => {
   return dispatch => {
-    fetch('/loadcsv', {
+    fetch('/employee/loadcsv', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({})
     })
       .then( response => {
-        console.log(response)
         if (response.success) dispatch({ type: 'LOAD_CSV' })
       })
   }
@@ -59,7 +58,7 @@ const setUser = (itAdmin, employeeId) => {
     else if (employeeId) {
       employeeId = employeeId.trim().toUpperCase();
       dispatch(employeeSelected(employeeId))
-      fetch(`/viewemployee/${employeeId}`, {
+      fetch(`/employee/${employeeId}`, {
         headers: {'Content-Type': 'application/json'}
       })
         .then( response => response.json())
@@ -88,42 +87,6 @@ const changeLogo = () => {
 
 const saveLogo = (logo) => {
   return dispatch => dispatch ({ type: 'SAVE_LOGO', logo })
-}
-
-
-const searchSubmitted = (search) => {
-  return { type: 'SEARCH_SUBMITTED', search }
-}
-
-const renderResults = (results) => {
-  return { type: 'RENDER_RESULTS', results }
-}
-
-const search = searchString => {
-  const searchArray = searchString.trim().toUpperCase().split(' ');
-  if (searchArray.length === 0) return;
-
-  return dispatch => {
-    dispatch(searchSubmitted(searchString));
-    if (searchArray.length === 1 || searchArray.length === 3) {
-      fetch(`/search/${searchArray[0]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
-        })
-    }
-    if (searchArray.length === 2) {
-      fetch(`/searchnames/${searchArray[0]}/${searchArray[1]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
-        })
-    }
-  }
 }
 
 
@@ -178,7 +141,7 @@ const saveEmployee = employee => {
           return;
         }
         if (!check && !photoError) {
-          fetch('/newemployee/', {
+          fetch('/employee', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(employee)
@@ -218,7 +181,7 @@ const renderProfile = employeeId => {
   return dispatch => {
     dispatch(idSearch(employeeId));
     employeeId = employeeId.toUpperCase();
-    fetch(`/viewemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
@@ -247,7 +210,7 @@ const updateProfile = employeeId => {
   return dispatch => {
     dispatch(editRequested());
 
-    fetch(`/viewemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
@@ -301,7 +264,7 @@ const saveUpdate = employee => {
       })
       .then( () => {
         if (!check && !photoError) {
-          fetch('/updateemployee/', {
+          fetch('/employee', {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(employee)
@@ -345,7 +308,7 @@ const employeeDeleted = () => {
 const deleteProfile = employeeId => {
   return dispatch => {
     dispatch(deleteEmployeeConfirmed());
-    fetch(`/deleteemployee/${employeeId}`, {
+    fetch(`/employee/${employeeId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -362,54 +325,4 @@ const deleteProfile = employeeId => {
 }
 
 
-const orgSubmitted = () => {
-  return { type: 'ORG_SUBMITTED' }
-}
-
-const orgDataReceived = () => {
-  return { type: 'ORG_DATA_RECEIVED'}
-}
-
-const renderManager = response => {
-  return { type: 'RENDER_MANAGER', response }
-}
-
-const renderEmployee = response => {
-  return { type: 'RENDER_EMPLOYEE', response}
-}
-
-const renderPeers = response => {
-  return { type: 'RENDER_PEERS', response}
-}
-
-const renderReports = response => {
-  return { type: 'RENDER_REPORTS', response}
-}
-
-const renderOrgChart = org => {
-  return dispatch => {
-    dispatch(orgSubmitted());
-
-    fetch(`/orgchart/${org.id}/${org.managerId}`, {
-      headers: {'Content-Type': 'application/json'}
-    })
-      .then( response => response.json())
-      .then( response => {
-        dispatch(orgDataReceived());
-        const manager = response[0];
-        const employee = [response[1]];
-        const reports = response[3];
-        const peers = response[2];
-
-        dispatch(renderManager(manager));
-        if (org.id != org.managerId){
-          dispatch(renderEmployee(employee));
-          dispatch(renderReports(reports));
-        }
-        dispatch(renderPeers(peers));
-      })
-  }
-}
-
-
-module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, search, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile, renderOrgChart }
+module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile }

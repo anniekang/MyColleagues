@@ -1,6 +1,7 @@
 const { createStore, combineReducers, applyMiddleware } = require('redux');
 const { default: thunk } = require('redux-thunk');
 
+
 const currentView = (state = [], action) => {
   switch(action.type) {
     case 'CHANGE_USER':
@@ -32,8 +33,7 @@ const currentView = (state = [], action) => {
   }
 };
 
-
-const csv = (state = {}, action) => {
+const CSV = (state = {}, action) => {
   switch(action.type) {
     case 'LOAD_CSV':
       return true;
@@ -41,7 +41,6 @@ const csv = (state = {}, action) => {
       return state;
   }
 }
-
 
 const currentUser = (state = {}, action) => {
   switch(action.type) {
@@ -180,7 +179,6 @@ const viewEmployee = (state = {}, action) => {
       return state;
   }
 };
-
 
 const newEmployee = (state = {}, action) => {
   switch (action.type) {
@@ -346,7 +344,6 @@ const deleteEmployee = (state = {}, action) => {
   }
 };
 
-
 const viewOrg = (state = [], action) => {
   switch (action.type) {
     case 'ORG_SUBMITTED':
@@ -388,10 +385,8 @@ const viewOrg = (state = [], action) => {
   }
 }
 
-
 const initialState = {
   currentView: 'home',
-  csv: false,
   currentUser: {
     ITCheck: false,
     ITSelect: false,
@@ -453,8 +448,10 @@ const initialState = {
   }
 };
 
-const reducer = combineReducers({ currentView, csv, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
+
+const reducer = combineReducers({ currentView, CSV, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+
 
 module.exports = store;
