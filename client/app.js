@@ -1,7 +1,7 @@
 const React = require('react');
 const Header = require('./header');
 const ITDashboard = require('./it-dashboard')
-const Body = require('./body');
+const Body = require('./body/body');
 
 const App = () => {
   return (
@@ -16,5 +16,6 @@ const App = () => {
     </div>
   )
 };
+
 
 module.exports = App;

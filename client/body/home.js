@@ -1,6 +1,6 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { loadCSV } = require('./actions/employee-actions')
+const { loadCSV } = require('../actions/employee-actions')
 
 
 const Home = ({ currentUser, handleClick }) => {
@@ -30,4 +30,6 @@ const mapDispatchtoProps = dispatch => {
     }
   }
 }
+
+
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(Home)

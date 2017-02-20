@@ -1,6 +1,6 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { saveEmployee, saveUpdate } = require('./actions/employee-actions');
+const { saveEmployee, saveUpdate } = require('../actions/employee-actions');
 
 
 const Missing = ({ employee }) => {
@@ -133,5 +133,6 @@ const mapDispatchtoProps = dispatch => {
     }
   }
 };
+
 
 module.exports = connect(mapStatetoProps, mapDispatchtoProps)(EditEmployee);

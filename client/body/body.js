@@ -1,10 +1,10 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const Home = require('./home')
-const OrgSearchEmployee = require('./org-search-employee')
+const OrgSearchEmployee = require('./org-chart/org-search-employee')
 const ViewEmployee = require('./view-employee')
 const EditEmployee = require('./edit-employee')
-const ViewOrg = require('./view-org')
+const ViewOrg = require('./org-chart/view-org')
 
 
 const Body = ({ currentView }) => {
@@ -25,5 +25,6 @@ const Body = ({ currentView }) => {
 };
 
 const mapStatetoProps = ({ currentView }) => ({ currentView });
+
 
 module.exports = connect(mapStatetoProps)(Body);

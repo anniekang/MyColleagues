@@ -1,7 +1,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { renderProfile } = require('./actions/employee-actions');
-const { renderOrgChart } = require('./actions/org-chart-actions');
+const { renderProfile } = require('../../actions/employee-actions');
+const { renderOrgChart } = require('../../actions/org-chart-actions');
 
 
 const OrgManager = ({ currentView, searchResults, viewOrg, handleClickProfile, handleClickOrg }) => {

@@ -6,7 +6,6 @@ const loadCSV = () => {
       body: JSON.stringify({})
     })
       .then( response => {
-        console.log(response)
         if (response.success) dispatch({ type: 'LOAD_CSV' })
       })
   }
@@ -324,5 +323,6 @@ const deleteProfile = employeeId => {
       })
   }
 }
+
 
 module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, renderProfile, updateProfile, newProfile, saveEmployee, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile }
