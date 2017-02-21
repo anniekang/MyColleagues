@@ -1,6 +1,6 @@
 /* global describe, it */
 
-const { ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, createProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, idSearch, idFound, idNotFound, editRequested, editForm, editSubmitted, missingFieldsEdit, editFailure, editSaved, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted } = require('../client/actions/employee-actions');
+const { ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, idSearch, idFound, idNotFound, editRequested, editForm, editSubmitted, missingFieldsEdit, editFailure, editSaved, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted } = require('../client/actions/employee-actions');
 const { expect } = require('chai');
 
 describe('Actions', () => {
@@ -38,12 +38,6 @@ describe('Actions', () => {
       expect(employeeFound({id: 'AK1'})).to.be.an('object');
       expect(employeeFound({id: 'AK1', first_name: 'Annie', last_name: 'Kang'})).to.include.keys('response');
       expect(employeeFound({id: 'AK2', first_name: 'Annie', last_name: 'Kang'})).to.have.deep.property('response.id', 'AK2');
-    })
-
-    it(`'createProfile' should return { type: 'CREATE_PROFILE_SUBMITTED' }`, () => {
-      expect(createProfile()).to.deep.equal({ type: 'CREATE_PROFILE_SUBMITTED' });
-      expect(createProfile()).to.be.an('object');
-      expect(createProfile()).to.have.property('type');
     })
 
     it(`'employeeSubmitted' should return { type: 'EMPLOYEE_SUBMITTED' }`, () => {

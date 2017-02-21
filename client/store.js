@@ -20,6 +20,7 @@ const currentView = (state = [], action) => {
     case 'ID_FOUND':
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
+    case 'COLLAB_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
@@ -28,6 +29,8 @@ const currentView = (state = [], action) => {
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
+    case 'CREATE_COLLAB_SUBMITTED':
+      return 'edit-collab';
     default:
       return state;
   }
@@ -166,7 +169,6 @@ const newEmployee = (state = {}, action) => {
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
     case 'EDIT_REQUESTED':
-    case 'EDIT_SUBMITTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
@@ -393,50 +395,49 @@ const newCollab = (state = {}, action) => {
     case 'CREATE_COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         newCollab: true,
+        employeeId: action.employeeId,
         missingFields: [],
         errorCode: '',
         errorDescription: '',
         saved: false
       });
-    /*case 'EMPLOYEE_SUBMITTED':
+    case 'COLLAB_SUBMITTED':
       return Object.assign({}, state, {
-        employeeSubmitted: true,
+        collabSubmitted: true,
+        type: action.collabType,
         missingFields: [],
-        photoError: false,
-        errorCode: '',
         errorDescription: ''
       });
-    case 'MISSING_FIELDS_NEW':
+
+    case 'MISSING_FIELDS_NEW_COLLAB':
       return Object.assign({}, state, {
         missingFields: action.missing,
-        photoError: action.photoError,
-        employeeSubmitted: false
+        collabSubmitted: false
       });
-    case 'EMPLOYEE_FAILURE':
+
+    case 'COLLAB_FAILURE':
       return Object.assign({}, state, {
-        employeeSubmitted: false,
-        errorCode: action.errorCode,
+        collabSubmitted: false,
         errorDescription: action.errorDescription
       });
-    case 'EMPLOYEE_SAVED':
+    case 'COLLAB_SAVED':
       return Object.assign({}, state, {
-        employeeSubmitted: false,
-        newProfile: false,
+        collabSubmitted: false,
+        newCollab: false,
         saved: true
       });
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
+    case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_REQUESTED':
-    case 'EDIT_SUBMITTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
+        type: '',
         saved: false,
-        errorCode: '',
         errorDescription: '',
-        photoError: false
-      });*/
+      });
     default:
       return state;
   }
@@ -505,10 +506,11 @@ const initialState = {
   },
   newCollab: {
     newCollab: false,
+    employeeId: '',
+    type: '',
     missingFields: [],
-    errorCode: '',
     errorDescription: '',
-    employeeSubmitted: false,
+    collabSubmitted: false,
     saved: false
   }
 };

@@ -4,7 +4,7 @@ const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/e
 const { search } = require('./actions/search-actions')
 
 
-const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {
+const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
 
   return (
@@ -43,7 +43,21 @@ const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUs
             <div className="ui hidden divider"></div>
             <div className="ui centered grid">
               { currentUser.employeeFound
-                ? <div>Hello { currentUser.employee.first_name } { currentUser.employee.last_name }!</div>
+                ? <div>
+                    <div>Hello { currentUser.employee.first_name } { currentUser.employee.last_name }!</div>
+                    { editEmployee.saved
+                      ? <div className="centered row">
+                          <div>Employee '{viewEmployee.employee.id} {viewEmployee.employee.first_name} {viewEmployee.employee.last_name}' successfully updated!</div>
+                        </div>
+                      : null
+                    }
+                    { newCollab.saved
+                      ? <div className="centered row">
+                          <div>New { newCollab.type } collaboration successfully created!</div>
+                        </div>
+                      : null
+                    }
+                  </div>
                 : null
               }
             </div>
@@ -148,7 +162,7 @@ const Header = ({ currentUser, searchResults, handleSubmitSearch, handleSubmitUs
   )
 };
 
-const mapStatetoProps = ({ currentUser, searchResults }) => ({ currentUser, searchResults })
+const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab }) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {

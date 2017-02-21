@@ -2,9 +2,11 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { updateProfile, deleteEmployeeSubmitted } = require('../actions/employee-actions');
 const { renderOrgChart } = require('../actions/org-chart-actions');
+const { newCollab } = require('../actions/collaboration-actions');
 
 
-const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickOrg, handleClickDelete, handleClickNew }) => {
+
+const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
   const defaultPhoto = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8NDw0PDQ0NDQ0NDQ0NDQ8NDg8ODRAOFREWFhYRFRUYHSggGBonHRUVITEhJTUrLi81Fx8zODMsNygwLisBCgoKDQ0NDg0NGisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAKAAoAMBIgACEQEDEQH/xAAbAAEBAAMBAQEAAAAAAAAAAAAAAQIEBQMGB//EADQQAAIBAQYCCAUDBQAAAAAAAAABAgMEBREhIlExcRITMkFhcoGhM0Kx0fFSkcEUFSNikv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/XAAVAAAAAAAAAAAAAAAAAAjYAjDIwBGGRgeoAAAAAAAAKaVrvCNPKOuXsubA3CSmlxklzaOBWtdSfGTw2WSPAD6aM0+Ek+TRT5g96NrqQ4SeGzzQH0ANKyXhGplLRL2fJm6wDMWXEgAjYbIBCMMmIHuAAAAAAHnaa3VwlLbhzA0rztnR0QefzPbwRySt4tt5t5t+JAAAKAAAHVu22dLRN5/K91szkhNrBrJrNPZgfTEPKzVushGW6z5956EBsxZWYsAYsuJi2BtAAAAABzb5nlCO7cn6fk6Ryr67VPyv6gc0AFAAAARgARlMWB1bnnipx2akvX8HQxOVc71T8sfqdRkEJiGRgRsmIbMWBugAAAABzr6hphLZuL9cPsdE87TS6yEo7rLn3AfOAsotNp5NPBrYhQAIAAZAIwAk28Fm3kl4gdO54ZTlu0lyX5OgzzoUurjGOyz595niQRmLZWzFgGYsMxbA6AAAAAAAAOfeVj6WuC1LtLdHIPpzTtdgjUzWmW64PmgOGDYrWKpDjFtbxzRrNlBkHE96VjqS4RwW8skBrs6t3WPo65rU1pWy3PSy2GNPN6pbvguSNpkBmLYZGBGzFsrMWAxMWw2YtgdMAAAAABjUqKKcpPBLicS2W6VTJaYbd75gdG0XjCGS1v/AF+5pSvWeOUYpbZv3NAgHYpXpB9pSg/+ke39XSl88PU4AA7ztdKPzx9DXq3nBdlSk/2XuccAb391njnGLW2a9zao3hCeTbg/H7nFZAPpGYtnFsttlTyeqG3euR141FJJxeKYFZGwzFgGzBsrZi2B1gAAANO9K3Qp4LjPFeneBzrwtXWSwXYjw8fE1ACiMBkAEbDIAI2MTFgCAjYA97FaureDeiXHwe5rmLA+iZi2at3VulDB8YZencbDIDZiGyAdkAADi3vUxqYfpSX7nZPn7a8atTzMDwIwQoEYIBTErMWwDMSkbAjICARkDI2Bt3bUwnh+pYfydRnEsr/yQ8yR2mQGTEEA7QBGAPnbZ8Sp52fQnzts+JU87A8SMpGUCAxbAYkYZABiysjAjZiUxYBmJWYgetl+JDzI7bZw7N24eZHbIGJCkA//2Q==';
 
   const first = viewEmployee.employee.first_name.substr(0,1) + viewEmployee.employee.first_name.substr(1).toLowerCase();
@@ -58,16 +60,16 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
                 <div className='ui hidden divider'></div>
                 { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                   ? <div className='row'>
-                      <button id='edit-button' className={ editButton } type='submit' onClick={ handleClickEdit }>Edit Profile</button>
+                      <button id='edit-button' className={ editButton } type='submit' onClick={ handleClick('edit') }>Edit Profile</button>
                     </div>
                   : null
                 }
                 <div className='row'>
-                  <button id='org-button' className={ orgButton } type='submit' onClick={ handleClickOrg }>Org Chart</button>
+                  <button id='org-button' className={ orgButton } type='submit' onClick={ handleClick('org') }>Org Chart</button>
                 </div>
                   { currentUser.ITConfirmed
                       ? <div className='row'>
-                          <button id='delete-button' className={ delButton } type='submit' onClick={ handleClickDelete }>Delete Profile</button>
+                          <button id='delete-button' className={ delButton } type='submit' onClick={ handleClick('del') }>Delete Profile</button>
                         </div>
                       : null
                   }
@@ -92,7 +94,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClickEdit, handleClickO
                 <div className='ui hidden divider'></div>
                 { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                   ? <div className='row'>
-                      <button id='new-collab-button' className={ collabButton } type='submit' onClick={ handleClickNew }>New Collaboration</button>
+                      <button id='new-collab-button' className={ collabButton } type='submit' onClick={ handleClick('new') }>New Collaboration</button>
                     </div>
                   : null
                 }
@@ -109,35 +111,17 @@ const mapStatetoProps = ({ currentUser, viewEmployee }) => ({ currentUser, viewE
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleClickEdit: event => {
-      event.preventDefault();
-      const employee = {
-        id: event.target.classList[3].toUpperCase()
-      };
-      dispatch(updateProfile(employee.id))
-    },
-    handleClickOrg: event => {
+    handleClick: type => event => {
       event.preventDefault();
       const employee = {
         id: event.target.classList[3].toUpperCase(),
         managerId: event.target.classList[4].toUpperCase()
-      }
-      dispatch(renderOrgChart(employee))
-    },
-    handleClickDelete: event => {
-      event.preventDefault();
-      const employee = {
-        id: event.target.classList[3].toUpperCase()
       };
-      dispatch(deleteEmployeeSubmitted(employee.id))
-    },
-    handleClickNew: event => {
-      event.preventDefault();
-      const employee = {
-        id: event.target.classList[3].toUpperCase()
-      };
-      console.log(employee);
-      //dispatch(deleteEmployeeSubmitted(employee.id))
+      if (type === 'edit') dispatch(updateProfile(employee))
+      else if (type === 'org') dispatch(renderOrgChart(employee))
+      else if (type === 'del') dispatch(deleteEmployeeSubmitted(employee))
+      else if (type === 'new') dispatch(newCollab(employee))
+
     }
   }
 };

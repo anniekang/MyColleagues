@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = require('./actions/employee-actions');
 
 
-const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
+const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
   const yesButton = `ui button ${ deleteEmployee.employeeId }`;
   if (!currentUser.ITConfirmed) return null;
 
@@ -44,6 +44,12 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
             </div>
           : null
         }
+        { newCollab.saved
+          ? <div className="centered row">
+              <div>New { newCollab.type } collaboration successfully created!</div>
+            </div>
+          : null
+        }
 
         { deleteEmployee.deleteSubmitted
           ? <div className="centered row">
@@ -76,7 +82,7 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
   )
 }
 
-const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {

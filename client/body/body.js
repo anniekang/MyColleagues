@@ -5,6 +5,7 @@ const OrgSearchEmployee = require('./org-chart/org-search-employee')
 const ViewEmployee = require('./view-employee')
 const EditEmployee = require('./edit-employee')
 const ViewOrg = require('./org-chart/view-org')
+const EditCollaboration = require('./edit-collaboration')
 
 
 const Body = ({ currentView }) => {
@@ -14,11 +15,13 @@ const Body = ({ currentView }) => {
     case 'org-search-employee':
       return <OrgSearchEmployee/>;
     case 'profile':
-        return <ViewEmployee/>;
+      return <ViewEmployee/>;
     case 'edit-profile':
       return <EditEmployee/>;
     case 'org-chart':
       return <ViewOrg/>;
+    case 'edit-collab':
+      return <EditCollaboration/>;
     default:
       return <Home/>;
   }

@@ -6,6 +6,7 @@ const { PORT } = process.env;
 const EmployeeRoutes = require('./routes/employee-routes');
 const SearchRoutes = require('./routes/search-routes');
 const OrgChartRoutes = require('./routes/org-chart-routes');
+const CollaborationRoutes = require('./routes/collaboration-routes');
 
 /*var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
 var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
@@ -22,6 +23,7 @@ express()
   .use('/employee', EmployeeRoutes(driver))
   .use('/search', SearchRoutes(driver))
   .use('/orgchart', OrgChartRoutes(driver))
+  .use('/collaboration', CollaborationRoutes(driver))
   .listen(PORT || 3000, () => {
       console.log(`listening on ${PORT || 3000}`);
     })
