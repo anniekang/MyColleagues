@@ -325,4 +325,4 @@ const deleteProfile = employeeId => {
 }
 
 
-module.exports = { loadCSV, ITChecked, employeeChecked, setUser, changeUser, changeLogo, saveLogo, newProfile, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile }
+module.exports = { loadCSV, ITChecked, employeeChecked, ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, setUser, changeUser, changeLogo, saveLogo, createProfile, newProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, saveEmployee, idSearch, idFound, idNotFound, renderProfile, editRequested, editForm, updateProfile, editSubmitted, missingFieldsEdit, editFailure, editSaved, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted, deleteProfile }

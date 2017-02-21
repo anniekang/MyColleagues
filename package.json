@@ -12,7 +12,9 @@
     "bundle": "browserify -t babelify client/ -o server/public/main.js",
     "bundle:watch": "watchify -v -t babelify client/ -o server/public/main.js",
     "dev": "npm-run-all -p start:watch bundle:watch",
-    "postinstall": "npm run bundle"
+    "postinstall": "npm run bundle",
+    "test": "mocha",
+    "tdd": "mocha -w -R nyan"
   },
   "repository": {
     "type": "git",
