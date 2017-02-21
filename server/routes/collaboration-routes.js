@@ -39,7 +39,6 @@ const CollaborationRoutes = (driver) => {
   });
 
   router.get('/:id', (req, res) => {
-    console.log(req.params.id)
     const session = driver.session();
     session
       .run(`
@@ -47,7 +46,6 @@ const CollaborationRoutes = (driver) => {
         RETURN view`,
         {id: req.params.id})
       .then( result => {
-        console.log(result)
         const results = [];
         for (let i = 0; i < result.records.length; i++) {
           let temp = {};
@@ -56,7 +54,6 @@ const CollaborationRoutes = (driver) => {
           })
           results.push(temp.view.properties);
         }
-        console.log(results)
         session.close();
         res.json(results);
       })

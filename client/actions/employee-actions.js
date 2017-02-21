@@ -68,6 +68,13 @@ const setUser = (itAdmin, employeeId) => {
           }
           else if (response.id) {
             dispatch(employeeFound(response))
+            fetch(`/collaboration/${employeeId}`, {
+              headers: {'Content-Type': 'application/json'}
+            })
+              .then( response => response.json())
+              .then( response => {
+                dispatch(renderCollabs(response));
+              })
           }
         })
     }
@@ -197,7 +204,6 @@ const renderProfile = employeeId => {
           })
             .then( response => response.json())
             .then( response => {
-              console.log(response)
               dispatch(renderCollabs(response));
             })
         }
