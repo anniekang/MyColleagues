@@ -190,7 +190,23 @@ const renderProfile = employeeId => {
           dispatch(idFound(response))
         }
       })
+
+    fetch(`/collaboration/${employeeId}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then( response => response.json())
+      .then( response => {
+        console.log(response)
+        /*if (response.error) {
+          alert(response.error);
+          dispatch(idNotFound());
+        }
+        else if (response.id) {
+          dispatch(idFound(response))
+        }*/
+      })
   }
+
 }
 
 
@@ -314,7 +330,7 @@ const deleteProfile = employeeId => {
           dispatch(deleteEmployeeError());
         }
         else if (response.success) {
-          dispatch(employeeDeleted(response))
+          dispatch(employeeDeleted(response));
         }
       })
   }
