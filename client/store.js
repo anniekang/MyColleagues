@@ -20,6 +20,7 @@ const currentView = (state = [], action) => {
     case 'ID_FOUND':
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
+    case 'COLLAB_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
@@ -168,7 +169,6 @@ const newEmployee = (state = {}, action) => {
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
     case 'EDIT_REQUESTED':
-    case 'EDIT_SUBMITTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
@@ -404,6 +404,7 @@ const newCollab = (state = {}, action) => {
     case 'COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         collabSubmitted: true,
+        type: action.collabType,
         missingFields: [],
         errorDescription: ''
       });
@@ -419,21 +420,24 @@ const newCollab = (state = {}, action) => {
         collabSubmitted: false,
         errorDescription: action.errorDescription
       });
-    /*
-    case 'EMPLOYEE_SAVED':
+    case 'COLLAB_SAVED':
       return Object.assign({}, state, {
-        employeeSubmitted: false,
-        newProfile: false,
+        collabSubmitted: false,
+        newCollab: false,
         saved: true
       });
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
     case 'CREATE_PROFILE_SUBMITTED':
+    case 'EDIT_REQUESTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
+        type: '',
         saved: false,
         errorDescription: '',
-      });*/
+      });
     default:
       return state;
   }
@@ -503,6 +507,7 @@ const initialState = {
   newCollab: {
     newCollab: false,
     employeeId: '',
+    type: '',
     missingFields: [],
     errorDescription: '',
     collabSubmitted: false,

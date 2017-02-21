@@ -13,7 +13,6 @@ const CollaborationRoutes = (driver) => {
         RETURN emp`,
         parameters)
       .then( result => {
-        console.log(result)
         if (result.records.length === 1) {
           return session.run(`
             MATCH (mgr: Employee {id: { Managed_By }})

@@ -33,10 +33,6 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
     isNew = true;
     collab = newCollab;
   }
-  /*else if (editEmployee.editReady) {
-    isNew = false;
-    employee = editEmployee;
-  }*/
 
   return (
     <div id="edit-collab" className="ui grid container">
