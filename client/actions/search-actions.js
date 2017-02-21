@@ -34,4 +34,4 @@ const search = searchString => {
 }
 
 
-module.exports = { search }
+module.exports = { searchSubmitted, renderResults, search }

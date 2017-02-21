@@ -124,61 +124,6 @@ const currentUser = (state = {}, action) => {
   }
 }
 
-const searchResults = (state = {}, action) => {
-  switch (action.type) {
-    case 'SEARCH_SUBMITTED':
-      return Object.assign({}, state, {
-        searchSubmitted: true,
-        search: action.search
-      });
-    case 'RENDER_RESULTS':
-      return Object.assign({}, state, {
-        results: action.results,
-        employeeType: 'search-result',
-        searchSubmitted: false
-      });
-    case 'CHANGE_USER':
-      return Object.assign({}, state, {
-        results: [],
-        employeeType: '',
-        searchSubmitted: false
-      });
-    default:
-      return state;
-  }
-};
-
-
-const viewEmployee = (state = {}, action) => {
-  switch (action.type) {
-    case 'EMPLOYEE_SELECTED':
-    case 'ID_SEARCH':
-      return Object.assign({}, state, {
-        idSubmitted: true,
-        employeeId: action.employeeId
-      });
-    case 'EMPLOYEE_NOT_FOUND':
-    case 'ID_NOT_FOUND':
-      return Object.assign({}, state, {
-        idSubmitted: false
-      });
-    case 'EMPLOYEE_FOUND':
-    case 'ID_FOUND':
-    case 'EMPLOYEE_SAVED':
-    case 'EDIT_SAVED':
-      return Object.assign({}, state, {
-        idSubmitted: false,
-        employee: action.response
-      });
-    case 'CHANGE_USER':
-      return Object.assign({}, state, {
-        idSubmitted: false,
-        employee: ''
-      });
-    default:
-      return state;
-  }
-};
 
 const newEmployee = (state = {}, action) => {
   switch (action.type) {
@@ -229,6 +174,38 @@ const newEmployee = (state = {}, action) => {
         errorCode: '',
         errorDescription: '',
         photoError: false
+      });
+    default:
+      return state;
+  }
+};
+
+
+const viewEmployee = (state = {}, action) => {
+  switch (action.type) {
+    case 'EMPLOYEE_SELECTED':
+    case 'ID_SEARCH':
+      return Object.assign({}, state, {
+        idSubmitted: true,
+        employeeId: action.employeeId
+      });
+    case 'EMPLOYEE_NOT_FOUND':
+    case 'ID_NOT_FOUND':
+      return Object.assign({}, state, {
+        idSubmitted: false
+      });
+    case 'EMPLOYEE_FOUND':
+    case 'ID_FOUND':
+    case 'EMPLOYEE_SAVED':
+    case 'EDIT_SAVED':
+      return Object.assign({}, state, {
+        idSubmitted: false,
+        employee: action.response
+      });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        idSubmitted: false,
+        employee: ''
       });
     default:
       return state;
@@ -344,6 +321,32 @@ const deleteEmployee = (state = {}, action) => {
   }
 };
 
+
+const searchResults = (state = {}, action) => {
+  switch (action.type) {
+    case 'SEARCH_SUBMITTED':
+      return Object.assign({}, state, {
+        searchSubmitted: true,
+        search: action.search
+      });
+    case 'RENDER_RESULTS':
+      return Object.assign({}, state, {
+        results: action.results,
+        employeeType: 'search-result',
+        searchSubmitted: false
+      });
+    case 'CHANGE_USER':
+      return Object.assign({}, state, {
+        results: [],
+        employeeType: '',
+        searchSubmitted: false
+      });
+    default:
+      return state;
+  }
+};
+
+
 const viewOrg = (state = [], action) => {
   switch (action.type) {
     case 'ORG_SUBMITTED':
@@ -385,6 +388,60 @@ const viewOrg = (state = [], action) => {
   }
 }
 
+const newCollab = (state = {}, action) => {
+  switch (action.type) {
+    case 'CREATE_COLLAB_SUBMITTED':
+      return Object.assign({}, state, {
+        newCollab: true,
+        missingFields: [],
+        errorCode: '',
+        errorDescription: '',
+        saved: false
+      });
+    /*case 'EMPLOYEE_SUBMITTED':
+      return Object.assign({}, state, {
+        employeeSubmitted: true,
+        missingFields: [],
+        photoError: false,
+        errorCode: '',
+        errorDescription: ''
+      });
+    case 'MISSING_FIELDS_NEW':
+      return Object.assign({}, state, {
+        missingFields: action.missing,
+        photoError: action.photoError,
+        employeeSubmitted: false
+      });
+    case 'EMPLOYEE_FAILURE':
+      return Object.assign({}, state, {
+        employeeSubmitted: false,
+        errorCode: action.errorCode,
+        errorDescription: action.errorDescription
+      });
+    case 'EMPLOYEE_SAVED':
+      return Object.assign({}, state, {
+        employeeSubmitted: false,
+        newProfile: false,
+        saved: true
+      });
+    case 'CHANGE_LOGO':
+    case 'CHANGE_USER':
+    case 'SEARCH_SUBMITTED':
+    case 'EDIT_REQUESTED':
+    case 'EDIT_SUBMITTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        saved: false,
+        errorCode: '',
+        errorDescription: '',
+        photoError: false
+      });*/
+    default:
+      return state;
+  }
+};
+
 const initialState = {
   currentView: 'home',
   currentUser: {
@@ -401,17 +458,6 @@ const initialState = {
     logo: '',
     changeLogo: false
   },
-  searchResults: {
-    searchSubmitted: false,
-    search: '',
-    employeeType: '',
-    results: []
-  },
-  viewEmployee: {
-    idSubmitted: false,
-    employeeId: '',
-    employee: {}
-  },
   newEmployee: {
     newProfile: false,
     missingFields: [],
@@ -420,6 +466,11 @@ const initialState = {
     errorDescription: '',
     employeeSubmitted: false,
     saved: false
+  },
+  viewEmployee: {
+    idSubmitted: false,
+    employeeId: '',
+    employee: {}
   },
   editEmployee: {
     editRequested: false,
@@ -438,6 +489,12 @@ const initialState = {
     error: false,
     deleted: false
   },
+  searchResults: {
+    searchSubmitted: false,
+    search: '',
+    employeeType: '',
+    results: []
+  },
   viewOrg: {
     orgSubmitted: false,
     employeeType: '',
@@ -445,11 +502,19 @@ const initialState = {
     employee: [],
     peers: [],
     reports: []
+  },
+  newCollab: {
+    newCollab: false,
+    missingFields: [],
+    errorCode: '',
+    errorDescription: '',
+    employeeSubmitted: false,
+    saved: false
   }
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, searchResults, viewEmployee, newEmployee, editEmployee, deleteEmployee, viewOrg });
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
 
