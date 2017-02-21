@@ -19,7 +19,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
 
   return (
     <div className='ui grid container'>
-      <div className="row">
+      <div className='row'>
         <div id='view-profile' className='ui grid container'>
           <div className='ui fourteen wide centered column row'>
             <div className='thirteen wide column'>
@@ -78,20 +78,17 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
           </div>
         </div>
       </div>
-      <div className="row">
+      <div className='ui hidden divider'></div>
+      <div className='row'>
         <div id='view-profile-collabs' className='ui grid container'>
           <div className='ui fourteen wide centered column row'>
-            <div className='thirteen wide column'>
-              <div id="collaborations" className='row'>
-                Collaborations
-              </div>
-              <div className='ui hidden divider'></div>
-              <div className='ui row grid'>
+            <div id='collaborations' className='thirteen wide column'>
+              <div className='row'>
+                <span id='collaboration'>Collaborations</span>
               </div>
             </div>
             <div className='three wide column'>
               <div className='ui one column centered grid'>
-                <div className='ui hidden divider'></div>
                 { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                   ? <div className='row'>
                       <button id='new-collab-button' className={ collabButton } type='submit' onClick={ handleClick('new') }>New Collaboration</button>
@@ -99,6 +96,31 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                   : null
                 }
               </div>
+            </div>
+          </div>
+          <div className='ui fourteen wide centered column row'>
+            <div className='fifteen wide column'>
+              { viewEmployee.collabs.map((collab, i) => {
+                  return (
+                    <div key={ i } className='row collab-info'>
+                      <div className='row'>Collaboration Type:
+                        <span className='collab-type'> { collab.type }</span>
+                      </div>
+                      <div className='row'>Collaboration Name:
+                        <span className='collab-name'> { collab.collaboration_name }</span>
+                      </div>
+                      <div className='row'>
+                        <div className='collab-description-label'>Description:</div>
+                        <div className='collab-description'> { collab.description }</div>
+                      </div>
+                      <div className='row'>Managed By:
+                        <span className='collab-manager'> { collab.managed_by }</span>
+                      </div>
+                      <div className='ui hidden divider'></div>
+                    </div>
+                  )
+                })
+              }
             </div>
           </div>
         </div>

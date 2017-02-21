@@ -122,3 +122,24 @@ body {
 .employee-org {
   width: 105px;
 }
+
+.collab-info {
+  font-size: 1.1em;
+  line-height: 1.2em;
+  color: rgb(104,104,104);
+}
+
+.collab-type,
+.collab-name,
+.collab-description,
+.collab-manager {
+  color: black;
+}
+
+.collab-description-label {
+  display: inline-block;
+}
+
+.collab-description {
+  display: inline;
+}

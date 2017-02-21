@@ -173,6 +173,10 @@ const idNotFound = () => {
   return { type: 'ID_NOT_FOUND' }
 }
 
+const renderCollabs = (response) => {
+  return { type: 'RENDER_COLLABS', response }
+}
+
 const renderProfile = employeeId => {
   return dispatch => {
     dispatch(idSearch(employeeId));
@@ -194,13 +198,7 @@ const renderProfile = employeeId => {
             .then( response => response.json())
             .then( response => {
               console.log(response)
-              /*if (response.error) {
-                alert(response.error);
-                dispatch(idNotFound());
-              }
-              else if (response.id) {
-                dispatch(idFound(response))
-              }*/
+              dispatch(renderCollabs(response));
             })
         }
       })
