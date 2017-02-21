@@ -1,6 +1,6 @@
 /* global describe, it */
 
-const { ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, createProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, idSearch, idFound, idNotFound, editRequested, editForm, editSubmitted, missingFieldsEdit, editFailure, editSaved, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted,  } = require('../client/actions/employee-actions');
+const { ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, createProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, idSearch, idFound, idNotFound, editRequested, editForm, editSubmitted, missingFieldsEdit, editFailure, editSaved, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted } = require('../client/actions/employee-actions');
 const { expect } = require('chai');
 
 describe('Actions', () => {

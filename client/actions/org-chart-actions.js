@@ -48,4 +48,4 @@ const renderOrgChart = org => {
 }
 
 
-module.exports = { renderOrgChart }
+module.exports = { orgSubmitted, orgDataReceived, renderManager, renderEmployee, renderPeers, renderReports, renderOrgChart }
