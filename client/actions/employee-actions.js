@@ -206,11 +206,11 @@ const editForm = (response) => {
   return { type: 'EDIT_FORM', response }
 }
 
-const updateProfile = employeeId => {
+const updateProfile = employee => {
   return dispatch => {
     dispatch(editRequested());
 
-    fetch(`/employee/${employeeId}`, {
+    fetch(`/employee/${employee.id}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
@@ -285,8 +285,8 @@ const saveUpdate = employee => {
 }
 
 
-const deleteEmployeeSubmitted = (employeeId) => {
-  return dispatch => dispatch({ type: 'DELETE_EMPLOYEE_SUBMITTED', employeeId })
+const deleteEmployeeSubmitted = ({ id }) => {
+  return dispatch => dispatch({ type: 'DELETE_EMPLOYEE_SUBMITTED', employeeId: id })
 }
 
 const deleteEmployeeNot = () => {
