@@ -405,22 +405,21 @@ const newCollab = (state = {}, action) => {
       return Object.assign({}, state, {
         collabSubmitted: true,
         missingFields: [],
-        errorCode: '',
         errorDescription: ''
       });
 
     case 'MISSING_FIELDS_NEW_COLLAB':
       return Object.assign({}, state, {
         missingFields: action.missing,
-        employeeSubmitted: false
+        collabSubmitted: false
       });
-    /*
-    case 'EMPLOYEE_FAILURE':
+
+    case 'COLLAB_FAILURE':
       return Object.assign({}, state, {
-        employeeSubmitted: false,
-        errorCode: action.errorCode,
+        collabSubmitted: false,
         errorDescription: action.errorDescription
       });
+    /*
     case 'EMPLOYEE_SAVED':
       return Object.assign({}, state, {
         employeeSubmitted: false,
@@ -430,15 +429,10 @@ const newCollab = (state = {}, action) => {
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
     case 'SEARCH_SUBMITTED':
-    case 'EDIT_REQUESTED':
-    case 'EDIT_SUBMITTED':
-    case 'DELETE_EMPLOYEE_SUBMITTED':
-    case 'ORG_SUBMITTED':
+    case 'CREATE_PROFILE_SUBMITTED':
       return Object.assign({}, state, {
         saved: false,
-        errorCode: '',
         errorDescription: '',
-        photoError: false
       });*/
     default:
       return state;
@@ -510,9 +504,8 @@ const initialState = {
     newCollab: false,
     employeeId: '',
     missingFields: [],
-    errorCode: '',
     errorDescription: '',
-    employeeSubmitted: false,
+    collabSubmitted: false,
     saved: false
   }
 };

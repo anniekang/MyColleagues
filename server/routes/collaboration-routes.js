@@ -25,7 +25,7 @@ const CollaborationRoutes = (driver) => {
         }
         else {
           session.close();
-          res.status(400).json({error: 'managed_by'});
+          res.status(400).json({error: true});
         }
       })
       .then( result => {

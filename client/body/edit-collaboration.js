@@ -14,26 +14,19 @@ const Missing = ({ collab }) => {
     </ul>
   )
 }
-/*
-const NewError = ({ newEmployee }) => {
-  const { errorCode, errorDescription } = newEmployee;
-  if (!errorCode) return null;
+
+const NewError = ({ newCollab }) => {
+  const { errorDescription } = newCollab;
+  if (!errorDescription) return null;
   return (
     <ul className="error">
-      { errorCode === 'id'
-          ? <li>Employee '{ errorDescription }' already exists.</li>
-          : <li>Manager '{ errorDescription }' does not exist.</li>
-      }
+      <li>Managed_By ID '{ errorDescription }' does not exist.</li>
     </ul>
   )
 }
 
-< NewError newEmployee={ newEmployee }/>
-*/
-
 
 const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
-  const collaborators = `${newCollab.employeeId}, `;
   let isNew = '';
   let collab = {};
   if (newCollab.newCollab){
@@ -48,6 +41,7 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
   return (
     <div id="edit-collab" className="ui grid container">
       < Missing collab={ collab }/>
+      < NewError newCollab={ newCollab }/>
       <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
         <div className="field">
           <label>Collaboration</label>

@@ -17,8 +17,8 @@ const collabSaved = (response) => {
   return { type: 'COLLAB_SAVED', response }
 }
 
-const collabFailure = (errorCode, errorDescription) => {
-  return { type: 'EMPLOYEE_FAILURE', errorCode, errorDescription }
+const collabFailure = (errorDescription) => {
+  return { type: 'COLLAB_FAILURE', errorDescription }
 }
 
 const saveCollab = collaboration => {
@@ -45,18 +45,12 @@ const saveCollab = collaboration => {
         .then( response => response.json())
         .then( response => {
           console.log(response)
-          /*if (response.error) {
-            if (response.error === 'id') {
-              dispatch(collabFailure('id', employee.ID));
-            }
-            else if (response.error === 'manager') {
-              dispatch(collabFailure('manager', employee.Manager_ID));
-            }
+          if (response.error) {
+            dispatch(collabFailure(collaboration.Managed_By));
           }
           else if (response.id) {
             dispatch(employeeSaved(response));
           }
-          */
         })
     }
   }
