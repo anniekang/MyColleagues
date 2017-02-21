@@ -84,10 +84,6 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
           <textarea id="collab-description" rows="2" name="collab-description" placeholder="Collaboration Description"></textarea>
         </div>
         <div className="required field">
-          <label>Collaborators</label>
-          <input id="employee-email" type="text" name="collaborators" defaultValue={ collaborators } placeholder="Collaborator1 ID, Collaborator2 ID, Collaborator3 ID..."/>
-        </div>
-        <div className="required field">
           <label>Managed By</label>
           { (currentUser.employeeFound && newCollab.employeeId === currentUser.employeeId) || currentUser.ITConfirmed
             ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
@@ -117,7 +113,6 @@ const mapDispatchtoProps = dispatch => {
         Type: collabData.get('type').toUpperCase(),
         Collaboration_Name: collabData.get('collab-name').trim().toUpperCase(),
         Description: collabData.get('collab-description').trim(),
-        Collaborators: collabData.get('collaborators').trim().toUpperCase(),
         Managed_By: collabData.get('managed-by').trim().toUpperCase(),
       };
       const action = isNew ? saveCollab : null;

@@ -25,14 +25,14 @@ const saveCollab = collaboration => {
   return dispatch => {
     dispatch(collabSubmitted());
     const missing = [];
-    let check = false;
+    let isMissing = false;
     for (let key in collaboration) {
       if (collaboration[key] === '') {
         missing.push(key);
-        check = true;
+        isMissing = true;
       }
     }
-    if (check) {
+    if (isMissing) {
       dispatch(missingFieldsNewCollab(missing));
       return;
     }
