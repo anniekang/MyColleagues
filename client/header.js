@@ -4,7 +4,7 @@ const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/e
 const { search } = require('./actions/search-actions')
 
 
-const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, handleSubmitSearch, handleSubmitUser, handleClickIt, handleClickEmp, handleClickChange }) => {
+const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
 
   return (
@@ -100,7 +100,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                             }
                           </div>
                         : <div className="ui radio checkbox">
-                              <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleClickIt }/>
+                              <input type="radio" name="user" value="IT Admin" tabIndex="1" onChange={ handleClick('IT') }/>
                               <label>IT Administrator</label>
                           </div>
                       }
@@ -135,7 +135,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                               }
                             </div>
                           : <div className="ui radio checkbox">
-                                <input type="radio" name="user" value="Employee" tabIndex="2" onChange={ handleClickEmp }/>
+                                <input type="radio" name="user" value="Employee" tabIndex="2" onChange={ handleClick('Emp') }/>
                                 <label>Employee</label>
                             </div>
                         }
@@ -144,7 +144,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                 </div>
                 <div className="field">
                   { currentUser.employeeFound || currentUser.ITConfirmed
-                    ? <button className="ui button" type="submit" onClick= { handleClickChange }>Change User</button>
+                    ? <button className="ui button" type="submit" onClick= { handleClick('Change') }>Change User</button>
                     : <div>
                         { currentUser.ITCheck || currentUser.employeeCheck
                           ? <button className="ui button" type="submit">View As</button>
@@ -179,17 +179,11 @@ const mapDispatchtoProps = dispatch => {
       const employeeId = userData.get('id');
       dispatch(setUser(ITAdmin, employeeId));
     },
-    handleClickIt: event => {
+    handleClick: user => event => {
       event.preventDefault();
-      dispatch(ITChecked());
-    },
-    handleClickEmp: event => {
-      event.preventDefault();
-      dispatch(employeeChecked());
-    },
-    handleClickChange: event => {
-      event.preventDefault();
-      dispatch(changeUser());
+      if (user === 'IT') dispatch(ITChecked())
+      else if (user === 'Emp') dispatch(employeeChecked());
+      else if (user === 'Change') dispatch(changeUser());
     }
   }
 };

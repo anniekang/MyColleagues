@@ -204,10 +204,15 @@ const viewEmployee = (state = {}, action) => {
         idSubmitted: false,
         employee: action.response
       });
+    case 'RENDER_COLLABS':
+      return Object.assign({}, state, {
+        collabs: action.response
+      });
     case 'CHANGE_USER':
       return Object.assign({}, state, {
         idSubmitted: false,
-        employee: ''
+        employee: {},
+        collabs: []
       });
     default:
       return state;
@@ -471,7 +476,8 @@ const initialState = {
   viewEmployee: {
     idSubmitted: false,
     employeeId: '',
-    employee: {}
+    employee: {},
+    collabs: []
   },
   editEmployee: {
     editRequested: false,

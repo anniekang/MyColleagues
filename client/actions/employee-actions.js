@@ -68,6 +68,13 @@ const setUser = (itAdmin, employeeId) => {
           }
           else if (response.id) {
             dispatch(employeeFound(response))
+            fetch(`/collaboration/${employeeId}`, {
+              headers: {'Content-Type': 'application/json'}
+            })
+              .then( response => response.json())
+              .then( response => {
+                dispatch(renderCollabs(response));
+              })
           }
         })
     }
@@ -173,6 +180,10 @@ const idNotFound = () => {
   return { type: 'ID_NOT_FOUND' }
 }
 
+const renderCollabs = (response) => {
+  return { type: 'RENDER_COLLABS', response }
+}
+
 const renderProfile = employeeId => {
   return dispatch => {
     dispatch(idSearch(employeeId));
@@ -187,7 +198,14 @@ const renderProfile = employeeId => {
           dispatch(idNotFound());
         }
         else if (response.id) {
-          dispatch(idFound(response))
+          dispatch(idFound(response));
+          fetch(`/collaboration/${employeeId}`, {
+            headers: {'Content-Type': 'application/json'}
+          })
+            .then( response => response.json())
+            .then( response => {
+              dispatch(renderCollabs(response));
+            })
         }
       })
   }
@@ -314,7 +332,7 @@ const deleteProfile = employeeId => {
           dispatch(deleteEmployeeError());
         }
         else if (response.success) {
-          dispatch(employeeDeleted(response))
+          dispatch(employeeDeleted(response));
         }
       })
   }

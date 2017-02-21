@@ -38,6 +38,28 @@ const CollaborationRoutes = (driver) => {
       .catch( error => res.json(error) );
   });
 
+  router.get('/:id', (req, res) => {
+    const session = driver.session();
+    session
+      .run(`
+        MATCH (view:Collaboration)-[:MANAGED_BY]->(emp:Employee {id: { id }})
+        RETURN view`,
+        {id: req.params.id})
+      .then( result => {
+        const results = [];
+        for (let i = 0; i < result.records.length; i++) {
+          let temp = {};
+          result.records[i].forEach( (value, key) => {
+          temp[key] = value;
+          })
+          results.push(temp.view.properties);
+        }
+        session.close();
+        res.json(results);
+      })
+      .catch( error => res.json(error) );
+  });
+
   return router;
 }
 
