@@ -50,7 +50,6 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
             </div>
           : null
         }
-
         { deleteEmployee.deleteSubmitted
           ? <div className="centered row">
               <div className="ui centered grid">

@@ -21,6 +21,7 @@ const currentView = (state = [], action) => {
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
     case 'COLLAB_SAVED':
+    case 'RENDER_COLLAB':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
