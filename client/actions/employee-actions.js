@@ -90,13 +90,9 @@ const saveLogo = (logo) => {
 }
 
 
-const createProfile = () => {
-  return { type: 'CREATE_PROFILE_SUBMITTED'}
-}
-
 const newProfile = () => {
   return dispatch => {
-    dispatch(createProfile());
+    dispatch({ type: 'CREATE_PROFILE_SUBMITTED' });
   }
 }
 
@@ -325,4 +321,4 @@ const deleteProfile = employeeId => {
 }
 
 
-module.exports = { loadCSV, ITChecked, employeeChecked, ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, setUser, changeUser, changeLogo, saveLogo, createProfile, newProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, saveEmployee, idSearch, idFound, idNotFound, renderProfile, editRequested, editForm, updateProfile, editSubmitted, missingFieldsEdit, editFailure, editSaved, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted, deleteProfile }
+module.exports = { loadCSV, ITChecked, employeeChecked, ITSelected, ITError, ITConfirmed, employeeSelected, employeeNotFound, employeeFound, setUser, changeUser, changeLogo, saveLogo, newProfile, employeeSubmitted, missingFieldsNew, employeeSaved, employeeFailure, saveEmployee, idSearch, idFound, idNotFound, renderProfile, editRequested, editForm, updateProfile, editSubmitted, missingFieldsEdit, editFailure, editSaved, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteEmployeeConfirmed, deleteEmployeeError, employeeDeleted, deleteProfile }

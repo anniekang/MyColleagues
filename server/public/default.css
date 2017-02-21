@@ -113,7 +113,8 @@ body {
   font-weight: bold;
 }
 
-#edit-profile {
+#edit-profile,
+#edit-collab {
   margin-top: 2%;
 }
 

@@ -1,78 +1,67 @@
-const createCollab = () => {
-  return { type: 'CREATE_COLLAB_SUBMITTED'}
-}
-
-const newCollab = () => {
+const newCollab = (employee) => {
   return dispatch => {
-    dispatch(createCollab());
+    dispatch({ type: 'CREATE_COLLAB_SUBMITTED', employeeId: employee.id });
   }
 }
 
 
-/*const employeeSubmitted = () => {
-  return { type: 'EMPLOYEE_SUBMITTED' }
+const collabSubmitted = () => {
+  return { type: 'COLLAB_SUBMITTED' }
 }
 
-const missingFieldsNew = (missing, photoError) => {
-  return { type: 'MISSING_FIELDS_NEW', missing, photoError }
+const missingFieldsNewCollab = (missing) => {
+  return { type: 'MISSING_FIELDS_NEW_COLLAB', missing }
 }
 
-const employeeSaved = (response) => {
-  return { type: 'EMPLOYEE_SAVED', response }
+const collabSaved = (response) => {
+  return { type: 'COLLAB_SAVED', response }
 }
 
-const employeeFailure = (errorCode, errorDescription) => {
+const collabFailure = (errorCode, errorDescription) => {
   return { type: 'EMPLOYEE_FAILURE', errorCode, errorDescription }
 }
 
-const saveEmployee = employee => {
+const saveCollab = collaboration => {
   return dispatch => {
-    dispatch(employeeSubmitted());
+    dispatch(collabSubmitted());
     const missing = [];
     let check = false;
-    let photoError = false;
-    for (let key in employee) {
-      if (key != 'Photo' && key != 'Job_Description') {
-        if (employee[key] === '') {
-          missing.push(key);
-          check = true;
-        }
+    for (let key in collaboration) {
+      if (collaboration[key] === '') {
+        missing.push(key);
+        check = true;
       }
     }
-    fetch(employee.Photo)
-      .then( photo => {
-        if (!photo.ok) {
-          photoError = true;
-        }
-        if (check || photoError) {
-          dispatch(missingFieldsNew(missing, photoError));
-          return;
-        }
-        if (!check && !photoError) {
-          fetch('/employee', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(employee)
-          })
-            .then( response => response.json())
-            .then( response => {
-              if (response.error) {
-                if (response.error === 'id') {
-                  dispatch(employeeFailure('id', employee.ID));
-                }
-                else if (response.error === 'manager') {
-                  dispatch(employeeFailure('manager', employee.Manager_ID));
-                }
-              }
-              else if (response.id) {
-                dispatch(employeeSaved(response));
-              }
-            })
-        }
+    if (check) {
+      dispatch(missingFieldsNewCollab(missing));
+      return;
+    }
+    else {
+      fetch('/collaboration', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(collaboration)
       })
+        .then( response => response.json())
+        .then( response => {
+          console.log(response)
+          /*if (response.error) {
+            if (response.error === 'id') {
+              dispatch(collabFailure('id', employee.ID));
+            }
+            else if (response.error === 'manager') {
+              dispatch(collabFailure('manager', employee.Manager_ID));
+            }
+          }
+          else if (response.id) {
+            dispatch(employeeSaved(response));
+          }
+          */
+        })
+    }
   }
 }
-
+/*
 const idSearch = (employeeId) => {
   return { type: 'ID_SEARCH', employeeId }
 }
@@ -233,4 +222,4 @@ const deleteProfile = employeeId => {
 }*/
 
 
-module.exports = { newCollab /*, saveEmployee, renderProfile, updateProfile, saveUpdate, deleteEmployeeSubmitted, deleteEmployeeNot, deleteProfile*/ }
+module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab }

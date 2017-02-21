@@ -2,6 +2,8 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { updateProfile, deleteEmployeeSubmitted } = require('../actions/employee-actions');
 const { renderOrgChart } = require('../actions/org-chart-actions');
+const { newCollab } = require('../actions/collaboration-actions');
+
 
 
 const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
@@ -118,7 +120,7 @@ const mapDispatchtoProps = dispatch => {
       if (type === 'edit') dispatch(updateProfile(employee))
       else if (type === 'org') dispatch(renderOrgChart(employee))
       else if (type === 'del') dispatch(deleteEmployeeSubmitted(employee))
-      //else if (type === 'new') //
+      else if (type === 'new') dispatch(newCollab(employee))
 
     }
   }

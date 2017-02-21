@@ -28,6 +28,8 @@ const currentView = (state = [], action) => {
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
+    case 'CREATE_COLLAB_SUBMITTED':
+      return 'edit-collab';
     default:
       return state;
   }
@@ -393,25 +395,26 @@ const newCollab = (state = {}, action) => {
     case 'CREATE_COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         newCollab: true,
+        employeeId: action.employeeId,
         missingFields: [],
         errorCode: '',
         errorDescription: '',
         saved: false
       });
-    /*case 'EMPLOYEE_SUBMITTED':
+    case 'COLLAB_SUBMITTED':
       return Object.assign({}, state, {
-        employeeSubmitted: true,
+        collabSubmitted: true,
         missingFields: [],
-        photoError: false,
         errorCode: '',
         errorDescription: ''
       });
-    case 'MISSING_FIELDS_NEW':
+
+    case 'MISSING_FIELDS_NEW_COLLAB':
       return Object.assign({}, state, {
         missingFields: action.missing,
-        photoError: action.photoError,
         employeeSubmitted: false
       });
+    /*
     case 'EMPLOYEE_FAILURE':
       return Object.assign({}, state, {
         employeeSubmitted: false,
@@ -505,6 +508,7 @@ const initialState = {
   },
   newCollab: {
     newCollab: false,
+    employeeId: '',
     missingFields: [],
     errorCode: '',
     errorDescription: '',

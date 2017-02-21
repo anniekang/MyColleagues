@@ -104,8 +104,13 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } 
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
-          <button className="ui button" type="submit">Submit</button>
+          { newEmployee.newProfile
+            ? <button className="ui button" type="submit">Create</button>
+            : <button className="ui button" type="submit">Submit</button>
+          }
         </div>
+        <div className="ui hidden divider"></div>
+        <div className="ui hidden divider"></div>
       </form>
     </div>
   )
