@@ -21,7 +21,11 @@ const collabFailure = (errorDescription) => {
   return { type: 'COLLAB_FAILURE', errorDescription }
 }
 
-const saveCollab = collaboration => {
+const renderCollabs = (response) => {
+  return { type: 'RENDER_COLLABS', response }
+}
+
+const saveCollab = (collaboration, id) => {
   return dispatch => {
     dispatch(collabSubmitted(collaboration.Type));
     const missing = [];
@@ -49,7 +53,17 @@ const saveCollab = collaboration => {
           }
           else if (response.type) {
             dispatch(collabSaved(response));
+            if (id === collaboration.Managed_By) {
+              fetch(`/collaboration/${id}`, {
+              headers: {'Content-Type': 'application/json'}
+              })
+                .then( response => response.json())
+                .then( response => {
+                  dispatch(renderCollabs(response));
+                })
+              }
           }
+
         })
     }
   }

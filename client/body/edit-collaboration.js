@@ -38,7 +38,7 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
     <div id="edit-collab" className="ui grid container">
       < Missing collab={ collab }/>
       < NewError newCollab={ newCollab }/>
-      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
+      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, newCollab.employeeId) }>
         <div className="field">
           <label>Collaboration</label>
         </div>
@@ -96,7 +96,7 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
 const mapStatetoProps = ({ currentUser, newCollab }) => ({ currentUser, newCollab })
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmit: isNew => event => {
+    handleSubmit: (isNew, id) => event => {
       event.preventDefault();
       const collabData = new FormData(event.target);
       const collaboration = {
@@ -106,7 +106,7 @@ const mapDispatchtoProps = dispatch => {
         Managed_By: collabData.get('managed-by').trim().toUpperCase(),
       };
       const action = isNew ? saveCollab : null;
-      dispatch(action(collaboration));
+      dispatch(action(collaboration, id));
     }
   }
 };
