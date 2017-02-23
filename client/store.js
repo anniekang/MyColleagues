@@ -22,16 +22,16 @@ const currentView = (state = [], action) => {
     case 'DELETE_EMPLOYEE_ERROR':
     case 'COLLAB_SAVED':
     case 'RENDER_COLLAB':
+    case 'EDIT_COLLAB_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
-    case 'MISSING_FIELDS_NEW':
-    case 'MISSING_FIELDS_EDIT':
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
     case 'CREATE_COLLAB_SUBMITTED':
     case 'EDIT_COLLAB_FORM':
+
       return 'edit-collab';
     default:
       return state;
@@ -397,6 +397,7 @@ const viewOrg = (state = [], action) => {
   }
 }
 
+
 const newCollab = (state = {}, action) => {
   switch (action.type) {
     case 'CREATE_COLLAB_SUBMITTED':
@@ -453,6 +454,7 @@ const newCollab = (state = {}, action) => {
   }
 };
 
+
 const editCollab = (state = {}, action) => {
   switch (action.type) {
     case 'EDIT_COLLAB_REQUESTED':
@@ -471,30 +473,28 @@ const editCollab = (state = {}, action) => {
         editRequested: false,
         collab: action.response
       });
-    /*
-    case 'EDIT_SUBMITTED':
+
+    case 'EDIT_COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         editSubmitted: true,
+        type: action.collabType,
         missingFields: [],
-        photoError: false,
         errorDescription: ''
       });
-    case 'MISSING_FIELDS_EDIT':
+    case 'MISSING_FIELDS_EDIT_COLLAB':
       return Object.assign({}, state, {
         missingFields: action.missing,
-        photoError: action.photoError,
         editSubmitted: false
       });
-    case 'EDIT_FAILURE':
+    case 'EDIT_COLLAB_FAILURE':
       return Object.assign({}, state, {
         editSubmitted: false,
         errorDescription: action.errorDescription
       });
-    case 'EDIT_SAVED':
+    case 'EDIT_COLLAB_SAVED':
       return Object.assign({}, state, {
         editReady: false,
         missingFields: [],
-        photoError: false,
         saved: true
       });
     case 'CHANGE_LOGO':
@@ -505,10 +505,10 @@ const editCollab = (state = {}, action) => {
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
         editReady: false,
+        type: '',
         saved: false,
         employee: {}
       });
-    */
     default:
       return state;
   }
@@ -589,6 +589,7 @@ const initialState = {
     editRequested: false,
     editReady: false,
     editSubmitted: false,
+    type: '',
     collab: {},
     missingFields: [],
     errorDescription: '',

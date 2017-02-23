@@ -61,7 +61,7 @@ const saveCollab = (collaboration, id) => {
                 .then( response => {
                   dispatch(renderCollabs(response));
                 })
-              }
+            }
           }
 
         })
@@ -78,7 +78,6 @@ const editCollabForm = (response) => {
 }
 
 const updateCollab = collabName => {
-  console.log(collabName)
   return dispatch => {
     dispatch(editCollabRequested());
 
@@ -87,11 +86,70 @@ const updateCollab = collabName => {
     })
       .then( response => response.json())
       .then( response => {
-        console.log(response)
         dispatch(editCollabForm(response));
       })
   }
 }
 
+const editCollabSubmitted = (collabType) => {
+  return { type: 'EDIT_COLLAB_SUBMITTED', collabType }
+}
 
-module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab }
+const missingFieldsEditCollab = (missing) => {
+  return { type: 'MISSING_FIELDS_EDIT_COLLAB', missing }
+}
+
+const editCollabFailure = (errorDescription) => {
+  return { type: 'EDIT_COLLAB_FAILURE', errorDescription }
+}
+
+const editCollabSaved = response => {
+  return { type: 'EDIT_COLLAB_SAVED', response }
+}
+
+const saveCollabUpdate = (collaboration, id) => {
+  return dispatch => {
+    dispatch(editCollabSubmitted(collaboration.type));
+    const missing = [];
+    let isMissing = false;
+    for (let key in collaboration) {
+      if (collaboration[key] === '') {
+        missing.push(key);
+        isMissing = true;
+      }
+    }
+    if (isMissing) {
+      dispatch(missingFieldsEditCollab(missing));
+      return;
+    }
+    else {
+      fetch('/collaboration', {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(collaboration)
+      })
+        .then( response => response.json())
+        .then( response => {
+          if (response.error === 'manager') {
+            dispatch(editCollabFailure(collaboration.Managed_By));
+          }
+          else if (response.id) {
+            dispatch(editCollabSaved(response));
+            if (id === collaboration.Managed_By) {
+              fetch(`/collaboration/${id}`, {
+              headers: {'Content-Type': 'application/json'}
+              })
+                .then( response => response.json())
+                .then( response => {
+                  dispatch(renderCollabs(response));
+                })
+            }
+          }
+        })
+    }
+  }
+}
+
+
+
+module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab, editCollabSubmitted, missingFieldsEditCollab, editCollabFailure, editCollabSaved, saveCollabUpdate }

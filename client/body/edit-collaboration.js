@@ -1,6 +1,6 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { saveCollab } = require('../actions/collaboration-actions');
+const { saveCollab, saveCollabUpdate } = require('../actions/collaboration-actions');
 
 
 const Missing = ({ collab }) => {
@@ -15,12 +15,14 @@ const Missing = ({ collab }) => {
   )
 }
 
-const NewError = ({ newCollab }) => {
-  const { errorDescription } = newCollab;
-  if (!errorDescription) return null;
+const Error = ({ newCollabError, editCollabError }) => {
+  if (!newCollabError && !editCollabError) return null;
   return (
     <ul className="error">
-      <li>Managed_By ID '{ errorDescription }' does not exist.</li>
+      { newCollabError
+        ? <li>Managed_By ID '{ newCollabError}' does not exist.</li>
+        : <li>Managed_By ID '{ editCollabError }' does not exist.</li>
+      }
     </ul>
   )
 }
@@ -37,12 +39,11 @@ const EditCollaboration = ( { currentUser, newCollab, editCollab, handleSubmit }
     isNew = false;
     collab = editCollab;
   }
-  console.log(editCollab)
 
   return (
     <div id="edit-collab" className="ui grid container">
       < Missing collab={ collab }/>
-      < NewError newCollab={ newCollab }/>
+      < Error newCollabError={ newCollab.errorDescription } editCollabError={ editCollab.errorDescription }/>
       <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, newCollab.employeeId) }>
         <div className="field">
           <label>Collaboration</label>
@@ -132,7 +133,7 @@ const mapDispatchtoProps = dispatch => {
         Description: collabData.get('collab-description').trim(),
         Managed_By: collabData.get('managed-by').trim().toUpperCase(),
       };
-      const action = isNew ? saveCollab : null;
+      const action = isNew ? saveCollab : saveCollabUpdate;
       dispatch(action(collaboration, id));
     }
   }
