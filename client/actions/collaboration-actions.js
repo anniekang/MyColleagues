@@ -5,8 +5,8 @@ const newCollab = (employee) => {
 }
 
 
-const collabSubmitted = (collabType) => {
-  return { type: 'COLLAB_SUBMITTED', collabType }
+const collabSubmitted = (collaboration) => {
+  return { type: 'COLLAB_SUBMITTED', collaboration }
 }
 
 const missingFieldsNewCollab = (missing) => {
@@ -17,8 +17,8 @@ const collabSaved = (response) => {
   return { type: 'COLLAB_SAVED', response }
 }
 
-const collabFailure = (errorDescription) => {
-  return { type: 'COLLAB_FAILURE', errorDescription }
+const collabFailure = (errorCode, errorDescription) => {
+  return { type: 'COLLAB_FAILURE', errorCode, errorDescription }
 }
 
 const renderCollabs = (response) => {
@@ -27,7 +27,7 @@ const renderCollabs = (response) => {
 
 const saveCollab = (collaboration, id) => {
   return dispatch => {
-    dispatch(collabSubmitted(collaboration.Type));
+    dispatch(collabSubmitted(collaboration));
     const missing = [];
     let isMissing = false;
     for (let key in collaboration) {
@@ -49,9 +49,15 @@ const saveCollab = (collaboration, id) => {
         .then( response => response.json())
         .then( response => {
           if (response.error) {
-            dispatch(collabFailure(collaboration.Managed_By));
+            if (response.error === 'id') {
+              dispatch(collabFailure(response.error, collaboration.Collaboration_ID));
+            }
+            else if (response.error === 'managed_by') {
+              dispatch(collabFailure(response.error, collaboration.Managed_By));
+
+            }
           }
-          else if (response.type) {
+          else if (response.collaboration_id) {
             dispatch(collabSaved(response));
             if (id === collaboration.Managed_By) {
               fetch(`/collaboration/${id}`, {
@@ -70,23 +76,23 @@ const saveCollab = (collaboration, id) => {
 }
 
 const editCollabRequested = () => {
-  return { type: 'EDIT__COLLAB_REQUESTED' }
+  return { type: 'EDIT_COLLAB_REQUESTED' }
 }
 
 const editCollabForm = (response) => {
   return { type: 'EDIT_COLLAB_FORM', response }
 }
 
-const updateCollab = collabName => {
+const updateCollab = collabID => {
   return dispatch => {
     dispatch(editCollabRequested());
 
-    fetch(`/collaboration/${collabName}`, {
+    fetch(`/collaboration/${collabID}`, {
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
       .then( response => {
-        dispatch(editCollabForm(response));
+        dispatch(editCollabForm(response[0]));
       })
   }
 }
@@ -108,8 +114,10 @@ const editCollabSaved = response => {
 }
 
 const saveCollabUpdate = (collaboration, id) => {
+  console.log(collaboration)
+  console.log(id)
   return dispatch => {
-    dispatch(editCollabSubmitted(collaboration.type));
+    dispatch(editCollabSubmitted(collaboration.Type));
     const missing = [];
     let isMissing = false;
     for (let key in collaboration) {
@@ -130,10 +138,11 @@ const saveCollabUpdate = (collaboration, id) => {
       })
         .then( response => response.json())
         .then( response => {
-          if (response.error === 'manager') {
+          console.log(response)
+          if (response.error === 'managed_by') {
             dispatch(editCollabFailure(collaboration.Managed_By));
           }
-          else if (response.id) {
+          else if (response.collaboration_id) {
             dispatch(editCollabSaved(response));
             if (id === collaboration.Managed_By) {
               fetch(`/collaboration/${id}`, {

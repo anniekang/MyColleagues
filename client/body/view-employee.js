@@ -16,7 +16,6 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
   const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const newCollabButton = `ui button new-collab ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
-  const editCollabButton = `ui button edit-collab ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
 
   return (
     <div className='ui grid container'>
@@ -101,12 +100,16 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
           </div>
           <div className='ui fourteen wide centered column row'>
               { viewEmployee.collabs.map((collab, i) => {
+                  let editCollabButton = `ui button edit-collab ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id} ${collab.collaboration_id}`;
                   return (
                     <div key={ i } className="ui centered grid">
                       <div className='twelve wide column'>
                         <div className='row collab-info'>
                           <div className='row'>Collaboration Type:
                             <span className='collab-type'> { collab.type }</span>
+                          </div>
+                          <div className='row'>Collaboration ID:
+                            <span className='collab-id'> { collab.collaboration_id }</span>
                           </div>
                           <div className='row'>Collaboration Name:
                             <span className='collab-name'> { collab.collaboration_name }</span>
@@ -124,7 +127,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                       <div className='two wide column'>
                         { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                           ? <div className='row'>
-                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick(collab.collaboration_name) }>Edit</button>
+                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick(collab.collaboration_id) }>Edit</button>
                             </div>
                           : null
                         }

@@ -412,7 +412,7 @@ const newCollab = (state = {}, action) => {
     case 'COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         collabSubmitted: true,
-        type: action.collabType,
+        collaboration: action.collaboration,
         missingFields: [],
         errorDescription: ''
       });
@@ -426,6 +426,7 @@ const newCollab = (state = {}, action) => {
     case 'COLLAB_FAILURE':
       return Object.assign({}, state, {
         collabSubmitted: false,
+        errorCode: action.errorCode,
         errorDescription: action.errorDescription
       });
     case 'COLLAB_SAVED':
@@ -443,11 +444,12 @@ const newCollab = (state = {}, action) => {
     case 'ORG_SUBMITTED':
     case 'EDIT_COLLAB_REQUESTED':
       return Object.assign({}, state, {
-        type: '',
+        collaboration: {},
         employeeId: '',
         saved: false,
         errorCode: '',
         errorDescription: '',
+        newCollab: false
       });
     default:
       return state;
@@ -462,7 +464,7 @@ const editCollab = (state = {}, action) => {
         editRequested: true,
         editReady: false,
         editSubmitted: false,
-        collab: {},
+        collaboration: {},
         missingFields: [],
         errorDescription: '',
         saved: false
@@ -471,7 +473,7 @@ const editCollab = (state = {}, action) => {
       return Object.assign({}, state, {
         editReady: true,
         editRequested: false,
-        collab: action.response
+        collaboration: action.response
       });
 
     case 'EDIT_COLLAB_SUBMITTED':
@@ -507,7 +509,8 @@ const editCollab = (state = {}, action) => {
         editReady: false,
         type: '',
         saved: false,
-        employee: {}
+        collaboration: {},
+        missingFields: []
       });
     default:
       return state;
@@ -579,8 +582,9 @@ const initialState = {
   newCollab: {
     newCollab: false,
     employeeId: '',
-    type: '',
+    collaboration: {},
     missingFields: [],
+    errorCode: '',
     errorDescription: '',
     collabSubmitted: false,
     saved: false
@@ -590,7 +594,7 @@ const initialState = {
     editReady: false,
     editSubmitted: false,
     type: '',
-    collab: {},
+    collaboration: {},
     missingFields: [],
     errorDescription: '',
     saved: false

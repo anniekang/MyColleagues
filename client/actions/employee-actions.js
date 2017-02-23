@@ -153,10 +153,10 @@ const saveEmployee = employee => {
             .then( response => {
               if (response.error) {
                 if (response.error === 'id') {
-                  dispatch(employeeFailure('id', employee.ID));
+                  dispatch(employeeFailure(response.error, employee.ID));
                 }
                 else if (response.error === 'manager') {
-                  dispatch(employeeFailure('manager', employee.Manager_ID));
+                  dispatch(employeeFailure(response.error, employee.Manager_ID));
                 }
               }
               else if (response.id) {
