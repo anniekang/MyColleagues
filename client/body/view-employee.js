@@ -122,9 +122,12 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                         </div>
                       </div>
                       <div className='two wide column'>
-                        <div className='row'>
-                          <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick(collab.collaboration_name) }>Edit</button>
-                        </div>
+                        { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
+                          ? <div className='row'>
+                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick(collab.collaboration_name) }>Edit</button>
+                            </div>
+                          : null
+                        }
                       </div>
                     </div>
                   )

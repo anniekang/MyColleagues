@@ -31,6 +31,7 @@ const currentView = (state = [], action) => {
     case 'RENDER_PEERS':
       return 'org-chart';
     case 'CREATE_COLLAB_SUBMITTED':
+    case 'EDIT_COLLAB_FORM':
       return 'edit-collab';
     default:
       return state;
@@ -439,9 +440,12 @@ const newCollab = (state = {}, action) => {
     case 'EDIT_REQUESTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
+    case 'EDIT_COLLAB_REQUESTED':
       return Object.assign({}, state, {
         type: '',
+        employeeId: '',
         saved: false,
+        errorCode: '',
         errorDescription: '',
       });
     default:

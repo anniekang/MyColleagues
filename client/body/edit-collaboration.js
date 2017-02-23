@@ -26,13 +26,18 @@ const NewError = ({ newCollab }) => {
 }
 
 
-const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
+const EditCollaboration = ( { currentUser, newCollab, editCollab, handleSubmit } ) => {
   let isNew = '';
   let collab = {};
   if (newCollab.newCollab){
     isNew = true;
     collab = newCollab;
   }
+  else if (editCollab.editReady) {
+    isNew = false;
+    collab = editCollab;
+  }
+  console.log(editCollab)
 
   return (
     <div id="edit-collab" className="ui grid container">
@@ -47,19 +52,28 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
           <div className="inline fields">
             <div className="field">
               <div className="ui radio checkbox">
-                <input type="radio" name="type" value="project" tabIndex="1" defaultChecked/>
+                { editCollab.collab[0].type === 'PROJECT' || newCollab.newCollab
+                  ? <input type="radio" name="type" value="project" tabIndex="1" defaultChecked/>
+                  : <input type="radio" name="type" value="project" tabIndex="1"/>
+                }
                 <label>Project</label>
               </div>
             </div>
             <div className="field">
               <div className="ui radio checkbox">
-                <input type="radio" name="type" value="product" tabIndex="2"/>
+                { editCollab.collab[0].type === 'PRODUCT'
+                  ? <input type="radio" name="type" value="product" tabIndex="2" defaultChecked/>
+                  : <input type="radio" name="type" value="product" tabIndex="2"/>
+                }
                 <label>Product</label>
               </div>
             </div>
             <div className="field">
               <div className="ui radio checkbox">
-                <input type="radio" name="type" value="program" tabIndex="3"/>
+                { editCollab.collab[0].type === 'PROGRAM'
+                  ? <input type="radio" name="type" value="program" tabIndex="3" defaultChecked/>
+                  : <input type="radio" name="type" value="program" tabIndex="3"/>
+                }
                 <label>Program</label>
               </div>
             </div>
@@ -67,23 +81,35 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
         </div>
         <div className="required field">
           <label>Collaboration Name</label>
-          <input id="collab-name" type="text" name="collab-name" placeholder="Collaboration Name"/>
+          <input id="collab-name" type="text" name="collab-name" defaultValue={ editCollab.collab[0].collaboration_name } placeholder="Collaboration Name"/>
         </div>
         <div id="collab-description" className="required field">
           <label>Description</label>
-          <textarea id="collab-description" rows="2" name="collab-description" placeholder="Collaboration Description"></textarea>
+          <textarea id="collab-description" rows="2" name="collab-description" defaultValue={ editCollab.collab[0].description } placeholder="Collaboration Description"></textarea>
         </div>
         <div className="required field">
           <label>Managed By</label>
-          { (currentUser.employeeFound && newCollab.employeeId === currentUser.employeeId) || currentUser.ITConfirmed
-            ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
-            : <input id="employee-manager" type="text" name="managed-by" value={ newCollab.employeeId } placeholder="Managed By" readOnly/>
+          { newCollab.newCollab
+            ? <div>
+                { (currentUser.employeeFound && newCollab.employeeId === currentUser.employeeId) || currentUser.ITConfirmed
+                  ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
+                  : <input id="employee-manager" type="text" name="managed-by" value={ newCollab.employeeId } placeholder="Managed By" readOnly/>
+                }
+              </div>
+            : <div>
+                { (currentUser.employeeFound && newCollab.employeeId === currentUser.employeeId) || currentUser.ITConfirmed
+                  ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ editCollab.collab[0].managed_by } placeholder="Managed By"/>
+                  : <input id="employee-manager" type="text" name="managed-by" value={ editCollab.collab[0].managed_by } placeholder="Managed By" readOnly/>
+                }
+              </div>
           }
-
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
-          <button className="ui button" type="submit">Submit</button>
+          { newCollab.newCollab
+            ? <button className="ui button" type="submit">Create</button>
+            : <button className="ui button" type="submit">Submit</button>
+          }
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui hidden divider"></div>
@@ -93,7 +119,8 @@ const EditCollaboration = ( { currentUser, newCollab, handleSubmit } ) => {
 }
 
 
-const mapStatetoProps = ({ currentUser, newCollab }) => ({ currentUser, newCollab })
+const mapStatetoProps = ({ currentUser, newCollab, editCollab }) => ({ currentUser, newCollab, editCollab })
+
 const mapDispatchtoProps = dispatch => {
   return {
     handleSubmit: (isNew, id) => event => {
