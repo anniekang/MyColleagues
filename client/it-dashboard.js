@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = require('./actions/employee-actions');
 
 
-const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
+const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab, handleClickLogo, handleClickProfile, handleSubmit, handleClickYes, handleClickNo }) => {
   const yesButton = `ui button ${ deleteEmployee.employeeId }`;
   if (!currentUser.ITConfirmed) return null;
 
@@ -46,11 +46,16 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
         }
         { newCollab.saved
           ? <div className="centered row">
-              <div>New { newCollab.type } collaboration successfully created!</div>
+              <div>{ newCollab.collaboration.Type } { newCollab.collaboration.Collaboration_ID } successfully created!</div>
             </div>
           : null
         }
-
+        { editCollab.saved
+          ? <div className="centered row">
+              <div>{ editCollab.collaboration.type } { editCollab.collaboration.collaboration_id } successfully updated!</div>
+            </div>
+          : null
+        }
         { deleteEmployee.deleteSubmitted
           ? <div className="centered row">
               <div className="ui centered grid">
@@ -82,7 +87,7 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
   )
 }
 
-const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {

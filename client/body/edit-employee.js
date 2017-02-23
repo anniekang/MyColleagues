@@ -3,8 +3,7 @@ const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('../actions/employee-actions');
 
 
-const Missing = ({ employee }) => {
-  const { missingFields, photoError } = employee;
+const Missing = ({ missingFields, photoError  }) => {
   if (!missingFields && !photoError) return null;
   return (
     <ul className="error">
@@ -19,8 +18,7 @@ const Missing = ({ employee }) => {
   )
 }
 
-const NewError = ({ newEmployee }) => {
-  const { errorCode, errorDescription } = newEmployee;
+const NewError = ({ errorCode, errorDescription }) => {
   if (!errorCode) return null;
   return (
     <ul className="error">
@@ -32,8 +30,7 @@ const NewError = ({ newEmployee }) => {
   )
 }
 
-const EditError = ({ editEmployee }) => {
-  const { errorDescription } = editEmployee;
+const EditError = ({ errorDescription }) => {
   if (!errorDescription) return null;
   return (
     <ul className="error">
@@ -56,9 +53,9 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } 
 
   return (
     <div id="edit-profile" className="ui grid container">
-      < Missing employee={ employee }/>
-      < NewError newEmployee={ newEmployee }/>
-      < EditError editEmployee={ editEmployee }/>
+      < Missing missingFields={ employee.missingFields } photoError={ employee.photoError }/>
+      < NewError errorCode={ newEmployee.errorCode } errorDescription={ newEmployee.errorDescription }/>
+      < EditError errorDescription={ editEmployee.errorDescription }/>
 
       <form id="employee" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew) }>
         <div className="field">

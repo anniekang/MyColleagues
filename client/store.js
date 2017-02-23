@@ -21,15 +21,17 @@ const currentView = (state = [], action) => {
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
     case 'COLLAB_SAVED':
+    case 'RENDER_COLLAB':
+    case 'EDIT_COLLAB_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
-    case 'MISSING_FIELDS_NEW':
-    case 'MISSING_FIELDS_EDIT':
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
     case 'CREATE_COLLAB_SUBMITTED':
+    case 'EDIT_COLLAB_FORM':
+
       return 'edit-collab';
     default:
       return state;
@@ -395,6 +397,7 @@ const viewOrg = (state = [], action) => {
   }
 }
 
+
 const newCollab = (state = {}, action) => {
   switch (action.type) {
     case 'CREATE_COLLAB_SUBMITTED':
@@ -409,7 +412,7 @@ const newCollab = (state = {}, action) => {
     case 'COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         collabSubmitted: true,
-        type: action.collabType,
+        collaboration: action.collaboration,
         missingFields: [],
         errorDescription: ''
       });
@@ -423,6 +426,7 @@ const newCollab = (state = {}, action) => {
     case 'COLLAB_FAILURE':
       return Object.assign({}, state, {
         collabSubmitted: false,
+        errorCode: action.errorCode,
         errorDescription: action.errorDescription
       });
     case 'COLLAB_SAVED':
@@ -438,10 +442,76 @@ const newCollab = (state = {}, action) => {
     case 'EDIT_REQUESTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
+    case 'EDIT_COLLAB_REQUESTED':
       return Object.assign({}, state, {
+        collaboration: {},
+        employeeId: '',
+        saved: false,
+        errorCode: '',
+        errorDescription: '',
+        newCollab: false
+      });
+    default:
+      return state;
+  }
+};
+
+
+const editCollab = (state = {}, action) => {
+  switch (action.type) {
+    case 'EDIT_COLLAB_REQUESTED':
+      return Object.assign({}, state, {
+        editRequested: true,
+        editReady: false,
+        editSubmitted: false,
+        collaboration: {},
+        missingFields: [],
+        errorDescription: '',
+        saved: false
+      });
+    case 'EDIT_COLLAB_FORM':
+      return Object.assign({}, state, {
+        editReady: true,
+        editRequested: false,
+        collaboration: action.response
+      });
+
+    case 'EDIT_COLLAB_SUBMITTED':
+      return Object.assign({}, state, {
+        editSubmitted: true,
+        type: action.collabType,
+        missingFields: [],
+        errorDescription: ''
+      });
+    case 'MISSING_FIELDS_EDIT_COLLAB':
+      return Object.assign({}, state, {
+        missingFields: action.missing,
+        editSubmitted: false
+      });
+    case 'EDIT_COLLAB_FAILURE':
+      return Object.assign({}, state, {
+        editSubmitted: false,
+        errorDescription: action.errorDescription
+      });
+    case 'EDIT_COLLAB_SAVED':
+      return Object.assign({}, state, {
+        editReady: false,
+        missingFields: [],
+        saved: true
+      });
+    case 'CHANGE_LOGO':
+    case 'CHANGE_USER':
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'EDIT_REQUESTED':
+    case 'SEARCH_SUBMITTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        editReady: false,
         type: '',
         saved: false,
-        errorDescription: '',
+        collaboration: {},
+        missingFields: []
       });
     default:
       return state;
@@ -513,18 +583,30 @@ const initialState = {
   newCollab: {
     newCollab: false,
     employeeId: '',
-    type: '',
+    collaboration: {},
     missingFields: [],
+    errorCode: '',
     errorDescription: '',
     collabSubmitted: false,
     saved: false
-  }
+  },
+  editCollab: {
+    editRequested: false,
+    editReady: false,
+    editSubmitted: false,
+    type: '',
+    collaboration: {},
+    missingFields: [],
+    errorDescription: '',
+    saved: false
+  },
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab });
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab });
+//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;
