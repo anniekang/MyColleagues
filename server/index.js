@@ -8,14 +8,14 @@ const SearchRoutes = require('./routes/search-routes');
 const OrgChartRoutes = require('./routes/org-chart-routes');
 const CollaborationRoutes = require('./routes/collaboration-routes');
 
-/*  var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
 var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
 var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
 var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
-*/
 
-const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
+
+//const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
 
 express()
   .use(express.static(`${__dirname}/public`))

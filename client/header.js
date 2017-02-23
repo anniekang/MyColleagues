@@ -4,7 +4,7 @@ const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/e
 const { search } = require('./actions/search-actions')
 
 
-const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
+const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
 
   return (
@@ -57,6 +57,13 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                         </div>
                       : null
                     }
+                    { editCollab.saved
+                      ? <div className="centered row">
+                          <div>{ editCollab.collaboration.type } { editCollab.collaboration.collaboration_id } successfully updated!</div>
+                        </div>
+                      : null
+                    }
+
                   </div>
                 : null
               }
@@ -162,7 +169,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
   )
 };
 
-const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab }) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab })
+const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab}) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {

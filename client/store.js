@@ -502,6 +502,7 @@ const editCollab = (state = {}, action) => {
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
     case 'CREATE_PROFILE_SUBMITTED':
+    case 'EDIT_REQUESTED':
     case 'SEARCH_SUBMITTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
@@ -603,9 +604,9 @@ const initialState = {
 
 
 const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab });
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
-//const store = createStore(reducer, initialState, applyMiddleware(thunk));
+//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;

@@ -53,7 +53,6 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
     collab = editCollab;
     id = collab.collaboration.managed_by;
   }
-  console.log(id)
   return (
     <div id="edit-collab" className="ui grid container">
       < Missing missingFields={ collab.missingFields }/>

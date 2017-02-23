@@ -114,8 +114,6 @@ const editCollabSaved = response => {
 }
 
 const saveCollabUpdate = (collaboration, id) => {
-  console.log(collaboration)
-  console.log(id)
   return dispatch => {
     dispatch(editCollabSubmitted(collaboration.Type));
     const missing = [];
@@ -138,7 +136,6 @@ const saveCollabUpdate = (collaboration, id) => {
       })
         .then( response => response.json())
         .then( response => {
-          console.log(response)
           if (response.error === 'managed_by') {
             dispatch(editCollabFailure(collaboration.Managed_By));
           }
