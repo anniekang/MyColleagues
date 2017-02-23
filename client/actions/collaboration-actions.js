@@ -69,5 +69,29 @@ const saveCollab = (collaboration, id) => {
   }
 }
 
+const editCollabRequested = () => {
+  return { type: 'EDIT__COLLAB_REQUESTED' }
+}
 
-module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab }
+const editCollabForm = (response) => {
+  return { type: 'EDIT_COLLAB_FORM', response }
+}
+
+const updateCollab = collabName => {
+  console.log(collabName)
+  return dispatch => {
+    dispatch(editCollabRequested());
+
+    fetch(`/collaboration/${collabName}`, {
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then( response => response.json())
+      .then( response => {
+        console.log(response)
+        dispatch(editCollabForm(response));
+      })
+  }
+}
+
+
+module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab }

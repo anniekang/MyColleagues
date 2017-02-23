@@ -39,10 +39,12 @@ const CollaborationRoutes = (driver) => {
   });
 
   router.get('/:id', (req, res) => {
+    console.log(req.params.id)
     const session = driver.session();
     session
       .run(`
-        MATCH (view:Collaboration)-[:MANAGED_BY]->(emp:Employee {id: { id }})
+        MATCH (view:Collaboration)-[:MANAGED_BY]->(emp:Employee)
+        WHERE emp.id = { id } OR view.collaboration_name = { id }
         RETURN view`,
         {id: req.params.id})
       .then( result => {

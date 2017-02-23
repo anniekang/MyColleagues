@@ -449,6 +449,67 @@ const newCollab = (state = {}, action) => {
   }
 };
 
+const editCollab = (state = {}, action) => {
+  switch (action.type) {
+    case 'EDIT_COLLAB_REQUESTED':
+      return Object.assign({}, state, {
+        editRequested: true,
+        editReady: false,
+        editSubmitted: false,
+        collab: {},
+        missingFields: [],
+        errorDescription: '',
+        saved: false
+      });
+    case 'EDIT_COLLAB_FORM':
+      return Object.assign({}, state, {
+        editReady: true,
+        editRequested: false,
+        collab: action.response
+      });
+    /*
+    case 'EDIT_SUBMITTED':
+      return Object.assign({}, state, {
+        editSubmitted: true,
+        missingFields: [],
+        photoError: false,
+        errorDescription: ''
+      });
+    case 'MISSING_FIELDS_EDIT':
+      return Object.assign({}, state, {
+        missingFields: action.missing,
+        photoError: action.photoError,
+        editSubmitted: false
+      });
+    case 'EDIT_FAILURE':
+      return Object.assign({}, state, {
+        editSubmitted: false,
+        errorDescription: action.errorDescription
+      });
+    case 'EDIT_SAVED':
+      return Object.assign({}, state, {
+        editReady: false,
+        missingFields: [],
+        photoError: false,
+        saved: true
+      });
+    case 'CHANGE_LOGO':
+    case 'CHANGE_USER':
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'SEARCH_SUBMITTED':
+    case 'DELETE_EMPLOYEE_SUBMITTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        editReady: false,
+        saved: false,
+        employee: {}
+      });
+    */
+    default:
+      return state;
+  }
+};
+
 const initialState = {
   currentView: 'home',
   currentUser: {
@@ -519,13 +580,23 @@ const initialState = {
     errorDescription: '',
     collabSubmitted: false,
     saved: false
-  }
+  },
+  editCollab: {
+    editRequested: false,
+    editReady: false,
+    editSubmitted: false,
+    collab: {},
+    missingFields: [],
+    errorDescription: '',
+    saved: false
+  },
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab });
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab });
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+//const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;
