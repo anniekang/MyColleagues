@@ -162,7 +162,7 @@ const deleteCollabSubmitted = ( collabId ) => {
   }
 }
 
-/*const deleteCollabNot = () => {
+const deleteCollabNot = () => {
   return dispatch => dispatch({ type: 'DELETE_COLLAB_NOT' })
 }
 
@@ -180,24 +180,24 @@ const collabDeleted = () => {
 
 const deleteCollab = collabId => {
   return dispatch => {
-    dispatch(deleteEmployeeConfirmed());
-    fetch(`/employee/${employeeId}`, {
+    dispatch(deleteCollabConfirmed());
+
+    /*fetch(`/employee/${collabId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
       .then( response => response.json())
       .then( response => {
         if (response.error) {
-          dispatch(deleteEmployeeError());
+          dispatch(deleteCollabError());
         }
         else if (response.success) {
-          dispatch(employeeDeleted(response));
+          dispatch(collabDeleted(response));
         }
       })
+    */
   }
-}*/
+}
 
 
-
-
-module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab, editCollabSubmitted, missingFieldsEditCollab, editCollabFailure, editCollabSaved, saveCollabUpdate, deleteCollabSubmitted }
+module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab, editCollabSubmitted, missingFieldsEditCollab, editCollabFailure, editCollabSaved, saveCollabUpdate, deleteCollabSubmitted, deleteCollabNot, deleteCollabConfirmed, deleteCollabError, collabDeleted, deleteCollab }

@@ -527,24 +527,23 @@ const deleteCollab = (state = {}, action) => {
         error: false,
         deleted: false
       });
-      /*
-    case 'DELETE_EMPLOYEE_NOT':
+    case 'DELETE_COLLAB_NOT':
       return Object.assign({}, state, {
         deleteSubmitted: false,
-        employeeId: ''
+        collabId: ''
       });
-    case 'DELETE_EMPLOYEE_CONFIRMED':
+    case 'DELETE_COLLAB_CONFIRMED':
       return Object.assign({}, state, {
         deleteConfirmed: true,
         deleteSubmitted: false
       });
-    case 'DELETE_EMPLOYEE_ERROR':
+    case 'DELETE_COLLAB_ERROR':
     return Object.assign({}, state, {
         deleteConfirmed: false,
         deleteSubmitted: false,
         error: true
       });
-    case 'EMPLOYEE_DELETED':
+    case 'COLLAB_DELETED':
       return Object.assign({}, state, {
         deleteSubmitted: false,
         deleteConfirmed: false,
@@ -560,7 +559,7 @@ const deleteCollab = (state = {}, action) => {
         error: false,
         deleted: false,
         employeeId: ''
-      });*/
+      });
     default:
       return state;
   }
