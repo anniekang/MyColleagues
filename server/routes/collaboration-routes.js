@@ -83,8 +83,8 @@ const CollaborationRoutes = (driver) => {
               WITH update
               MATCH (update_mgr:Employee {id: { Managed_By }})
               CREATE UNIQUE (update)-[:MANAGED_BY]->(update_mgr)
-              SET update.collaboration_name = { Collaboration_Name }, update.description = { Description }, update.managed_by = { Managed_By }
-              RETURN update.collaboration_id AS collaboration_id, update.collaboration_name AS collaboration_name, update.description AS description, update.managed_by AS managed_by`,
+              SET update.type = { Type }, update.collaboration_name = { Collaboration_Name }, update.description = { Description }, update.managed_by = { Managed_By }
+              RETURN update.collaboration_id AS collaboration_id, update.type AS type, update.collaboration_name AS collaboration_name, update.description AS description, update.managed_by AS managed_by`,
               parameters)
           }
           else {
