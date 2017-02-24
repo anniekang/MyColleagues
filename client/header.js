@@ -53,7 +53,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                     }
                     { newCollab.saved
                       ? <div className="centered row">
-                          <div>{ newCollab.collaboration.Type } { newCollab.collaboration.Collaboration_ID } successfully created!</div>
+                          <div>{ newCollab.collaboration.type } { newCollab.collaboration.collaboration_id } successfully created!</div>
                         </div>
                       : null
                     }

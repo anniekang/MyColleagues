@@ -21,7 +21,7 @@ const currentView = (state = [], action) => {
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
     case 'COLLAB_SAVED':
-    case 'RENDER_COLLAB':
+    case 'RENDER_COLLABS':
     case 'EDIT_COLLAB_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
@@ -433,7 +433,8 @@ const newCollab = (state = {}, action) => {
       return Object.assign({}, state, {
         collabSubmitted: false,
         newCollab: false,
-        saved: true
+        saved: true,
+        collaboration: action.response
       });
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
@@ -479,7 +480,6 @@ const editCollab = (state = {}, action) => {
     case 'EDIT_COLLAB_SUBMITTED':
       return Object.assign({}, state, {
         editSubmitted: true,
-        type: action.collabType,
         missingFields: [],
         errorDescription: ''
       });
@@ -497,7 +497,8 @@ const editCollab = (state = {}, action) => {
       return Object.assign({}, state, {
         editReady: false,
         missingFields: [],
-        saved: true
+        saved: true,
+        collaboration: action.response
       });
     case 'CHANGE_LOGO':
     case 'CHANGE_USER':
@@ -508,7 +509,6 @@ const editCollab = (state = {}, action) => {
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
         editReady: false,
-        type: '',
         saved: false,
         collaboration: {},
         missingFields: []
@@ -517,6 +517,55 @@ const editCollab = (state = {}, action) => {
       return state;
   }
 };
+
+const deleteCollab = (state = {}, action) => {
+  switch (action.type) {
+    case 'DELETE_COLLAB_SUBMITTED':
+      return Object.assign({}, state, {
+        deleteSubmitted: true,
+        collabId: action.collabId,
+        error: false,
+        deleted: false
+      });
+      /*
+    case 'DELETE_EMPLOYEE_NOT':
+      return Object.assign({}, state, {
+        deleteSubmitted: false,
+        employeeId: ''
+      });
+    case 'DELETE_EMPLOYEE_CONFIRMED':
+      return Object.assign({}, state, {
+        deleteConfirmed: true,
+        deleteSubmitted: false
+      });
+    case 'DELETE_EMPLOYEE_ERROR':
+    return Object.assign({}, state, {
+        deleteConfirmed: false,
+        deleteSubmitted: false,
+        error: true
+      });
+    case 'EMPLOYEE_DELETED':
+      return Object.assign({}, state, {
+        deleteSubmitted: false,
+        deleteConfirmed: false,
+        deleted: true
+      });
+    case 'CHANGE_USER':
+    case 'SEARCH_SUBMITTED':
+    case 'CREATE_PROFILE_SUBMITTED':
+    case 'CHANGE_LOGO':
+    case 'EDIT_REQUESTED':
+    case 'ORG_SUBMITTED':
+      return Object.assign({}, state, {
+        error: false,
+        deleted: false,
+        employeeId: ''
+      });*/
+    default:
+      return state;
+  }
+};
+
 
 const initialState = {
   currentView: 'home',
@@ -594,19 +643,25 @@ const initialState = {
     editRequested: false,
     editReady: false,
     editSubmitted: false,
-    type: '',
     collaboration: {},
     missingFields: [],
     errorDescription: '',
     saved: false
   },
+  deleteCollab: {
+    deleteSubmitted: false,
+    collabId: '',
+    deleteConfirmed: false,
+    error: false,
+    deleted: false
+  }
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab });
-//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+//const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;

@@ -2,7 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { updateProfile, deleteEmployeeSubmitted } = require('../actions/employee-actions');
 const { renderOrgChart } = require('../actions/org-chart-actions');
-const { newCollab, updateCollab } = require('../actions/collaboration-actions');
+const { newCollab, updateCollab, deleteCollabSubmitted } = require('../actions/collaboration-actions');
 
 
 
@@ -100,7 +100,9 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
           </div>
           <div className='ui fourteen wide centered column row'>
               { viewEmployee.collabs.map((collab, i) => {
-                  let editCollabButton = `ui button edit-collab ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id} ${collab.collaboration_id}`;
+                  let editCollabButton = `ui button edit-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
+                  let deleteCollabButton = `ui button delete-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
+
                   return (
                     <div key={ i } className="ui centered grid">
                       <div className='twelve wide column'>
@@ -127,7 +129,8 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                       <div className='two wide column'>
                         { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                           ? <div className='row'>
-                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick(collab.collaboration_id) }>Edit</button>
+                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick('updateCollab') }>Edit</button>
+                              <button id='del-collab-button' className={ deleteCollabButton } type='submit' onClick={ handleClick('deleteCollab') }>Delete</button>
                             </div>
                           : null
                         }
@@ -153,12 +156,13 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3].toUpperCase(),
         managerId: event.target.classList[4].toUpperCase()
       };
+      const collabId = event.target.classList[4].toUpperCase();
       if (type === 'edit') dispatch(updateProfile(employee))
       else if (type === 'org') dispatch(renderOrgChart(employee))
       else if (type === 'del') dispatch(deleteEmployeeSubmitted(employee))
       else if (type === 'newCollab') dispatch(newCollab(employee))
-      else dispatch(updateCollab(type))
-
+      else if (type === 'updateCollab') dispatch(updateCollab(collabId))
+      else if (type === 'deleteCollab') dispatch(deleteCollabSubmitted(collabId))
     }
   }
 };

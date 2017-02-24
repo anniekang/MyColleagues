@@ -97,8 +97,8 @@ const updateCollab = collabID => {
   }
 }
 
-const editCollabSubmitted = (collabType) => {
-  return { type: 'EDIT_COLLAB_SUBMITTED', collabType }
+const editCollabSubmitted = () => {
+  return { type: 'EDIT_COLLAB_SUBMITTED' }
 }
 
 const missingFieldsEditCollab = (missing) => {
@@ -115,7 +115,7 @@ const editCollabSaved = response => {
 
 const saveCollabUpdate = (collaboration, id) => {
   return dispatch => {
-    dispatch(editCollabSubmitted(collaboration.Type));
+    dispatch(editCollabSubmitted());
     const missing = [];
     let isMissing = false;
     for (let key in collaboration) {
@@ -156,6 +156,48 @@ const saveCollabUpdate = (collaboration, id) => {
   }
 }
 
+const deleteCollabSubmitted = ( collabId ) => {
+  return dispatch => {
+    dispatch({ type: 'DELETE_COLLAB_SUBMITTED', collabId })
+  }
+}
+
+/*const deleteCollabNot = () => {
+  return dispatch => dispatch({ type: 'DELETE_COLLAB_NOT' })
+}
+
+const deleteCollabConfirmed = () => {
+  return { type: 'DELETE_COLLAB_CONFIRMED' }
+}
+
+const deleteCollabError = () => {
+  return { type: 'DELETE_COLLAB_ERROR' }
+}
+
+const collabDeleted = () => {
+  return { type: 'COLLAB_DELETED' }
+}
+
+const deleteCollab = collabId => {
+  return dispatch => {
+    dispatch(deleteEmployeeConfirmed());
+    fetch(`/employee/${employeeId}`, {
+      method: 'DELETE',
+      headers: {'Content-Type': 'application/json'}
+    })
+      .then( response => response.json())
+      .then( response => {
+        if (response.error) {
+          dispatch(deleteEmployeeError());
+        }
+        else if (response.success) {
+          dispatch(employeeDeleted(response));
+        }
+      })
+  }
+}*/
 
 
-module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab, editCollabSubmitted, missingFieldsEditCollab, editCollabFailure, editCollabSaved, saveCollabUpdate }
+
+
+module.exports = { newCollab, collabSubmitted, missingFieldsNewCollab, collabSaved, collabFailure, saveCollab, updateCollab, editCollabSubmitted, missingFieldsEditCollab, editCollabFailure, editCollabSaved, saveCollabUpdate, deleteCollabSubmitted }
