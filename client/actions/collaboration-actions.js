@@ -182,7 +182,7 @@ const deleteCollab = collabId => {
   return dispatch => {
     dispatch(deleteCollabConfirmed());
 
-    /*fetch(`/employee/${collabId}`, {
+    fetch(`/collaboration/${collabId}`, {
       method: 'DELETE',
       headers: {'Content-Type': 'application/json'}
     })
@@ -195,7 +195,6 @@ const deleteCollab = collabId => {
           dispatch(collabDeleted(response));
         }
       })
-    */
   }
 }
 

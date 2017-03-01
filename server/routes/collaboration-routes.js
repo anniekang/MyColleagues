@@ -103,6 +103,31 @@ const CollaborationRoutes = (driver) => {
       .catch( error => res.json(error) );
   });
 
+  router.delete('/:id', (req, res) => {
+    const session = driver.session();
+    session
+      .run(`
+        MATCH (del:Collaboration {collaboration_id: { id }}) DETACH DELETE del`,
+        {id: req.params.id})
+      .then( () => {
+        return session.run(`
+          MATCH (col:Collaboration {collaboration_id: { id }}) RETURN col`,
+          {id: req.params.id})
+      })
+        .then ( result => {
+          if (result.records.length === 0) {
+            session.close();
+            res.json({success: true});
+          }
+          else {
+            session.close();
+            res.status(501).json({error: true});
+          }
+
+        })
+      .catch( error => res.json(error) );
+  });
+
   return router;
 }
 
