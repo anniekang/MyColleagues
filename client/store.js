@@ -658,9 +658,9 @@ const initialState = {
 
 
 const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
-//const store = createStore(reducer, initialState, applyMiddleware(thunk));
+//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;
