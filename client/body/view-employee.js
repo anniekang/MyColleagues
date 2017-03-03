@@ -100,8 +100,8 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
           </div>
           <div className='ui fourteen wide centered column row'>
               { viewEmployee.collabs.map((collab, i) => {
-                  let editCollabButton = `ui button edit-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
-                  let deleteCollabButton = `ui button delete-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
+                  let editCollabButton = `ui tiny button edit-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
+                  let deleteCollabButton = `ui tiny button delete-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
 
                   return (
                     <div key={ i } className="ui centered grid">
@@ -128,9 +128,9 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                       </div>
                       <div className='two wide column'>
                         { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
-                          ? <div className='row'>
-                              <button id='edit-collab-button' className={ editCollabButton } type='submit' onClick={ handleClick('updateCollab') }>Edit</button>
-                              <button id='del-collab-button' className={ deleteCollabButton } type='submit' onClick={ handleClick('deleteCollab') }>Delete</button>
+                          ? <div className='ui one column centered grid'>
+                                <button className={ editCollabButton } type='submit' onClick={ handleClick('updateCollab') }>Edit</button>
+                                <button className={ deleteCollabButton } type='submit' onClick={ handleClick('deleteCollab') }>Delete</button>
                             </div>
                           : null
                         }
