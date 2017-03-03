@@ -79,7 +79,18 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                         </div>
                       : null
                     }
-
+                    { deleteCollab.deleted
+                      ? <div className="centered row">
+                          <div>Collaboration '{ deleteCollab.collabId }' has been deleted.</div>
+                        </div>
+                      : null
+                    }
+                    { deleteCollab.error
+                      ? <div className="centered row">
+                          <div>Collaboration '{ deleteCollab.collabId }' still exists.</div>
+                        </div>
+                      : null
+                    }
                   </div>
                 : null
               }
