@@ -42,16 +42,16 @@ const EditError = ({ errorDescription }) => {
 const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
   let isNew = '';
   let collab = {};
-  let id = '';
+  let collabManagerId = '';
   if (newCollab.newCollab){
     isNew = true;
     collab = newCollab;
-    id = newCollab.employeeId;
+    collabManagerId = newCollab.employeeId;
   }
   else if (editCollab.editReady) {
     isNew = false;
     collab = editCollab;
-    id = collab.collaboration.managed_by;
+    collabManagerId = collab.collaboration.managed_by;
   }
   return (
     <div id="edit-collab" className="ui grid container">
@@ -59,7 +59,7 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
       < NewError errorCode={ newCollab.errorCode } errorDescription={ newCollab.errorDescription }/>
       < EditError errorDescription={ editCollab.errorDescription }/>
 
-      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, id) }>
+      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, collabManagerId) }>
         <div className="field">
           <label>Collaboration</label>
         </div>
@@ -113,7 +113,7 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
         <div className="required field">
           <label>Managed By</label>
           { newCollab.newCollab
-            ? <input id="employee-manager" type="text" name="managed-by"    defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
+            ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
             : <input id="employee-manager" type="text" name="managed-by" defaultValue={ editCollab.collaboration.managed_by } placeholder="Managed By"/>
           }
         </div>
@@ -136,7 +136,7 @@ const mapStatetoProps = ({ newCollab, editCollab }) => ({ newCollab, editCollab 
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmit: (isNew, id) => event => {
+    handleSubmit: (isNew, collabManagerId) => event => {
       event.preventDefault();
       const collabData = new FormData(event.target);
       const collaboration = {
@@ -147,7 +147,7 @@ const mapDispatchtoProps = dispatch => {
         Managed_By: collabData.get('managed-by').trim().toUpperCase(),
       };
       const action = isNew ? saveCollab : saveCollabUpdate;
-      dispatch(action(collaboration, id));
+      dispatch(action(collaboration, collabManagerId));
     }
   }
 };

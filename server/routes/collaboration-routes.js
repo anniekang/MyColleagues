@@ -83,8 +83,8 @@ const CollaborationRoutes = (driver) => {
               WITH update
               MATCH (update_mgr:Employee {id: { Managed_By }})
               CREATE UNIQUE (update)-[:MANAGED_BY]->(update_mgr)
-              SET update.collaboration_name = { Collaboration_Name }, update.description = { Description }, update.managed_by = { Managed_By }
-              RETURN update.collaboration_id AS collaboration_id, update.collaboration_name AS collaboration_name, update.description AS description, update.managed_by AS managed_by`,
+              SET update.type = { Type }, update.collaboration_name = { Collaboration_Name }, update.description = { Description }, update.managed_by = { Managed_By }
+              RETURN update.collaboration_id AS collaboration_id, update.type AS type, update.collaboration_name AS collaboration_name, update.description AS description, update.managed_by AS managed_by`,
               parameters)
           }
           else {
@@ -100,6 +100,31 @@ const CollaborationRoutes = (driver) => {
         session.close();
         res.json(results);
       })
+      .catch( error => res.json(error) );
+  });
+
+  router.delete('/:id', (req, res) => {
+    const session = driver.session();
+    session
+      .run(`
+        MATCH (del:Collaboration {collaboration_id: { id }}) DETACH DELETE del`,
+        {id: req.params.id})
+      .then( () => {
+        return session.run(`
+          MATCH (col:Collaboration {collaboration_id: { id }}) RETURN col`,
+          {id: req.params.id})
+      })
+        .then ( result => {
+          if (result.records.length === 0) {
+            session.close();
+            res.json({success: true});
+          }
+          else {
+            session.close();
+            res.status(501).json({error: true});
+          }
+
+        })
       .catch( error => res.json(error) );
   });
 

@@ -14,7 +14,6 @@ var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
 var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
 
-
 //const driver = neo4j.driver('bolt://localhost', neo4j.auth.basic('neo4j', 'students'));
 
 express()

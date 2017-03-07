@@ -1,11 +1,13 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/employee-actions')
-const { search } = require('./actions/search-actions')
+const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/employee-actions');
+const { search } = require('./actions/search-actions');
+const { deleteCollab, deleteCollabNot } = require('./actions/collaboration-actions');
 
 
-const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
+const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
+  const yesButtonCollab = `ui button ${ deleteCollab.collabId }`;
 
   return (
     <div id="header" className="ui grid container">
@@ -53,7 +55,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                     }
                     { newCollab.saved
                       ? <div className="centered row">
-                          <div>{ newCollab.collaboration.Type } { newCollab.collaboration.Collaboration_ID } successfully created!</div>
+                          <div>{ newCollab.collaboration.type } { newCollab.collaboration.collaboration_id } successfully created!</div>
                         </div>
                       : null
                     }
@@ -63,7 +65,32 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
                         </div>
                       : null
                     }
-
+                    { deleteCollab.deleteSubmitted
+                      ? <div className="centered row">
+                          <div className="ui centered grid">
+                            <div className="centered row">
+                              <div>Are you sure you would like to delete Collaboration '{ deleteCollab.collabId }'?</div>
+                            </div>
+                            <div className="centered row">
+                              <button className={ yesButtonCollab } type='submit' onClick={ handleClick('yesCollab') }>Yes</button>
+                              <button className='ui button' type='submit' onClick={ handleClick('noCollab') }>No</button>
+                            </div>
+                          </div>
+                        </div>
+                      : null
+                    }
+                    { deleteCollab.deleted
+                      ? <div className="centered row">
+                          <div>Collaboration '{ deleteCollab.collabId }' has been deleted.</div>
+                        </div>
+                      : null
+                    }
+                    { deleteCollab.error
+                      ? <div className="centered row">
+                          <div>Collaboration '{ deleteCollab.collabId }' still exists.</div>
+                        </div>
+                      : null
+                    }
                   </div>
                 : null
               }
@@ -169,7 +196,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
   )
 };
 
-const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab}) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab })
+const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab }) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -186,11 +213,13 @@ const mapDispatchtoProps = dispatch => {
       const employeeId = userData.get('id');
       dispatch(setUser(ITAdmin, employeeId));
     },
-    handleClick: user => event => {
+    handleClick: key => event => {
       event.preventDefault();
-      if (user === 'IT') dispatch(ITChecked())
-      else if (user === 'Emp') dispatch(employeeChecked());
-      else if (user === 'Change') dispatch(changeUser());
+      if (key === 'IT') dispatch(ITChecked())
+      else if (key === 'Emp') dispatch(employeeChecked());
+      else if (key === 'Change') dispatch(changeUser());
+      else if (key === 'yesCollab') dispatch(deleteCollab(event.target.classList[2].toUpperCase()))
+      else if (key === 'noCollab') dispatch(deleteCollabNot())
     }
   }
 };
