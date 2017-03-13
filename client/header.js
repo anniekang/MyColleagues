@@ -1,13 +1,23 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/employee-actions');
-const { search } = require('./actions/search-actions');
+const { search, employeeSearch, collaborationSearch } = require('./actions/search-actions');
 const { deleteCollab, deleteCollabNot } = require('./actions/collaboration-actions');
 
 
-const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
+const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
   const yesButtonCollab = `ui button ${ deleteCollab.collabId }`;
+  let employeeSearchCheck = '';
+  let collaborationSearchCheck = '';
+  if (searchType.employee) {
+    employeeSearchCheck = 'true';
+    collaborationSearchCheck = '';
+  }
+  else {
+    employeeSearchCheck = '';
+    collaborationSearchCheck = 'true';
+  }
 
   return (
     <div id="header" className="ui grid container">
@@ -20,27 +30,43 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
             <div id="my-colleagues">MyColleagues</div>
             <div className="ui hidden divider"></div>
             <form id="search" className="ui form" onSubmit={ handleSubmitSearch }>
-              <div className="fields">
-                <div className="fourteen wide field">
                   { currentUser.employeeFound || currentUser.ITConfirmed
                     ? <div>
                         { searchResults.searchSubmitted
                           ? null
-                          : <input id="emp-search" name="emp-search" type="text" placeholder="Employee ID or First and Last Name"/>
+                          : <div>
+                              <div className="inline fields">
+                                <div className="field">
+                                  <div className="ui radio checkbox">
+                                    <input type="radio" name="searchType" tabIndex="1" onChange={ handleClick('employeeSearch') } checked={ employeeSearchCheck }/>
+                                    <label>Employee</label>
+                                  </div>
+                                </div>
+                                <div className="field">
+                                  <div className="ui radio checkbox">
+                                    <input type="radio" name="searchType" tabIndex="2" onChange={ handleClick('collaborationSearch') } checked={ collaborationSearchCheck }/>
+                                    <label>Collaboration</label>
+                                  </div>
+                                </div>
+                                </div>
+                            <div className="fields">
+                              <div className="fourteen wide field">
+                                { searchType.employee
+                                  ? <input id="emp-search" name="emp-search" type="text" placeholder="Employee ID or First and Last Name"/>
+                                  : <input id="collab-search" name="collab-search" type="text" placeholder="Collaboration ID or Name"/>
+                                }
+                              </div>
+                              <div className="two wide field">
+                                <button className="ui icon button">
+                                  <i className="search icon"></i>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         }
                       </div>
                     : null
                   }
-                </div>
-                <div className="two wide field">
-                  { currentUser.employeeFound || currentUser.ITConfirmed
-                    ? <button className="ui icon button">
-                        <i className="search icon"></i>
-                      </button>
-                    : null
-                  }
-                </div>
-              </div>
             </form>
             <div className="ui hidden divider"></div>
             <div className="ui centered grid">
@@ -196,7 +222,7 @@ const Header = ({ currentUser, searchResults, editEmployee, viewEmployee, newCol
   )
 };
 
-const mapStatetoProps = ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab }) => ({ currentUser, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab })
+const mapStatetoProps = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab }) => ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab })
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -216,8 +242,10 @@ const mapDispatchtoProps = dispatch => {
     handleClick: key => event => {
       event.preventDefault();
       if (key === 'IT') dispatch(ITChecked())
-      else if (key === 'Emp') dispatch(employeeChecked());
-      else if (key === 'Change') dispatch(changeUser());
+      else if (key === 'Emp') dispatch(employeeChecked())
+      else if (key === 'Change') dispatch(changeUser())
+      else if (key === 'employeeSearch') dispatch(employeeSearch())
+      else if (key === 'collaborationSearch') dispatch(collaborationSearch())
       else if (key === 'yesCollab') dispatch(deleteCollab(event.target.classList[2].toUpperCase()))
       else if (key === 'noCollab') dispatch(deleteCollabNot())
     }

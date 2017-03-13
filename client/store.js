@@ -1,3 +1,5 @@
+/* global compose */
+
 const { createStore, combineReducers, applyMiddleware } = require('redux');
 const { default: thunk } = require('redux-thunk');
 
@@ -331,6 +333,23 @@ const deleteEmployee = (state = {}, action) => {
 };
 
 
+const searchType = (state = {}, action) => {
+  switch(action.type) {
+    case 'EMPLOYEE_SEARCH':
+      return Object.assign({}, state, {
+        employee: true,
+        collaboration: false
+      });
+    case 'COLLABORATION_SEARCH':
+      return Object.assign({}, state, {
+        employee: false,
+        collaboration: true
+      });
+    default:
+      return state;
+  }
+}
+
 const searchResults = (state = {}, action) => {
   switch (action.type) {
     case 'SEARCH_SUBMITTED':
@@ -614,6 +633,10 @@ const initialState = {
     error: false,
     deleted: false
   },
+  searchType: {
+    employee: true,
+    collaboration: false
+  },
   searchResults: {
     searchSubmitted: false,
     search: '',
@@ -657,10 +680,10 @@ const initialState = {
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
-//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchType, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+//const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;

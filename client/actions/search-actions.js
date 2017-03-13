@@ -1,3 +1,11 @@
+const employeeSearch = () => {
+  return { type: 'EMPLOYEE_SEARCH' }
+}
+
+const collaborationSearch = () => {
+  return { type: 'COLLABORATION_SEARCH' }
+}
+
 const searchSubmitted = (search) => {
   return { type: 'SEARCH_SUBMITTED', search }
 }
@@ -34,4 +42,4 @@ const search = searchString => {
 }
 
 
-module.exports = { searchSubmitted, renderResults, search }
+module.exports = { employeeSearch, collaborationSearch, searchSubmitted, renderResults, search }
