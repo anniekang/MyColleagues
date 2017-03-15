@@ -14,30 +14,33 @@ const renderResults = (results) => {
   return { type: 'RENDER_RESULTS', results }
 }
 
-const search = searchString => {
+const search = (isEmployee, searchString) => {
   const searchArray = searchString.trim().toUpperCase().split(' ');
   if (searchArray.length === 0) return;
 
   return dispatch => {
     dispatch(searchSubmitted(searchString));
-    if (searchArray.length === 1 || searchArray.length === 3) {
-      fetch(`/search/${searchArray[0]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
+    if (isEmployee) {
+      if (searchArray.length === 1 || searchArray.length === 3) {
+        fetch(`/search/${searchArray[0]}`, {
+          headers: {'Content-Type': 'application/json'}
         })
-    }
-    if (searchArray.length === 2) {
-      fetch(`/search/names/${searchArray[0]}/${searchArray[1]}`, {
-        headers: {'Content-Type': 'application/json'}
-      })
-        .then( response => response.json())
-        .then( response => {
-          dispatch(renderResults(response))
+          .then( response => response.json())
+          .then( response => {
+            dispatch(renderResults(response))
+          })
+      }
+      if (searchArray.length === 2) {
+        fetch(`/search/names/${searchArray[0]}/${searchArray[1]}`, {
+          headers: {'Content-Type': 'application/json'}
         })
+          .then( response => response.json())
+          .then( response => {
+            dispatch(renderResults(response))
+          })
+      }
     }
+
   }
 }
 

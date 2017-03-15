@@ -29,7 +29,7 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
           <div className="twelve wide column">
             <div id="my-colleagues">MyColleagues</div>
             <div className="ui hidden divider"></div>
-            <form id="search" className="ui form" onSubmit={ handleSubmitSearch }>
+            <form id="search" className="ui form" onSubmit={ handleSubmitSearch(searchType.employee) }>
                   { currentUser.employeeFound || currentUser.ITConfirmed
                     ? <div>
                         { searchResults.searchSubmitted
@@ -226,11 +226,14 @@ const mapStatetoProps = ({ currentUser, searchType, searchResults, editEmployee,
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmitSearch: event => {
+    handleSubmitSearch: isEmployee => event => {
       event.preventDefault();
-      const employeeData = new FormData(event.target);
-      const searchString = employeeData.get('emp-search');
-      dispatch(search(searchString));
+      const data = new FormData(event.target);
+      let searchString = '';
+      if (isEmployee) searchString = data.get('emp-search')
+      else searchString = data.get('collab-search')
+      console.log(searchString)
+      dispatch(search(isEmployee, searchString));
     },
     handleSubmitUser: event => {
       event.preventDefault();
