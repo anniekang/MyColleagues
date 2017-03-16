@@ -1,9 +1,10 @@
 # Project-2-MyColleagues
-A web application for businesses to use as a tool to understand their organizational structure and employee profiles
+A web application for businesses to use as an internal tool to understand their organizational structure, employee profiles and collaboration
 
 ## Technologies
 - Javascript ES6
+- Semantic UI
+- React/Redux
 - Node.js
 - Express
-- Semantic UI
 - Neo4j
