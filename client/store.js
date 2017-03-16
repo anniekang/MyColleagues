@@ -17,6 +17,8 @@ const currentView = (state = [], action) => {
       return 'home';
     case 'RENDER_EMPLOYEE_RESULTS':
       return 'org-search-employee';
+    case 'RENDER_COLLABORATION_RESULTS':
+      return 'search-collaboration';
     case 'EMPLOYEE_SAVED':
     case 'EMPLOYEE_FOUND':
     case 'ID_FOUND':
@@ -365,11 +367,15 @@ const searchResults = (state = {}, action) => {
     case 'RENDER_COLLABORATION_RESULTS':
       return Object.assign({}, state, {
         results: action.results,
+        employeeType: '',
         searchSubmitted: false
       });
     case 'CHANGE_USER':
+    case 'ID_SEARCH':
+    case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
         results: [],
+        isEmployee: true,
         employeeType: '',
         searchSubmitted: false
       });
