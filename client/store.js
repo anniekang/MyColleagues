@@ -1,3 +1,5 @@
+/* global compose */
+
 const { createStore, combineReducers, applyMiddleware } = require('redux');
 const { default: thunk } = require('redux-thunk');
 
@@ -13,8 +15,10 @@ const currentView = (state = [], action) => {
     case 'IT_SELECTED':
     case 'CHANGE_LOGO':
       return 'home';
-    case 'RENDER_RESULTS':
+    case 'RENDER_EMPLOYEE_RESULTS':
       return 'org-search-employee';
+    case 'RENDER_COLLABORATION_RESULTS':
+      return 'search-collaboration';
     case 'EMPLOYEE_SAVED':
     case 'EMPLOYEE_FOUND':
     case 'ID_FOUND':
@@ -331,22 +335,47 @@ const deleteEmployee = (state = {}, action) => {
 };
 
 
+const searchType = (state = {}, action) => {
+  switch(action.type) {
+    case 'EMPLOYEE_SEARCH':
+      return Object.assign({}, state, {
+        isEmployee: true
+      });
+    case 'COLLABORATION_SEARCH':
+      return Object.assign({}, state, {
+        isEmployee: false
+      });
+    default:
+      return state;
+  }
+}
+
 const searchResults = (state = {}, action) => {
   switch (action.type) {
     case 'SEARCH_SUBMITTED':
       return Object.assign({}, state, {
         searchSubmitted: true,
+        isEmployee: action.isEmployee,
         search: action.search
       });
-    case 'RENDER_RESULTS':
+    case 'RENDER_EMPLOYEE_RESULTS':
       return Object.assign({}, state, {
         results: action.results,
         employeeType: 'search-result',
         searchSubmitted: false
       });
+    case 'RENDER_COLLABORATION_RESULTS':
+      return Object.assign({}, state, {
+        results: action.results,
+        employeeType: '',
+        searchSubmitted: false
+      });
     case 'CHANGE_USER':
+    case 'ID_SEARCH':
+    case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
         results: [],
+        isEmployee: true,
         employeeType: '',
         searchSubmitted: false
       });
@@ -614,8 +643,12 @@ const initialState = {
     error: false,
     deleted: false
   },
+  searchType: {
+    isEmployee: true
+  },
   searchResults: {
     searchSubmitted: false,
+    isEmployee: true,
     search: '',
     employeeType: '',
     results: []
@@ -657,7 +690,7 @@ const initialState = {
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchType, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
 //const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
 const store = createStore(reducer, initialState, applyMiddleware(thunk));

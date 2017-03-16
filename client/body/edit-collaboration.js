@@ -36,9 +36,6 @@ const EditError = ({ errorDescription }) => {
 }
 
 
-
-
-
 const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
   let isNew = '';
   let collab = {};
