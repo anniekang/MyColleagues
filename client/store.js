@@ -15,7 +15,7 @@ const currentView = (state = [], action) => {
     case 'IT_SELECTED':
     case 'CHANGE_LOGO':
       return 'home';
-    case 'RENDER_RESULTS':
+    case 'RENDER_EMPLOYEE_RESULTS':
       return 'org-search-employee';
     case 'EMPLOYEE_SAVED':
     case 'EMPLOYEE_FOUND':
@@ -337,13 +337,11 @@ const searchType = (state = {}, action) => {
   switch(action.type) {
     case 'EMPLOYEE_SEARCH':
       return Object.assign({}, state, {
-        employee: true,
-        collaboration: false
+        isEmployee: true
       });
     case 'COLLABORATION_SEARCH':
       return Object.assign({}, state, {
-        employee: false,
-        collaboration: true
+        isEmployee: false
       });
     default:
       return state;
@@ -355,12 +353,18 @@ const searchResults = (state = {}, action) => {
     case 'SEARCH_SUBMITTED':
       return Object.assign({}, state, {
         searchSubmitted: true,
+        isEmployee: action.isEmployee,
         search: action.search
       });
-    case 'RENDER_RESULTS':
+    case 'RENDER_EMPLOYEE_RESULTS':
       return Object.assign({}, state, {
         results: action.results,
         employeeType: 'search-result',
+        searchSubmitted: false
+      });
+    case 'RENDER_COLLABORATION_RESULTS':
+      return Object.assign({}, state, {
+        results: action.results,
         searchSubmitted: false
       });
     case 'CHANGE_USER':
@@ -634,11 +638,11 @@ const initialState = {
     deleted: false
   },
   searchType: {
-    employee: true,
-    collaboration: false
+    isEmployee: true
   },
   searchResults: {
     searchSubmitted: false,
+    isEmployee: true,
     search: '',
     employeeType: '',
     results: []

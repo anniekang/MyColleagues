@@ -8,15 +8,15 @@ const { deleteCollab, deleteCollabNot } = require('./actions/collaboration-actio
 const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
   const yesButtonCollab = `ui button ${ deleteCollab.collabId }`;
-  let employeeSearchCheck = '';
-  let collaborationSearchCheck = '';
-  if (searchType.employee) {
-    employeeSearchCheck = 'true';
-    collaborationSearchCheck = '';
+  let employeeSearchCheck = false;
+  let collaborationSearchCheck = false;
+  if (searchType.isEmployee) {
+    employeeSearchCheck = true;
+    collaborationSearchCheck = false;
   }
   else {
-    employeeSearchCheck = '';
-    collaborationSearchCheck = 'true';
+    employeeSearchCheck = false;
+    collaborationSearchCheck = true;
   }
 
   return (
@@ -29,7 +29,7 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
           <div className="twelve wide column">
             <div id="my-colleagues">MyColleagues</div>
             <div className="ui hidden divider"></div>
-            <form id="search" className="ui form" onSubmit={ handleSubmitSearch(searchType.employee) }>
+            <form id="search" className="ui form" onSubmit={ handleSubmitSearch(searchType.isEmployee) }>
                   { currentUser.employeeFound || currentUser.ITConfirmed
                     ? <div>
                         { searchResults.searchSubmitted
@@ -51,7 +51,7 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
                                 </div>
                             <div className="fields">
                               <div className="fourteen wide field">
-                                { searchType.employee
+                                { searchType.isEmployee
                                   ? <input id="emp-search" name="emp-search" type="text" placeholder="Employee ID or First and Last Name"/>
                                   : <input id="collab-search" name="collab-search" type="text" placeholder="Collaboration ID or Name"/>
                                 }
@@ -232,7 +232,6 @@ const mapDispatchtoProps = dispatch => {
       let searchString = '';
       if (isEmployee) searchString = data.get('emp-search')
       else searchString = data.get('collab-search')
-      console.log(searchString)
       dispatch(search(isEmployee, searchString));
     },
     handleSubmitUser: event => {
