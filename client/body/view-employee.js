@@ -12,6 +12,8 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
   const first = viewEmployee.employee.first_name.substr(0,1) + viewEmployee.employee.first_name.substr(1).toLowerCase();
   const last = viewEmployee.employee.last_name.substr(0,1) + viewEmployee.employee.last_name.substr(1).toLowerCase();
   const email = `mailto:${viewEmployee.employee.email }`;
+  const linkedinAlt = `View ${first} ${last}'s profile on LinkedIn`;
+
   const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
@@ -52,6 +54,12 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                   <div className='row'>Manager Name:
                     <span id='profile-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
                   </div>
+                  <div className='row'>
+                    <a href={ viewEmployee.employee.linkedin }>
+                      <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt={ linkedinAlt }/>
+                    </a>
+                  </div>
+
                 </div>
               </div>
             </div>
