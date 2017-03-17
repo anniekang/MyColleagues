@@ -52,11 +52,11 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                     <span id='profile-manager'> { viewEmployee.employee.manager_id }</span>
                   </div>
                   <div className='row'>Manager Name:
-                    <span id='profile-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
+                    <span id='profilev-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
                   </div>
                   <div className='row'>
                     <a href={ viewEmployee.employee.linkedin }>
-                      <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt={ linkedinAlt }/>
+                      <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' alt={ linkedinAlt }/>
                     </a>
                   </div>
 

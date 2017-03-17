@@ -103,6 +103,10 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } 
           <label>LinkedIn URL</label>
           <input id="linkedin" type="text" name="linkedin" defaultValue={ editEmployee.employee.linkedin } placeholder="LinkedIn URL"/>
         </div>
+        <div className="field">
+          <label>Twitter Username</label>
+          <input id="twitter" type="text" name="twitter" defaultValue={ editEmployee.employee.twitter } placeholder="Twitter Username"/>
+        </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
           { newEmployee.newProfile
@@ -133,7 +137,8 @@ const mapDispatchtoProps = dispatch => {
         Job_Description: employeeData.get('job-description').trim(),
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
-        LinkedIn: employeeData.get('linkedin').trim()
+        LinkedIn: employeeData.get('linkedin').trim(),
+        Twitter: employeeData.get('twitter').trim()
       };
       const action = isNew ? saveEmployee : saveUpdate;
       dispatch(action(employee));
