@@ -24,19 +24,19 @@ const currentView = (state = [], action) => {
     case 'ID_FOUND':
     case 'EDIT_SAVED':
     case 'DELETE_EMPLOYEE_ERROR':
-    case 'COLLAB_SAVED':
-    case 'RENDER_COLLABS':
-    case 'EDIT_COLLAB_SAVED':
+    case 'COLLABORATION_SAVED':
+    case 'RENDER_COLLABORATIONS':
+    case 'EDIT_COLLABORATION_SAVED':
       return 'profile';
     case 'CREATE_PROFILE_SUBMITTED':
     case 'EDIT_FORM':
       return 'edit-profile';
     case 'RENDER_PEERS':
       return 'org-chart';
-    case 'CREATE_COLLAB_SUBMITTED':
-    case 'EDIT_COLLAB_FORM':
+    case 'CREATE_COLLABORATION_SUBMITTED':
+    case 'EDIT_COLLABORATION_FORM':
 
-      return 'edit-collab';
+      return 'edit-collaboration';
     default:
       return state;
   }
@@ -210,15 +210,15 @@ const viewEmployee = (state = {}, action) => {
         idSubmitted: false,
         employee: action.response
       });
-    case 'RENDER_COLLABS':
+    case 'RENDER_COLLABORATIONS':
       return Object.assign({}, state, {
-        collabs: action.response
+        collaborations: action.response
       });
     case 'CHANGE_USER':
       return Object.assign({}, state, {
         idSubmitted: false,
         employee: {},
-        collabs: []
+        collaborations: []
       });
     default:
       return state;
@@ -427,41 +427,41 @@ const viewOrg = (state = [], action) => {
 }
 
 
-const newCollab = (state = {}, action) => {
+const newCollaboration = (state = {}, action) => {
   switch (action.type) {
-    case 'CREATE_COLLAB_SUBMITTED':
+    case 'CREATE_COLLABORATION_SUBMITTED':
       return Object.assign({}, state, {
-        newCollab: true,
+        newCollaboration: true,
         employeeId: action.employeeId,
         missingFields: [],
         errorCode: '',
         errorDescription: '',
         saved: false
       });
-    case 'COLLAB_SUBMITTED':
+    case 'COLLABORATION_SUBMITTED':
       return Object.assign({}, state, {
-        collabSubmitted: true,
+        collaborationSubmitted: true,
         collaboration: action.collaboration,
         missingFields: [],
         errorDescription: ''
       });
 
-    case 'MISSING_FIELDS_NEW_COLLAB':
+    case 'MISSING_FIELDS_NEW_COLLABORATION':
       return Object.assign({}, state, {
         missingFields: action.missing,
-        collabSubmitted: false
+        collaborationSubmitted: false
       });
 
-    case 'COLLAB_FAILURE':
+    case 'COLLABORATION_FAILURE':
       return Object.assign({}, state, {
-        collabSubmitted: false,
+        collaborationSubmitted: false,
         errorCode: action.errorCode,
         errorDescription: action.errorDescription
       });
-    case 'COLLAB_SAVED':
+    case 'COLLABORATION_SAVED':
       return Object.assign({}, state, {
-        collabSubmitted: false,
-        newCollab: false,
+        collaborationSubmitted: false,
+        newCollaboration: false,
         saved: true,
         collaboration: action.response
       });
@@ -472,14 +472,14 @@ const newCollab = (state = {}, action) => {
     case 'EDIT_REQUESTED':
     case 'DELETE_EMPLOYEE_SUBMITTED':
     case 'ORG_SUBMITTED':
-    case 'EDIT_COLLAB_REQUESTED':
+    case 'EDIT_COLLABORATION_REQUESTED':
       return Object.assign({}, state, {
         collaboration: {},
         employeeId: '',
         saved: false,
         errorCode: '',
         errorDescription: '',
-        newCollab: false
+        newCollaboration: false
       });
     default:
       return state;
@@ -487,9 +487,9 @@ const newCollab = (state = {}, action) => {
 };
 
 
-const editCollab = (state = {}, action) => {
+const editCollaboration = (state = {}, action) => {
   switch (action.type) {
-    case 'EDIT_COLLAB_REQUESTED':
+    case 'EDIT_COLLABORATION_REQUESTED':
       return Object.assign({}, state, {
         editRequested: true,
         editReady: false,
@@ -499,30 +499,30 @@ const editCollab = (state = {}, action) => {
         errorDescription: '',
         saved: false
       });
-    case 'EDIT_COLLAB_FORM':
+    case 'EDIT_COLLABORATION_FORM':
       return Object.assign({}, state, {
         editReady: true,
         editRequested: false,
         collaboration: action.response
       });
 
-    case 'EDIT_COLLAB_SUBMITTED':
+    case 'EDIT_COLLABORATION_SUBMITTED':
       return Object.assign({}, state, {
         editSubmitted: true,
         missingFields: [],
         errorDescription: ''
       });
-    case 'MISSING_FIELDS_EDIT_COLLAB':
+    case 'MISSING_FIELDS_EDIT_COLLABORATION':
       return Object.assign({}, state, {
         missingFields: action.missing,
         editSubmitted: false
       });
-    case 'EDIT_COLLAB_FAILURE':
+    case 'EDIT_COLLABORATION_FAILURE':
       return Object.assign({}, state, {
         editSubmitted: false,
         errorDescription: action.errorDescription
       });
-    case 'EDIT_COLLAB_SAVED':
+    case 'EDIT_COLLABORATION_SAVED':
       return Object.assign({}, state, {
         editReady: false,
         missingFields: [],
@@ -547,32 +547,32 @@ const editCollab = (state = {}, action) => {
   }
 };
 
-const deleteCollab = (state = {}, action) => {
+const deleteCollaboration = (state = {}, action) => {
   switch (action.type) {
-    case 'DELETE_COLLAB_SUBMITTED':
+    case 'DELETE_COLLABORATION_SUBMITTED':
       return Object.assign({}, state, {
         deleteSubmitted: true,
-        collabId: action.collabId,
+        collaborationId: action.collaborationId,
         error: false,
         deleted: false
       });
-    case 'DELETE_COLLAB_NOT':
+    case 'DELETE_COLLABORATION_NOT':
       return Object.assign({}, state, {
         deleteSubmitted: false,
-        collabId: ''
+        collaborationId: ''
       });
-    case 'DELETE_COLLAB_CONFIRMED':
+    case 'DELETE_COLLABORATION_CONFIRMED':
       return Object.assign({}, state, {
         deleteConfirmed: true,
         deleteSubmitted: false
       });
-    case 'DELETE_COLLAB_ERROR':
+    case 'DELETE_COLLABORATION_ERROR':
     return Object.assign({}, state, {
         deleteConfirmed: false,
         deleteSubmitted: false,
         error: true
       });
-    case 'COLLAB_DELETED':
+    case 'COLLABORATION_DELETED':
       return Object.assign({}, state, {
         deleteSubmitted: false,
         deleteConfirmed: false,
@@ -624,7 +624,7 @@ const initialState = {
     idSubmitted: false,
     employeeId: '',
     employee: {},
-    collabs: []
+    collaborations: []
   },
   editEmployee: {
     editRequested: false,
@@ -661,17 +661,17 @@ const initialState = {
     peers: [],
     reports: []
   },
-  newCollab: {
-    newCollab: false,
+  newCollaboration: {
+    newCollaboration: false,
     employeeId: '',
     collaboration: {},
     missingFields: [],
     errorCode: '',
     errorDescription: '',
-    collabSubmitted: false,
+    collaborationSubmitted: false,
     saved: false
   },
-  editCollab: {
+  editCollaboration: {
     editRequested: false,
     editReady: false,
     editSubmitted: false,
@@ -680,9 +680,9 @@ const initialState = {
     errorDescription: '',
     saved: false
   },
-  deleteCollab: {
+  deleteCollaboration: {
     deleteSubmitted: false,
-    collabId: '',
+    collaborationId: '',
     deleteConfirmed: false,
     error: false,
     deleted: false
@@ -690,10 +690,10 @@ const initialState = {
 };
 
 
-const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchType, searchResults, viewOrg, newCollab, editCollab, deleteCollab });
-//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-//const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
-const store = createStore(reducer, initialState, applyMiddleware(thunk));
+const reducer = combineReducers({ currentView, CSV, currentUser, newEmployee, viewEmployee, editEmployee, deleteEmployee, searchType, searchResults, viewOrg, newCollaboration, editCollaboration, deleteCollaboration });
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, initialState, composeEnhancers(applyMiddleware(thunk)));
+//const store = createStore(reducer, initialState, applyMiddleware(thunk));
 
 
 module.exports = store;

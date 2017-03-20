@@ -73,7 +73,7 @@ const setUser = (itAdmin, employeeId) => {
             })
               .then( response => response.json())
               .then( response => {
-                dispatch(renderCollabs(response));
+                dispatch(renderCollaborations(response));
               })
           }
         })
@@ -180,8 +180,8 @@ const idNotFound = () => {
   return { type: 'ID_NOT_FOUND' }
 }
 
-const renderCollabs = (response) => {
-  return { type: 'RENDER_COLLABS', response }
+const renderCollaborations = (response) => {
+  return { type: 'RENDER_COLLABORATIONS', response }
 }
 
 const renderProfile = employeeId => {
@@ -204,7 +204,7 @@ const renderProfile = employeeId => {
           })
             .then( response => response.json())
             .then( response => {
-              dispatch(renderCollabs(response));
+              dispatch(renderCollaborations(response));
             })
         }
       })

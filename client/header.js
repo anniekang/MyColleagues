@@ -2,12 +2,12 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { ITChecked, employeeChecked, changeUser, setUser } = require('./actions/employee-actions');
 const { search, employeeSearch, collaborationSearch } = require('./actions/search-actions');
-const { deleteCollab, deleteCollabNot } = require('./actions/collaboration-actions');
+const { deleteCollaboration, deleteCollaborationNot } = require('./actions/collaboration-actions');
 
 
-const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab, handleSubmitSearch, handleSubmitUser, handleClick }) => {
+const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollaboration, editCollaboration, deleteCollaboration, handleSubmitSearch, handleSubmitUser, handleClick }) => {
   const defaultPhoto = 'https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRp2fY5IddQ51unoSD0p2tQdwWnjdMKUaOZ5ONfnTnv7WSaP4v4zg';
-  const yesButtonCollab = `ui button ${ deleteCollab.collabId }`;
+  const yesButtonCollaboration = `ui button ${ deleteCollaboration.collaborationId }`;
   let employeeSearchCheck = false;
   let collaborationSearchCheck = false;
   if (searchType.isEmployee) {
@@ -53,7 +53,7 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
                               <div className="fourteen wide field">
                                 { searchType.isEmployee
                                   ? <input id="emp-search" name="emp-search" type="text" placeholder="Employee ID or First and Last Name"/>
-                                  : <input id="collab-search" name="collab-search" type="text" placeholder="Collaboration ID or Name"/>
+                                  : <input id="collaboration-search" name="collaboration-search" type="text" placeholder="Collaboration ID or Name"/>
                                 }
                               </div>
                               <div className="two wide field">
@@ -79,41 +79,41 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
                         </div>
                       : null
                     }
-                    { newCollab.saved
+                    { newCollaboration.saved
                       ? <div className="centered row">
-                          <div>{ newCollab.collaboration.type } { newCollab.collaboration.collaboration_id } successfully created!</div>
+                          <div>{ newCollaboration.collaboration.type } { newCollaboration.collaboration.collaboration_id } successfully created!</div>
                         </div>
                       : null
                     }
-                    { editCollab.saved
+                    { editCollaboration.saved
                       ? <div className="centered row">
-                          <div>{ editCollab.collaboration.type } { editCollab.collaboration.collaboration_id } successfully updated!</div>
+                          <div>{ editCollaboration.collaboration.type } { editCollaboration.collaboration.collaboration_id } successfully updated!</div>
                         </div>
                       : null
                     }
-                    { deleteCollab.deleteSubmitted
+                    { deleteCollaboration.deleteSubmitted
                       ? <div className="centered row">
                           <div className="ui centered grid">
                             <div className="centered row">
-                              <div>Are you sure you would like to delete Collaboration '{ deleteCollab.collabId }'?</div>
+                              <div>Are you sure you would like to delete Collaboration '{ deleteCollaboration.collaborationId }'?</div>
                             </div>
                             <div className="centered row">
-                              <button className={ yesButtonCollab } type='submit' onClick={ handleClick('yesCollab') }>Yes</button>
-                              <button className='ui button' type='submit' onClick={ handleClick('noCollab') }>No</button>
+                              <button className={ yesButtonCollaboration } type='submit' onClick={ handleClick('yesCollaboration') }>Yes</button>
+                              <button className='ui button' type='submit' onClick={ handleClick('noCollaboration') }>No</button>
                             </div>
                           </div>
                         </div>
                       : null
                     }
-                    { deleteCollab.deleted
+                    { deleteCollaboration.deleted
                       ? <div className="centered row">
-                          <div>Collaboration '{ deleteCollab.collabId }' has been deleted.</div>
+                          <div>Collaboration '{ deleteCollaboration.collaborationId }' has been deleted.</div>
                         </div>
                       : null
                     }
-                    { deleteCollab.error
+                    { deleteCollaboration.error
                       ? <div className="centered row">
-                          <div>Collaboration '{ deleteCollab.collabId }' still exists.</div>
+                          <div>Collaboration '{ deleteCollaboration.collaborationId }' still exists.</div>
                         </div>
                       : null
                     }
@@ -222,7 +222,7 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
   )
 };
 
-const mapStatetoProps = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab }) => ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollab, editCollab, deleteCollab })
+const mapStatetoProps = ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollaboration, editCollaboration, deleteCollaboration }) => ({ currentUser, searchType, searchResults, editEmployee, viewEmployee, newCollaboration, editCollaboration, deleteCollaboration })
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -231,7 +231,7 @@ const mapDispatchtoProps = dispatch => {
       const data = new FormData(event.target);
       let searchString = '';
       if (isEmployee) searchString = data.get('emp-search')
-      else searchString = data.get('collab-search')
+      else searchString = data.get('collaboration-search')
       dispatch(search(isEmployee, searchString));
     },
     handleSubmitUser: event => {
@@ -248,8 +248,8 @@ const mapDispatchtoProps = dispatch => {
       else if (key === 'Change') dispatch(changeUser())
       else if (key === 'employeeSearch') dispatch(employeeSearch())
       else if (key === 'collaborationSearch') dispatch(collaborationSearch())
-      else if (key === 'yesCollab') dispatch(deleteCollab(event.target.classList[2].toUpperCase()))
-      else if (key === 'noCollab') dispatch(deleteCollabNot())
+      else if (key === 'yesCollaboration') dispatch(deleteCollaboration(event.target.classList[2].toUpperCase()))
+      else if (key === 'noCollaboration') dispatch(deleteCollaborationNot())
     }
   }
 };

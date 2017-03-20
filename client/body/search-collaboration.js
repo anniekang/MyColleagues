@@ -11,9 +11,9 @@ const SearchCollaboration = ({ currentView, searchResults}) => {
           ? <div id='search-results'>Showing results for '{ searchResults.search }'</div>
           : null
       }
-      { searchResults.results.map((collab, i) => {
+      { searchResults.results.map((collaboration, i) => {
           return (
-          <div key={ i } id={ collab.collaboration_id } className='ui equal width grid container collaboration'>
+          <div key={ i } id={ collaboration.collaboration_id } className='ui equal width grid container collaboration'>
             <div className='ui hidden divider'></div>
             <div className='row'>
               <div className='two wide column'></div>
@@ -21,20 +21,20 @@ const SearchCollaboration = ({ currentView, searchResults}) => {
                 <div className='ui row grid'>
                   <div className='twelve wide column'>
                     <div className='row'>Collaboration Type:
-                      <span className='collab-type'> { collab.type }</span>
+                      <span className='collaboration-type'> { collaboration.type }</span>
                     </div>
                     <div className='row'>Collaboration ID:
-                      <span className='collab-id'> { collab.collaboration_id }</span>
+                      <span className='collaboration-id'> { collaboration.collaboration_id }</span>
                     </div>
                     <div className='row'>Collaboration Name:
-                      <span className='collab-name'> { collab.collaboration_name }</span>
+                      <span className='collaboration-name'> { collaboration.collaboration_name }</span>
                     </div>
                     <div className='row'>
-                      <div className='collab-description-label'>Description:</div>
-                      <div className='collab-description'> { collab.description }</div>
+                      <div className='collaboration-description-label'>Description:</div>
+                      <div className='collaboration-description'> { collaboration.description }</div>
                     </div>
                     <div className='row'>Managed By:
-                      <span className='collab-manager'> { collab.managed_by }</span>
+                      <span className='collaboration-manager'> { collaboration.managed_by }</span>
                     </div>
                   </div>
                 </div>

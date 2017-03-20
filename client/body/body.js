@@ -23,7 +23,7 @@ const Body = ({ currentView }) => {
       return <EditEmployee/>;
     case 'org-chart':
       return <ViewOrg/>;
-    case 'edit-collab':
+    case 'edit-collaboration':
       return <EditCollaboration/>;
     default:
       return <Home/>;

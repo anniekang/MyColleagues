@@ -1,13 +1,13 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { changeLogo, saveLogo, newProfile, deleteProfile, deleteEmployeeNot } = require('./actions/employee-actions');
-const { deleteCollab, deleteCollabNot } = require('./actions/collaboration-actions');
+const { deleteCollaboration, deleteCollaborationNot } = require('./actions/collaboration-actions');
 
 
 
-const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab, deleteCollab, handleClick, handleSubmit }) => {
+const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollaboration, editCollaboration, deleteCollaboration, handleClick, handleSubmit }) => {
   const yesButtonEmployee = `ui button ${ deleteEmployee.employeeId }`;
-  const yesButtonCollab = `ui button ${ deleteCollab.collabId }`;
+  const yesButtonCollaboration = `ui button ${ deleteCollaboration.collaborationId }`;
   if (!currentUser.ITConfirmed) return null;
 
   return (
@@ -47,15 +47,15 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
             </div>
           : null
         }
-        { newCollab.saved
+        { newCollaboration.saved
           ? <div className="centered row">
-              <div>{ newCollab.collaboration.type } { newCollab.collaboration.collaboration_id } successfully created!</div>
+              <div>{ newCollaboration.collaboration.type } { newCollaboration.collaboration.collaboration_id } successfully created!</div>
             </div>
           : null
         }
-        { editCollab.saved
+        { editCollaboration.saved
           ? <div className="centered row">
-              <div>{ editCollab.collaboration.type } { editCollab.collaboration.collaboration_id } successfully updated!</div>
+              <div>{ editCollaboration.collaboration.type } { editCollaboration.collaboration.collaboration_id } successfully updated!</div>
             </div>
           : null
         }
@@ -73,15 +73,15 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
             </div>
           : null
         }
-        { deleteCollab.deleteSubmitted
+        { deleteCollaboration.deleteSubmitted
           ? <div className="centered row">
               <div className="ui centered grid">
                 <div className="centered row">
-                  <div>Are you sure you would like to delete Collaboration '{ deleteCollab.collabId }'?</div>
+                  <div>Are you sure you would like to delete Collaboration '{ deleteCollaboration.collaborationId }'?</div>
                 </div>
                 <div className="centered row">
-                  <button className={ yesButtonCollab } type='submit' onClick={ handleClick('yesCollab') }>Yes</button>
-                  <button className='ui button' type='submit' onClick={ handleClick('noCollab') }>No</button>
+                  <button className={ yesButtonCollaboration } type='submit' onClick={ handleClick('yesCollaboration') }>Yes</button>
+                  <button className='ui button' type='submit' onClick={ handleClick('noCollaboration') }>No</button>
                 </div>
               </div>
             </div>
@@ -99,15 +99,15 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
             </div>
           : null
         }
-        { deleteCollab.deleted
+        { deleteCollaboration.deleted
           ? <div className="centered row">
-              <div>Collaboration '{ deleteCollab.collabId }' has been deleted.</div>
+              <div>Collaboration '{ deleteCollaboration.collaborationId }' has been deleted.</div>
             </div>
           : null
         }
-        { deleteCollab.error
+        { deleteCollaboration.error
           ? <div className="centered row">
-              <div>Collaboration '{ deleteCollab.collabId }' still exists.</div>
+              <div>Collaboration '{ deleteCollaboration.collaborationId }' still exists.</div>
             </div>
           : null
         }
@@ -116,7 +116,7 @@ const ITDashboard = ({ currentUser, newEmployee, editEmployee, viewEmployee, del
   )
 }
 
-const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab, deleteCollab }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollab, editCollab, deleteCollab })
+const mapStatetoProps = ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollaboration, editCollaboration, deleteCollaboration }) => ({ currentUser, newEmployee, editEmployee, viewEmployee, deleteEmployee, newCollaboration, editCollaboration, deleteCollaboration })
 
 const mapDispatchtoProps = dispatch => {
   return {
@@ -126,8 +126,8 @@ const mapDispatchtoProps = dispatch => {
       else if (type === 'profile') dispatch(newProfile())
       else if (type === 'yesEmployee') dispatch(deleteProfile(event.target.classList[2].toUpperCase()))
       else if (type === 'noEmployee') dispatch(deleteEmployeeNot())
-      else if (type === 'yesCollab') dispatch(deleteCollab(event.target.classList[2].toUpperCase()))
-      else if (type === 'noCollab') dispatch(deleteCollabNot())
+      else if (type === 'yesCollaboration') dispatch(deleteCollaboration(event.target.classList[2].toUpperCase()))
+      else if (type === 'noCollaboration') dispatch(deleteCollaborationNot())
     },
     handleSubmit: event => {
       event.preventDefault();

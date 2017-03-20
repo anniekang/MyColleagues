@@ -1,6 +1,6 @@
 const React = require('react');
 const { connect } = require('react-redux');
-const { saveCollab, saveCollabUpdate } = require('../actions/collaboration-actions');
+const { saveCollaboration, saveCollaborationUpdate } = require('../actions/collaboration-actions');
 
 
 const Missing = ({ missingFields }) => {
@@ -36,27 +36,27 @@ const EditError = ({ errorDescription }) => {
 }
 
 
-const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
+const EditCollaboration = ( { newCollaboration, editCollaboration, handleSubmit } ) => {
   let isNew = '';
-  let collab = {};
-  let collabManagerId = '';
-  if (newCollab.newCollab){
+  let collaboration = {};
+  let collaborationManagerId = '';
+  if (newCollaboration.newCollaboration){
     isNew = true;
-    collab = newCollab;
-    collabManagerId = newCollab.employeeId;
+    collaboration = newCollaboration;
+    collaborationManagerId = newCollaboration.employeeId;
   }
-  else if (editCollab.editReady) {
+  else if (editCollaboration.editReady) {
     isNew = false;
-    collab = editCollab;
-    collabManagerId = collab.collaboration.managed_by;
+    collaboration = editCollaboration;
+    collaborationManagerId = collaboration.collaboration.managed_by;
   }
   return (
-    <div id="edit-collab" className="ui grid container">
-      < Missing missingFields={ collab.missingFields }/>
-      < NewError errorCode={ newCollab.errorCode } errorDescription={ newCollab.errorDescription }/>
-      < EditError errorDescription={ editCollab.errorDescription }/>
+    <div id="edit-collaboration" className="ui grid container">
+      < Missing missingFields={ collaboration.missingFields }/>
+      < NewError errorCode={ newCollaboration.errorCode } errorDescription={ newCollaboration.errorDescription }/>
+      < EditError errorDescription={ editCollaboration.errorDescription }/>
 
-      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, collabManagerId) }>
+      <form id="collaboration" className="ui ten wide centered column fluid form" onSubmit={ handleSubmit(isNew, collaborationManagerId) }>
         <div className="field">
           <label>Collaboration</label>
         </div>
@@ -65,7 +65,7 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
           <div className="inline fields">
             <div className="field">
               <div className="ui radio checkbox">
-                { editCollab.collaboration.type === 'PROJECT' || newCollab.newCollab
+                { editCollaboration.collaboration.type === 'PROJECT' || newCollaboration.newCollaboration
                   ? <input type="radio" name="type" value="project" tabIndex="1" defaultChecked/>
                   : <input type="radio" name="type" value="project" tabIndex="1"/>
                 }
@@ -74,7 +74,7 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
             </div>
             <div className="field">
               <div className="ui radio checkbox">
-                { editCollab.collaboration.type === 'PRODUCT'
+                { editCollaboration.collaboration.type === 'PRODUCT'
                   ? <input type="radio" name="type" value="product" tabIndex="2" defaultChecked/>
                   : <input type="radio" name="type" value="product" tabIndex="2"/>
                 }
@@ -83,7 +83,7 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
             </div>
             <div className="field">
               <div className="ui radio checkbox">
-                { editCollab.collaboration.type === 'PROGRAM'
+                { editCollaboration.collaboration.type === 'PROGRAM'
                   ? <input type="radio" name="type" value="program" tabIndex="3" defaultChecked/>
                   : <input type="radio" name="type" value="program" tabIndex="3"/>
                 }
@@ -94,29 +94,29 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
         </div>
         <div className="required field">
           <label>Collaboration ID</label>
-          { editCollab.editReady
-            ? <input id="collab-id" type="text" name="collab-id" value={ editCollab.collaboration.collaboration_id } placeholder="Collaboration ID" readOnly/>
-            : <input id="collab-id" type="text" name="collab-id" placeholder="Collaboration ID"/>
+          { editCollaboration.editReady
+            ? <input id="collaboration-id" type="text" name="collaboration-id" value={ editCollaboration.collaboration.collaboration_id } placeholder="Collaboration ID" readOnly/>
+            : <input id="collaboration-id" type="text" name="collaboration-id" placeholder="Collaboration ID"/>
           }
         </div>
         <div className="required field">
           <label>Collaboration Name</label>
-          <input id="collab-name" type="text" name="collab-name" defaultValue={ editCollab.collaboration.collaboration_name } placeholder="Collaboration Name"/>
+          <input id="collaboration-name" type="text" name="collaboration-name" defaultValue={ editCollaboration.collaboration.collaboration_name } placeholder="Collaboration Name"/>
         </div>
-        <div id="collab-description" className="required field">
+        <div id="collaboration-description" className="required field">
           <label>Description</label>
-          <textarea id="collab-description" rows="2" name="collab-description" defaultValue={ editCollab.collaboration.description } placeholder="Collaboration Description"></textarea>
+          <textarea id="collaboration-description" rows="2" name="collaboration-description" defaultValue={ editCollaboration.collaboration.description } placeholder="Collaboration Description"></textarea>
         </div>
         <div className="required field">
           <label>Managed By</label>
-          { newCollab.newCollab
-            ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollab.employeeId } placeholder="Managed By"/>
-            : <input id="employee-manager" type="text" name="managed-by" defaultValue={ editCollab.collaboration.managed_by } placeholder="Managed By"/>
+          { newCollaboration.newCollaboration
+            ? <input id="employee-manager" type="text" name="managed-by" defaultValue={ newCollaboration.employeeId } placeholder="Managed By"/>
+            : <input id="employee-manager" type="text" name="managed-by" defaultValue={ editCollaboration.collaboration.managed_by } placeholder="Managed By"/>
           }
         </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
-          { newCollab.newCollab
+          { newCollaboration.newCollaboration
             ? <button className="ui button" type="submit">Create</button>
             : <button className="ui button" type="submit">Submit</button>
           }
@@ -129,22 +129,22 @@ const EditCollaboration = ( { newCollab, editCollab, handleSubmit } ) => {
 }
 
 
-const mapStatetoProps = ({ newCollab, editCollab }) => ({ newCollab, editCollab })
+const mapStatetoProps = ({ newCollaboration, editCollaboration }) => ({ newCollaboration, editCollaboration })
 
 const mapDispatchtoProps = dispatch => {
   return {
-    handleSubmit: (isNew, collabManagerId) => event => {
+    handleSubmit: (isNew, collaborationManagerId) => event => {
       event.preventDefault();
-      const collabData = new FormData(event.target);
+      const collaborationData = new FormData(event.target);
       const collaboration = {
-        Type: collabData.get('type').toUpperCase(),
-        Collaboration_ID: collabData.get('collab-id').trim().toUpperCase(),
-        Collaboration_Name: collabData.get('collab-name').trim().toUpperCase(),
-        Description: collabData.get('collab-description').trim(),
-        Managed_By: collabData.get('managed-by').trim().toUpperCase(),
+        Type: collaborationData.get('type').toUpperCase(),
+        Collaboration_ID: collaborationData.get('collaboration-id').trim().toUpperCase(),
+        Collaboration_Name: collaborationData.get('collaboration-name').trim().toUpperCase(),
+        Description: collaborationData.get('collaboration-description').trim(),
+        Managed_By: collaborationData.get('managed-by').trim().toUpperCase(),
       };
-      const action = isNew ? saveCollab : saveCollabUpdate;
-      dispatch(action(collaboration, collabManagerId));
+      const action = isNew ? saveCollaboration : saveCollaborationUpdate;
+      dispatch(action(collaboration, collaborationManagerId));
     }
   }
 };

@@ -2,7 +2,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { updateProfile, deleteEmployeeSubmitted } = require('../actions/employee-actions');
 const { renderOrgChart } = require('../actions/org-chart-actions');
-const { newCollab, updateCollab, deleteCollabSubmitted } = require('../actions/collaboration-actions');
+const { newCollaboration, updateCollaboration, deleteCollaborationSubmitted } = require('../actions/collaboration-actions');
 
 const Twitter = ( { twitterName } ) => {
   console.log(twitterName)
@@ -14,7 +14,6 @@ const Twitter = ( { twitterName } ) => {
     js.id = id;
     js.src = "https://platform.twitter.com/widgets.js";
     fjs.parentNode.insertBefore(js, fjs);
-
     t._e = [];
     t.ready = function(f) {
       t._e.push(f);
@@ -37,7 +36,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
   const editButton = `ui button edit-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const orgButton = `ui button employee-org ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
   const delButton = `ui button del-profile ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
-  const newCollabButton = `ui button new-collab ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
+  const newCollaborationButton = `ui button new-collaboration ${viewEmployee.employee.id} ${viewEmployee.employee.manager_id}`;
 
   return (
     <div className='ui grid container'>
@@ -110,7 +109,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
       </div>
       <div className='ui hidden divider'></div>
       <div className='row'>
-        <div id='view-profile-collabs' className='ui grid container'>
+        <div id='view-profile-collaborations' className='ui grid container'>
           <div className='ui fourteen wide centered column row'>
             <div id='collaborations' className='thirteen wide column'>
               <div className='row'>
@@ -121,7 +120,7 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
               <div className='ui one column centered grid'>
                 { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                   ? <div className='row'>
-                      <button id='new-collab-button' className={ newCollabButton } type='submit' onClick={ handleClick('newCollab') }>New Collaboration</button>
+                      <button id='new-collaboration-button' className={ newCollaborationButton } type='submit' onClick={ handleClick('newCollaboration') }>New Collaboration</button>
                     </div>
                   : null
                 }
@@ -129,29 +128,29 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
             </div>
           </div>
           <div className='ui fourteen wide centered column row'>
-              { viewEmployee.collabs.map((collab, i) => {
-                  let editCollabButton = `ui tiny button edit-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
-                  let deleteCollabButton = `ui tiny button delete-collab ${viewEmployee.employee.id} ${collab.collaboration_id}`;
+              { viewEmployee.collaborations.map((collaboration, i) => {
+                  let editCollaborationButton = `ui tiny button edit-collaboration ${viewEmployee.employee.id} ${collaboration.collaboration_id}`;
+                  let deleteCollaborationButton = `ui tiny button delete-collaboration ${viewEmployee.employee.id} ${collaboration.collaboration_id}`;
 
                   return (
                     <div key={ i } className="ui centered grid">
                       <div className='twelve wide column'>
-                        <div className='row collab-info'>
+                        <div className='row collaboration-info'>
                           <div className='row'>Collaboration Type:
-                            <span className='collab-type'> { collab.type }</span>
+                            <span className='collaboration-type'> { collaboration.type }</span>
                           </div>
                           <div className='row'>Collaboration ID:
-                            <span className='collab-id'> { collab.collaboration_id }</span>
+                            <span className='collaboration-id'> { collaboration.collaboration_id }</span>
                           </div>
                           <div className='row'>Collaboration Name:
-                            <span className='collab-name'> { collab.collaboration_name }</span>
+                            <span className='collaboration-name'> { collaboration.collaboration_name }</span>
                           </div>
                           <div className='row'>
-                            <div className='collab-description-label'>Description:</div>
-                            <div className='collab-description'> { collab.description }</div>
+                            <div className='collaboration-description-label'>Description:</div>
+                            <div className='collaboration-description'> { collaboration.description }</div>
                           </div>
                           <div className='row'>Managed By:
-                            <span className='collab-manager'> { collab.managed_by }</span>
+                            <span className='collaboration-manager'> { collaboration.managed_by }</span>
                           </div>
                           <div className='ui hidden divider'></div>
                         </div>
@@ -159,8 +158,8 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                       <div className='two wide column'>
                         { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
                           ? <div className='ui one column centered grid'>
-                              <button className={ editCollabButton } type='submit' onClick={ handleClick('updateCollab') }>Edit</button>
-                              <button className={ deleteCollabButton } type='submit' onClick={ handleClick('deleteCollab') }>Delete</button>
+                              <button className={ editCollaborationButton } type='submit' onClick={ handleClick('updateCollaboration') }>Edit</button>
+                              <button className={ deleteCollaborationButton } type='submit' onClick={ handleClick('deleteCollaboration') }>Delete</button>
                             </div>
                           : null
                         }
@@ -186,13 +185,13 @@ const mapDispatchtoProps = dispatch => {
         id: event.target.classList[3].toUpperCase(),
         managerId: event.target.classList[4].toUpperCase()
       };
-      const collabId = event.target.classList[4].toUpperCase();
+      const collaborationId = event.target.classList[4].toUpperCase();
       if (type === 'edit') dispatch(updateProfile(employee))
       else if (type === 'org') dispatch(renderOrgChart(employee))
       else if (type === 'del') dispatch(deleteEmployeeSubmitted(employee))
-      else if (type === 'newCollab') dispatch(newCollab(employee))
-      else if (type === 'updateCollab') dispatch(updateCollab(collabId))
-      else if (type === 'deleteCollab') dispatch(deleteCollabSubmitted(collabId))
+      else if (type === 'newCollaboration') dispatch(newCollaboration(employee))
+      else if (type === 'updateCollaboration') dispatch(updateCollaboration(collaborationId))
+      else if (type === 'deleteCollaboration') dispatch(deleteCollaborationSubmitted(collaborationId))
     }
   }
 };
