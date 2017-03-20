@@ -47,9 +47,9 @@ const EmployeeRoutes = (driver) => {
           return session.run(`
             MATCH (mgr: Employee {id: { Manager_ID }})
             WITH mgr
-            CREATE (new:Employee {id: { ID }, first_name: { First_Name }, last_name: { Last_Name }, photo: { Photo }, job_title: { Job_Title }, job_description: { Job_Description }, email: { Email }, manager_id: { Manager_ID }})
+            CREATE (new:Employee {id: { ID }, first_name: { First_Name }, last_name: { Last_Name }, photo: { Photo }, job_title: { Job_Title }, job_description: { Job_Description }, email: { Email }, manager_id: { Manager_ID }, linkedin: { LinkedIn }, twitter: { Twitter }})
             CREATE UNIQUE (new)-[rel:REPORTS_TO]->(mgr)
-            RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
+            RETURN new.id AS id, new.first_name AS first_name, new.last_name AS last_name, new.photo AS photo, new.job_title AS job_title, new.job_description AS job_description, new.email AS email, new.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name, new.linkedin AS linkedin, new.twitter AS twitter`,
             parameters)
         }
         else {
@@ -79,7 +79,7 @@ const EmployeeRoutes = (driver) => {
     session
       .run(`
         MATCH (view:Employee {id: { id }})-[:REPORTS_TO]->(mgr:Employee)
-        RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name`,
+        RETURN view.id AS id, view.first_name AS first_name, view.last_name AS last_name, view.photo AS photo, view.job_title AS job_title, view.job_description AS job_description, view.email AS email, view.manager_id AS manager_id, mgr.first_name AS manager_first_name, mgr.last_name AS manager_last_name, view.linkedin AS linkedin, view.twitter AS twitter`,
         {id: req.params.id})
       .then( result => {
         if (result.records.length === 0) {
@@ -114,8 +114,8 @@ const EmployeeRoutes = (driver) => {
               WITH update
               MATCH (update_mgr:Employee {id: { Manager_ID }})
               CREATE UNIQUE (update)-[:REPORTS_TO]->(update_mgr)
-              SET update.first_name = { First_Name }, update.last_name = { Last_Name }, update.photo = { Photo }, update.job_title = { Job_Title }, update.job_description = { Job_Description }, update.email = { Email }, update.manager_id = { Manager_ID }
-              RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, update_mgr.first_name AS manager_first_name, update_mgr.last_name AS manager_last_name`,
+              SET update.first_name = { First_Name }, update.last_name = { Last_Name }, update.photo = { Photo }, update.job_title = { Job_Title }, update.job_description = { Job_Description }, update.email = { Email }, update.manager_id = { Manager_ID }, update.linkedin = { LinkedIn }, update.twitter = { Twitter }
+              RETURN update.id AS id, update.first_name AS first_name, update.last_name AS last_name, update.photo AS photo, update.job_title AS job_title, update.job_description AS job_description, update.email AS email, update.manager_id AS manager_id, update_mgr.first_name AS manager_first_name, update_mgr.last_name AS manager_last_name, update.linkedin AS linkedin, update.twitter AS twitter`,
               parameters)
           }
           else {

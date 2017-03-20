@@ -38,13 +38,13 @@ const Header = ({ currentUser, searchType, searchResults, editEmployee, viewEmpl
                               <div className="inline fields">
                                 <div className="field">
                                   <div className="ui radio checkbox">
-                                    <input type="radio" name="searchType" tabIndex="1" onChange={ handleClick('employeeSearch') } checked={ employeeSearchCheck }/>
+                                    <input type="radio" name="searchType" value="Employee" tabIndex="1" onChange={ handleClick('employeeSearch') } checked={ employeeSearchCheck }/>
                                     <label>Employee</label>
                                   </div>
                                 </div>
                                 <div className="field">
                                   <div className="ui radio checkbox">
-                                    <input type="radio" name="searchType" tabIndex="2" onChange={ handleClick('collaborationSearch') } checked={ collaborationSearchCheck }/>
+                                    <input type="radio" name="searchType" value="Collaboration" tabIndex="2" onChange={ handleClick('collaborationSearch') } checked={ collaborationSearchCheck }/>
                                     <label>Collaboration</label>
                                   </div>
                                 </div>

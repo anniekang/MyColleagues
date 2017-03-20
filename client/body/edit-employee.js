@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('../actions/employee-actions');
 
 
-const Missing = ({ missingFields, photoError  }) => {
+const Missing = ({ missingFields, photoError }) => {
   if (!missingFields && !photoError) return null;
   return (
     <ul className="error">
@@ -99,6 +99,14 @@ const EditEmployee = ( { currentUser, newEmployee, editEmployee, handleSubmit } 
             : <input id="employee-manager" type="text" name="manager-id" defaultValue={ editEmployee.employee.manager_id } placeholder="Manager ID"/>
           }
         </div>
+        <div className="field">
+          <label>LinkedIn URL</label>
+          <input id="linkedin" type="text" name="linkedin" defaultValue={ editEmployee.employee.linkedin } placeholder="LinkedIn URL"/>
+        </div>
+        <div className="field">
+          <label>Twitter Username</label>
+          <input id="twitter" type="text" name="twitter" defaultValue={ editEmployee.employee.twitter } placeholder="Twitter Username"/>
+        </div>
         <div className="ui hidden divider"></div>
         <div className="ui one column centered grid">
           { newEmployee.newProfile
@@ -129,6 +137,8 @@ const mapDispatchtoProps = dispatch => {
         Job_Description: employeeData.get('job-description').trim(),
         Email: employeeData.get('email').trim().toUpperCase(),
         Manager_ID: employeeData.get('manager-id').trim().toUpperCase(),
+        LinkedIn: employeeData.get('linkedin').trim(),
+        Twitter: employeeData.get('twitter').trim()
       };
       const action = isNew ? saveEmployee : saveUpdate;
       dispatch(action(employee));
