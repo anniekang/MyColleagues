@@ -3,7 +3,7 @@ const { connect } = require('react-redux');
 const { saveEmployee, saveUpdate } = require('../actions/employee-actions');
 
 
-const Missing = ({ missingFields, photoError  }) => {
+const Missing = ({ missingFields, photoError }) => {
   if (!missingFields && !photoError) return null;
   return (
     <ul className="error">
