@@ -5,7 +5,7 @@ const { renderOrgChart } = require('../actions/org-chart-actions');
 const { newCollaboration, updateCollaboration, deleteCollaborationSubmitted } = require('../actions/collaboration-actions');
 
 const Twitter = ( { twitterName } ) => {
-  console.log(twitterName)
+  if (!twitterName) return null;
   const twitterHref = `https://twitter.com/${twitterName}`;
   window.twttr = (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
@@ -22,7 +22,9 @@ const Twitter = ( { twitterName } ) => {
   }(document, "script", "twitter-wjs"));
 
   return (
-    <a href={ twitterHref } className="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @{ twitterName }</a>
+    <div className='row'>
+      <a href={ twitterHref } className="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @{ twitterName }</a>
+    </div>
   )
 };
 
@@ -73,14 +75,17 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                   <div className='row'>Manager Name:
                     <span id='profilev-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
                   </div>
-                  <div className='row'>
-                    <a href={ viewEmployee.employee.linkedin }>
-                      <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='100' height='20' alt={ linkedinAlt }/>
-                    </a>
-                  </div>
-                  <div className='row'>
-                    <Twitter twitterName={ viewEmployee.employee.twitter}/>
-                  </div>
+                  { viewEmployee.employee.linkedin
+                    ? <div className='row'>
+                        <a href={ viewEmployee.employee.linkedin }>
+                          <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='100' height='20' alt={ linkedinAlt }/>
+                        </a>
+                      </div>
+                    : null
+                  }
+                  <Twitter twitterName={ viewEmployee.employee.twitter}/>
+
+
                 </div>
               </div>
             </div>
@@ -111,17 +116,11 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
       <div className='row'>
         <div id='view-profile-collaborations' className='ui grid container'>
           <div className='ui fourteen wide centered column row'>
-            <div id='collaborations' className='thirteen wide column'>
+            <div id='collaborations' className='sixteen wide column'>
               <div className='row'>
                 <span id='collaboration'>Collaborations</span>
-              </div>
-            </div>
-            <div className='three wide column'>
-              <div className='ui one column centered grid'>
                 { (currentUser.employeeFound && viewEmployee.employee.id === currentUser.employeeId) || currentUser.ITConfirmed
-                  ? <div className='row'>
-                      <button id='new-collaboration-button' className={ newCollaborationButton } type='submit' onClick={ handleClick('newCollaboration') }>New Collaboration</button>
-                    </div>
+                  ? <button id='new-collaboration-button' className={ newCollaborationButton } type='submit' onClick={ handleClick('newCollaboration') }>New Collaboration</button>
                   : null
                 }
               </div>

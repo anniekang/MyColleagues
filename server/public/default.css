@@ -65,7 +65,7 @@ body {
 }
 
 #profile-photo {
-  max-height: 150px;
+  max-height: 200px;
 }
 
 #profile-info {
@@ -104,7 +104,7 @@ body {
 #edit-button,
 #org-button,
 #delete-button,
-#new-collab-button {
+#new-collaboration-button {
   width: 150px;
 }
 
@@ -113,8 +113,12 @@ body {
   font-weight: bold;
 }
 
+#collaboration {
+  margin-right: 10px;
+}
+
 #edit-profile,
-#edit-collab {
+#edit-collaboration {
   margin-top: 2%;
 }
 
@@ -123,24 +127,24 @@ body {
   width: 105px;
 }
 
-.collab-info {
+.collaboration-info {
   font-size: 1.1em;
   line-height: 1.2em;
   color: rgb(104,104,104);
 }
 
-.collab-type,
-.collab-id,
-.collab-name,
-.collab-description,
-.collab-manager {
+.collaboration-type,
+.collaboration-id,
+.collaboration-name,
+.collaboration-description,
+.collaboration-manager {
   color: black;
 }
 
-.collab-description-label {
+.collaboration-description-label {
   display: inline-block;
 }
 
-.collab-description {
+.collaboration-description {
   display: inline;
 }

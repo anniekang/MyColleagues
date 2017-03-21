@@ -586,8 +586,7 @@ const deleteCollaboration = (state = {}, action) => {
     case 'ORG_SUBMITTED':
       return Object.assign({}, state, {
         error: false,
-        deleted: false,
-        employeeId: ''
+        deleted: false
       });
     default:
       return state;

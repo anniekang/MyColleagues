@@ -127,7 +127,7 @@ const saveEmployee = employee => {
     let check = false;
     let photoError = false;
     for (let key in employee) {
-      if (key != 'Photo' && key != 'Job_Description') {
+      if (key != 'Photo' && key != 'Job_Description' && key != 'LinkedIn' && key != 'Twitter') {
         if (employee[key] === '') {
           missing.push(key);
           check = true;
@@ -258,7 +258,7 @@ const saveUpdate = employee => {
     let check = false;
     let photoError = false;
     for (let key in employee) {
-      if (key != 'Photo' && key != 'Job_Description') {
+      if (key != 'Photo' && key != 'Job_Description' && key != 'LinkedIn' && key != 'Twitter') {
         if (employee[key] === '') {
           missing.push(key);
           check = true;
