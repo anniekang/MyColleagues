@@ -5,7 +5,7 @@ const { renderOrgChart } = require('../actions/org-chart-actions');
 const { newCollab, updateCollab, deleteCollabSubmitted } = require('../actions/collaboration-actions');
 
 const Twitter = ( { twitterName } ) => {
-  console.log(twitterName)
+  if (!twitterName) return null;
   const twitterHref = `https://twitter.com/${twitterName}`;
   window.twttr = (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0], t = window.twttr || {};
@@ -72,13 +72,16 @@ const ViewEmployee = ({ currentUser, viewEmployee, handleClick }) => {
                     <span id='profile-manager'> { viewEmployee.employee.manager_id }</span>
                   </div>
                   <div className='row'>Manager Name:
-                    <span id='profilev-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
+                    <span id='profile-manager-name'> { viewEmployee.employee.manager_first_name } { viewEmployee.employee.manager_last_name }</span>
                   </div>
-                  <div className='row'>
-                    <a href={ viewEmployee.employee.linkedin }>
-                      <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='100' height='20' alt={ linkedinAlt }/>
-                    </a>
-                  </div>
+                  { viewEmployee.employee.linkedin
+                    ? <div className='row'>
+                        <a href={ viewEmployee.employee.linkedin }>
+                          <img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='100' height='20' alt={ linkedinAlt }/>
+                        </a>
+                      </div>
+                    : null
+                  }
                   <div className='row'>
                     <Twitter twitterName={ viewEmployee.employee.twitter}/>
                   </div>
